@@ -16,7 +16,7 @@ $from = '01/01/2013';
 $to = '01/31/2013';
 $project = 'virtual-piggy';
 
-$handler = new DataCollector('cfbc848c5e2816ac3381', '8f21a57b9b86dedeafdc22f34d90d5dff93130f4', 'virtual-piggy');
+$handler = new DataCollector('cfbc848c5e2816ac3381', '8f21a57b9b86dedeafdc22f34d90d5dff93130f4', $project);
 
 // Define statuses to consider
 $responded = array('Accepted', 'Test', 'Invalid', 'Fixed');
