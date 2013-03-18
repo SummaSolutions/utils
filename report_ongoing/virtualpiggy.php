@@ -76,4 +76,3 @@ $tickets = $handler->getTicketsCreatedInRange($from, $to);
 </body>
 
 </html>
-?>
