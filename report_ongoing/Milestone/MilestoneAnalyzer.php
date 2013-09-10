@@ -52,23 +52,28 @@ class MilestoneAnalyzer
         $this->_deferredTickets = array();
     }
 
-    public function getMilestone(){
+    public function getMilestone()
+    {
         return $this->_milestone;
     }
 
-    public function getCompleteTickets(){
+    public function getCompleteTickets()
+    {
         return $this->_completeTickets;
     }
 
-    public function getIncompleteTickets(){
+    public function getIncompleteTickets()
+    {
         return $this->_incompleteTickets;
     }
 
-    public function getDeferredTickets(){
+    public function getDeferredTickets()
+    {
         return $this->_deferredTickets;
     }
 
-    public function getIndicators(){
+    public function getIndicators()
+    {
         return $this->_indicators;
     }
 
@@ -88,7 +93,8 @@ class MilestoneAnalyzer
     /**
      * Calculate the results of the milestone
      */
-    private function calculateResults(){
+    private function calculateResults()
+    {
 
         $this->_indicators->totalCompleted = count($this->_completeTickets);
         $this->_indicators->totalIncomplete = count($this->_incompleteTickets) + count($this->_deferredTickets);

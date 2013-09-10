@@ -11,7 +11,7 @@ require_once("../core/assembla.php");
 $conn = new AssemblaConnector($_POST['key'], $_POST['secret'], $_POST['project']);
 
 $statuses = json_decode($conn->getSpaceStatuses());
-$milestones = json_decode($conn->getMilestones(0,1000));
+$milestones = json_decode($conn->getMilestones(0, 1000));
 
 ?>
 
@@ -23,6 +23,7 @@ $milestones = json_decode($conn->getMilestones(0,1000));
 
 <body>
 <h1>Specify report details</h1>
+
 <form action="report.php" method="post">
 
     <input type="hidden" name="key" value="<?php echo $_POST['key']; ?>">
@@ -32,9 +33,9 @@ $milestones = json_decode($conn->getMilestones(0,1000));
     <fieldset>
         <legend>Specify the "delivered" statuses</legend>
         <?php
-            foreach($statuses as $status){
-                echo '<input type ="checkbox" name="status[]" value="' .$status->name . '">' . $status->name . '<br>';
-            }
+        foreach ($statuses as $status) {
+            echo '<input type ="checkbox" name="status[]" value="' . $status->name . '">' . $status->name . '<br>';
+        }
         ?>
     </fieldset>
 
@@ -47,9 +48,9 @@ $milestones = json_decode($conn->getMilestones(0,1000));
     Select the milestone:
     <select name="milestone">
         <?php
-            foreach($milestones as $milestone){
-                echo '<option value="' . $milestone->id . '">' . $milestone->title . '</option>';
-            }
+        foreach ($milestones as $milestone) {
+            echo '<option value="' . $milestone->id . '">' . $milestone->title . '</option>';
+        }
         ?>
     </select>
 
