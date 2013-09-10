@@ -6,7 +6,8 @@
  * Time: 1:29 PM
  */
 
-class MilestoneIndicators {
+class MilestoneIndicators
+{
 
     public $ticketsTotal;
 

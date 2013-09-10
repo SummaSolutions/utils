@@ -1,5 +1,3 @@
-
-
 <?php
 /**
  * Created by PhpStorm.
@@ -17,6 +15,7 @@
 
 <body>
 <h1>Specify your Assembla credentials</h1>
+
 <form action="step2.php" method="post">
     Assembla Key: <input type="text" name="key" value="cfbc848c5e2816ac3381" size="60"><br>
     Assembla Secret: <input type="text" name="secret" value="8f21a57b9b86dedeafdc22f34d90d5dff93130f4" size="60"><br>

@@ -33,9 +33,11 @@ $tickets = $handler->getTicketsCreatedInRange($from, $to);
 ?>
 
 <h1>Ongoing Project Metrics </h1>
+
 <h2><?php echo $project ?></h2>
 <br>
-<h2>Period from <?php echo $from . ' to ' . $to;?></h2>
+
+<h2>Period from <?php echo $from . ' to ' . $to; ?></h2>
 
 <table border="1">
     <tr>
@@ -52,7 +54,7 @@ $tickets = $handler->getTicketsCreatedInRange($from, $to);
     </tr>
 
     <?php
-    foreach($tickets as $ticket){
+    foreach ($tickets as $ticket) {
 
         echo '<tr ' . alterTr($ticket) . '>';
 

@@ -10,7 +10,7 @@ require_once("FLowAnalyzer.php");
 
 
 $analyzer = new FLowAnalyzer($_POST['key'], $_POST['secret'], $_POST['project']);
-$analyzer->analyzePeriod($_POST['dateFrom'],$_POST['dateTo']);
+$analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
 
 ?>
 
@@ -18,7 +18,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'],$_POST['dateTo']);
 <h2><?php echo $_POST['project'] ?></h2>
 <br>
 
-<h2>range: <?php echo $_POST['dateFrom'];?> to <?php echo $_POST['dateFrom']; ?></h2>
+<h2>range: <?php echo $_POST['dateFrom']; ?> to <?php echo $_POST['dateFrom']; ?></h2>
 <br>
 <br>
 <h3>Completed Tickets</h3>
@@ -35,7 +35,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'],$_POST['dateTo']);
         <th>Final Status</th>
     </tr>
     <?php
-    foreach($analyzer->getTickets() as $ticket){
+    foreach ($analyzer->getTickets() as $ticket) {
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
@@ -52,11 +52,11 @@ $analyzer->analyzePeriod($_POST['dateFrom'],$_POST['dateTo']);
 <br><br>
 <h2>Period Indicators</h2>
 <br>
-<h3>Total delivered tickets: <?php echo count($analyzer->getTickets());?></h3>
+<h3>Total delivered tickets: <?php echo count($analyzer->getTickets()); ?></h3>
 <br>
-<h3>Average deviation (hours): <?php echo number_format($analyzer->getAvgDeviation(), 2);?></h3>
+<h3>Average deviation (hours): <?php echo number_format($analyzer->getAvgDeviation(), 2); ?></h3>
 <br>
-<h3>Average Error Percentage: <?php echo number_format($analyzer->getAvgErrorPercentage(),2);?>%</h3>
+<h3>Average Error Percentage: <?php echo number_format($analyzer->getAvgErrorPercentage(), 2); ?>%</h3>
 
 </body>
 
