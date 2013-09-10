@@ -57,7 +57,59 @@ class AssemblaConnector{
      */
     public function getTickets($page, $pageSize){
 
-        $url = '/tickets.json?report=0&page='. $page .'per_page=' . $pageSize;
+        $url = '/tickets.json?report=0&page='. $page .'&per_page=' . $pageSize;
+        return $this->callAssembla($url);
+    }
+
+
+    /**
+     * Get all time entries for a particular task
+     * @param $taskID
+     * @param $page
+     * @param $pageSize
+     * @return mixed
+     */
+    public function getTimeEntries($taskID, $page, $pageSize){
+
+        $url = '/tasks/'. $taskID . '/time_entries.json?page='. $page .'&per_page=' . $pageSize;
+        return $this->callAssembla($url);
+    }
+
+    /**
+     * Get all the tickets for a particular milestone
+     *
+     * @param $milestone
+     * @param $pageSize
+     * @return mixed
+     */
+    public function getMilestoneTickets($milestone, $page, $pageSize){
+
+        $url = '/tickets/milestone/' . $milestone . 'json?page='. $page .'&per_page=' . $pageSize . '&ticket_status=all';
+
+        return $this->callAssembla($url);
+
+    }
+
+    /**
+     * Get milestones.
+     * @return mixed
+     */
+    public function getMilestones($page, $pageSize){
+
+        $url = '/milestones/all.json?page='. $page .'&per_page=' . $pageSize;
+
+        return $this->callAssembla($url);
+
+    }
+
+    /**
+     * Get milestones.
+     * @param $id
+     * @return mixed
+     */
+    public function getMilestone($id){
+
+        $url = '/milestones/' . $id . '.json';
 
         return $this->callAssembla($url);
     }

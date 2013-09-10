@@ -103,7 +103,7 @@ class DataCollector {
         $item->fromPreviousPeriod = ( $creation < $from );
     }
 
-    private function getAllTickets(){
+    public function getAllTickets(){
 
         $allFetched = false;
         $tickets = array();
@@ -122,7 +122,38 @@ class DataCollector {
             }
         }
 
+        $tickets = $this->clearRepeated($tickets);
+
+        // Sort tickets by number.
+        usort(
+            $tickets,
+            function ($a, $b){
+                return $a->number - $b->number;
+            }
+        );
+
         return $tickets;
+    }
+
+    /**
+     * Make a new array without repetition
+     * @param $tickets
+     * @return array
+     */
+    private function clearRepeated($tickets){
+
+        $clean = array();
+        foreach($tickets as $ticket){
+            $clean[$ticket->id] = $ticket;
+        }
+        return $clean;
+    }
+
+    public function getMilestones(){
+
+        $data = $this->conn->getMilestones(0,1000);
+
+        return json_decode($data);
     }
 
     private function getTicketSummary($ticket){
@@ -209,5 +240,9 @@ class DataCollector {
         return sprintf('%02d', $final_hours) . ':' . sprintf('%02d', $final_minutes);
 
     }
+
+
+
+
 
 }
