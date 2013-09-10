@@ -3,7 +3,8 @@
 require_once('assembla.php');
 require_once('StatusHandler.php');
 
-class DataCollector {
+class DataCollector
+{
 
     private $conn;
     private $stHandler;
@@ -11,13 +12,15 @@ class DataCollector {
     private $startedStatuses;
     private $completedStatuses;
 
-    function __construct($key, $secret, $space){
+    function __construct($key, $secret, $space)
+    {
 
         $this->conn = new AssemblaConnector($key, $secret, $space);
         $this->stHandler = new StatusHandler($this->conn);
     }
 
-    public function initialize($responded, $started, $completed){
+    public function initialize($responded, $started, $completed)
+    {
 
         $this->respondedStatuses = $responded;
         $this->startedStatuses = $started;
@@ -35,8 +38,8 @@ class DataCollector {
         $list = $this->getAllTickets();
 
         foreach ($list as $ticket) {
-           $item = $this->checkTicketInclusion($ticket, $from, $to);
-            if( !is_null($item)){
+            $item = $this->checkTicketInclusion($ticket, $from, $to);
+            if (!is_null($item)) {
                 $tickets[$item->number] = $item;
             }
         }
@@ -47,24 +50,24 @@ class DataCollector {
     }
 
 
-    private function checkTicketInclusion($ticket, $from, $to){
+    private function checkTicketInclusion($ticket, $from, $to)
+    {
 
         $item = null;
 
         $creationDate = new DateTime($ticket->created_on);
 
-        if( $ticket->completed_date == ""){
+        if ($ticket->completed_date == "") {
             $completionDate = null;
-        }
-        else{
+        } else {
             $completionDate = new DateTime($ticket->completed_date);
         }
 
         $getIt = ($creationDate >= $from && $creationDate <= $to) ||
-              ((is_null($completionDate) && ($creationDate <= $to)) ||
-              ($completionDate >= $from && $completionDate <= $to));
+            ((is_null($completionDate) && ($creationDate <= $to)) ||
+                ($completionDate >= $from && $completionDate <= $to));
 
-        if( $getIt){
+        if ($getIt) {
 
             $item = $this->getTicketSummary($ticket);
             $this->calculateItemMetrics($item, $from);
@@ -74,36 +77,35 @@ class DataCollector {
         return $item;
     }
 
-    private function calculateItemMetrics($item, $from){
+    private function calculateItemMetrics($item, $from)
+    {
 
-        if( $item->responded != ''){
+        if ($item->responded != '') {
             $item->RespondedTime = $this->dateDiff($item->responded, $item->created);
-        }
-        else{
+        } else {
             $item->RespondedTime = '';
         }
 
-        if( $item->started != ''){
+        if ($item->started != '') {
             $item->startedTime = $this->dateDiff($item->started, $item->created);
-        }
-        else{
+        } else {
             $item->startedTime = '';
         }
 
-        if( $item->completed != ''){
+        if ($item->completed != '') {
             $item->completedTime = $this->dateDiff($item->completed, $item->created);
             $item->draggingTime = "";
-        }
-        else{
+        } else {
             $item->completedTime = '';
             $item->draggingTime = $this->dateDiff(time(), $item->created);
         }
 
         $creation = new DateTime($item->created);
-        $item->fromPreviousPeriod = ( $creation < $from );
+        $item->fromPreviousPeriod = ($creation < $from);
     }
 
-    public function getAllTickets(){
+    public function getAllTickets()
+    {
 
         $allFetched = false;
         $tickets = array();
@@ -111,12 +113,11 @@ class DataCollector {
         $pageSize = 100;
         $page = 0;
 
-        while(!$allFetched){
+        while (!$allFetched) {
             $pageTickets = $this->conn->getTickets($page, $pageSize);
-            if( $pageTickets == ""){
+            if ($pageTickets == "") {
                 $allFetched = true;
-            }
-            else{
+            } else {
                 $tickets = array_merge($tickets, json_decode($pageTickets));
                 $page++;
             }
@@ -127,7 +128,7 @@ class DataCollector {
         // Sort tickets by number.
         usort(
             $tickets,
-            function ($a, $b){
+            function ($a, $b) {
                 return $a->number - $b->number;
             }
         );
@@ -140,23 +141,26 @@ class DataCollector {
      * @param $tickets
      * @return array
      */
-    private function clearRepeated($tickets){
+    private function clearRepeated($tickets)
+    {
 
         $clean = array();
-        foreach($tickets as $ticket){
+        foreach ($tickets as $ticket) {
             $clean[$ticket->id] = $ticket;
         }
         return $clean;
     }
 
-    public function getMilestones(){
+    public function getMilestones()
+    {
 
-        $data = $this->conn->getMilestones(0,1000);
+        $data = $this->conn->getMilestones(0, 1000);
 
         return json_decode($data);
     }
 
-    private function getTicketSummary($ticket){
+    private function getTicketSummary($ticket)
+    {
 
         $changes = $this->stHandler->getStatusHistory($ticket->number);
 
@@ -167,10 +171,9 @@ class DataCollector {
         $summary->responded = $this->getFirstDate($changes, $this->respondedStatuses);
         $summary->started = $this->getFirstDate($changes, $this->startedStatuses);
 
-        if( !is_null($ticket->completed_date)){
+        if (!is_null($ticket->completed_date)) {
             $summary->completed = $ticket->completed_date;
-        }
-        else{
+        } else {
             $summary->completed = $this->getFirstDate($changes, $this->completedStatuses);
         }
 
@@ -178,25 +181,27 @@ class DataCollector {
     }
 
 
-    public function getTicketFromNumber($number){
+    public function getTicketFromNumber($number)
+    {
 
         $ticket = json_decode($this->conn->getTicket($number));
         return $this->getTicketSummary($ticket);
     }
 
-    private function getFirstDate($changes, $statuses){
+    private function getFirstDate($changes, $statuses)
+    {
 
         $date = '';
         $found = false;
         $index = 0;
 
-        while(!$found &&
-               $index < count($statuses)){
+        while (!$found &&
+            $index < count($statuses)) {
 
             $status = $statuses[$index++];
             $ocurrence = $this->getFirstOccurrence($status, $changes);
 
-            if( !is_null($ocurrence)){
+            if (!is_null($ocurrence)) {
                 $date = $ocurrence->date;
                 $found = true;
             }
@@ -205,13 +210,14 @@ class DataCollector {
         return $date;
     }
 
-    private function getFirstOccurrence($status, $changes){
+    private function getFirstOccurrence($status, $changes)
+    {
 
         $occurrence = null;
 
-        foreach($changes as $change){
+        foreach ($changes as $change) {
 
-            if( $change->status_to == $status){
+            if ($change->status_to == $status) {
                 $occurrence = $change;
                 break;
             }
@@ -221,8 +227,8 @@ class DataCollector {
     }
 
 
-
-    private function dateDiff($time1, $time2){
+    private function dateDiff($time1, $time2)
+    {
 
         if (!is_int($time1)) {
             $time1 = strtotime($time1);
@@ -234,15 +240,12 @@ class DataCollector {
         $difference = $time1 - $time2;
         $hours = $difference / 3600; // 3600 seconds in an hour
         $minutes = ($hours - floor($hours)) * 60;
-        $final_hours = round($hours,0);
+        $final_hours = round($hours, 0);
         $final_minutes = round($minutes);
 
         return sprintf('%02d', $final_hours) . ':' . sprintf('%02d', $final_minutes);
 
     }
-
-
-
 
 
 }

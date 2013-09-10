@@ -8,21 +8,25 @@
 
 require_once('../core/DataCollector.php');
 
-class FLowAnalyzer {
+class FLowAnalyzer
+{
 
     private $_tickets;
     private $_avgDeviation;
     private $_avgErrorPercentage;
 
-    public function getTickets(){
+    public function getTickets()
+    {
         return $this->_tickets;
     }
 
-    public function getAvgDeviation(){
+    public function getAvgDeviation()
+    {
         return $this->_avgDeviation;
     }
 
-    public function getAvgErrorPercentage(){
+    public function getAvgErrorPercentage()
+    {
         return $this->_avgErrorPercentage;
     }
 
@@ -38,7 +42,8 @@ class FLowAnalyzer {
      * @param $from
      * @param $to
      */
-    function analyzePeriod($from, $to){
+    function analyzePeriod($from, $to)
+    {
 
         $this->filterTickets($from, $to);
         $this->calculateResults();
@@ -47,12 +52,13 @@ class FLowAnalyzer {
     /**
      * Calculate the indicators for the period.
      */
-    private function calculateResults(){
+    private function calculateResults()
+    {
 
         $totalDeviation = 0;
         $totalPercentage = 0;
 
-        foreach($this->_tickets as $ticket){
+        foreach ($this->_tickets as $ticket) {
 
             $ticket->deviation = abs($ticket->total_estimate - $ticket->total_invested_hours);
             $ticket->errorPercentage = ($ticket->deviation / $ticket->total_estimate) * 100;
@@ -73,14 +79,15 @@ class FLowAnalyzer {
      * @param $to
      * @return array
      */
-    private function filterTickets($from, $to){
+    private function filterTickets($from, $to)
+    {
 
         // Fetch all tickets for the space.
         $tickets = $this->dataCollector->getAllTickets();
 
-        foreach($tickets as $ticket){
+        foreach ($tickets as $ticket) {
 
-            if( !is_null($ticket->completed_date)){
+            if (!is_null($ticket->completed_date)) {
                 $this->processTicket($from, $to, $ticket);
             }
         }
