@@ -14,6 +14,7 @@ class FLowAnalyzer
     private $_tickets;
     private $_avgDeviation;
     private $_avgErrorPercentage;
+    private $_generalWorkRatio;
 
     public function getTickets()
     {
@@ -28,6 +29,10 @@ class FLowAnalyzer
     public function getAvgErrorPercentage()
     {
         return $this->_avgErrorPercentage;
+    }
+
+    public function getGeneralWorkRatio(){
+        return $this->_generalWorkRatio;
     }
 
     function __construct($key, $secret, $space)
@@ -57,6 +62,9 @@ class FLowAnalyzer
 
         $totalDeviation = 0;
         $totalPercentage = 0;
+        $totalInvested = 0;
+        $totalEstimated = 0;
+
 
         foreach ($this->_tickets as $ticket) {
 
@@ -65,10 +73,16 @@ class FLowAnalyzer
 
             $totalDeviation += $ticket->deviation;
             $totalPercentage += $ticket->errorPercentage;
+
+            $ticket->workRatio = $ticket->total_invested_hours / $ticket->total_estimate;
+
+            $totalInvested += $ticket->total_invested_hours;
+            $totalEstimated += $ticket->total_estimate;
         }
 
         $this->_avgDeviation = $totalDeviation / count($this->_tickets);
         $this->_avgErrorPercentage = $totalPercentage / count($this->_tickets);
+        $this->_generalWorkRatio = $totalInvested / $totalEstimated;
 
     }
 

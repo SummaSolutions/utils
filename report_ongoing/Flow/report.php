@@ -30,6 +30,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
         <th>Completed date</th>
         <th>Estimated (hours)</th>
         <th>Invested (hours)</th>
+        <th>Work Ratio</th>
         <th>Deviation (hours)</th>
         <th>Error Percentage</th>
         <th>Final Status</th>
@@ -41,6 +42,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
         echo '<td>' . $ticket->completed_date . '</td>';
         echo '<td>' . $ticket->total_estimate . '</td>';
         echo '<td>' . $ticket->total_invested_hours . '</td>';
+        echo '<td>' . $ticket->workRatio . '</td>';
         echo '<td>' . $ticket->deviation . '</td>';
         echo '<td>' . $ticket->errorPercentage . '%</td>';
         echo '<td>' . $ticket->status . '</td>';
@@ -57,6 +59,9 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
 <h3>Average deviation (hours): <?php echo number_format($analyzer->getAvgDeviation(), 2); ?></h3>
 <br>
 <h3>Average Error Percentage: <?php echo number_format($analyzer->getAvgErrorPercentage(), 2); ?>%</h3>
+<br>
+<h3>General Work Ratio: <?php echo number_format($analyzer->getGeneralWorkRatio(), 2); ?></h3>
+
 
 </body>
 
