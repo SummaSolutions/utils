@@ -6,7 +6,7 @@
  * Time: 8:03 PM
  */
 
-require_once("../core/assembla.php");
+require_once("../core/AssemblaConnector.php");
 
 $conn = new AssemblaConnector($_POST['key'], $_POST['secret'], $_POST['project']);
 

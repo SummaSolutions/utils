@@ -4,7 +4,7 @@ define('STATUS_MARKUP', "\n- - status\n");
 define('STATUS_POSITION', "status\n");
 
 require_once('RegexBuilder.php');
-require_once('assembla.php');
+require_once('AssemblaConnector.php');
 
 
 class StatusHandler

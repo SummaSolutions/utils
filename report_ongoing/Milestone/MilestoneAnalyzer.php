@@ -26,13 +26,11 @@
  */
 define('MILESTONE_MARKUP', "\n- - milestone_id\n");
 
-require_once('../core/assembla.php');
-require_once('../core/DataCollector.php');
+require_once('../core/TicketsAnalyzer.php');
 require_once('MilestoneIndicators.php');
 
-class MilestoneAnalyzer
+class MilestoneAnalyzer extends TicketsAnalyzer
 {
-    private $_completeTickets;
     private $_incompleteTickets;
     private $_deferredTickets;
     private $_milestone;
@@ -42,12 +40,12 @@ class MilestoneAnalyzer
 
     function __construct($key, $secret, $space, $completedStates)
     {
-        $this->conn = new AssemblaConnector($key, $secret, $space);
-        $this->dataCollector = new DataCollector($key, $secret, $space);
+        parent::__construct($key, $secret, $space);
+
         $this->_completedStates = $completedStates;
         $this->_indicators = new MilestoneIndicators();
 
-        $this->_completeTickets = array();
+        $this->_completedTickets = array();
         $this->_incompleteTickets = array();
         $this->_deferredTickets = array();
     }
@@ -55,11 +53,6 @@ class MilestoneAnalyzer
     public function getMilestone()
     {
         return $this->_milestone;
-    }
-
-    public function getCompleteTickets()
-    {
-        return $this->_completeTickets;
     }
 
     public function getIncompleteTickets()
@@ -84,10 +77,10 @@ class MilestoneAnalyzer
     public function AnalyzeMilestone($targetMilestoneID, $exceptionsList = null)
     {
         $this->_exceptionsList = $exceptionsList;
-        $this->_milestone = json_decode($this->conn->getMilestone($targetMilestoneID));
+        $this->_milestone = json_decode($this->_conn->getMilestone($targetMilestoneID));
         $this->analyzeTickets($targetMilestoneID);
         $this->calculateResults();
-
+        $this->calculateTicketResults();
     }
 
     /**
@@ -96,7 +89,7 @@ class MilestoneAnalyzer
     private function calculateResults()
     {
 
-        $this->_indicators->totalCompleted = count($this->_completeTickets);
+        $this->_indicators->totalCompleted = count($this->_completedTickets);
         $this->_indicators->totalIncomplete = count($this->_incompleteTickets) + count($this->_deferredTickets);
 
         $this->_indicators->ticketsTotal = $this->_indicators->totalCompleted + $this->_indicators->totalIncomplete;
@@ -125,7 +118,7 @@ class MilestoneAnalyzer
     private function processTicketInMilestone($ticket)
     {
         if ($this->ticketIsComplete($ticket)) {
-            $this->_completeTickets[] = $ticket;
+            $this->_completedTickets[] = $ticket;
 
         } else {
             $this->_incompleteTickets[] = $ticket;
@@ -173,7 +166,7 @@ class MilestoneAnalyzer
         $result = false;
 
         // Get the ticket comments.
-        $comments = json_decode($this->conn->getTicketComments($ticket->number));
+        $comments = json_decode($this->_conn->getTicketComments($ticket->number));
 
         foreach ($comments as $comment) {
 
@@ -183,6 +176,9 @@ class MilestoneAnalyzer
                 // This matched the milestone markup and has the milestone in that line too. Assuming it
                 // really belonged to the target milestone.
                 $result = true;
+                $ticketMilestone = json_decode($this->_conn->getMilestone($ticket->milestone_id));
+                $ticket->currentMilestone = $ticketMilestone->title;
+
                 break;
             }
         }
@@ -196,7 +192,7 @@ class MilestoneAnalyzer
     public function analyzeTickets($targetMilestoneID)
     {
         // Fetch all tickets for the space.
-        $tickets = $this->dataCollector->getAllTickets();
+        $tickets = $this->_dataCollector->getAllTickets();
 
         // Check each ticket.
         foreach ($tickets as $ticket) {

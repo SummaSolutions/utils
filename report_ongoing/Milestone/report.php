@@ -43,18 +43,30 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $exceptions);
     <tr>
         <th>Ticket number</th>
         <th>Summary</th>
+        <th>Completed date</th>
+        <th>Estimated (hours)</th>
+        <th>Invested (hours)</th>
+        <th>Work Ratio</th>
+        <th>Deviation (hours)</th>
+        <th>Error Percentage</th>
         <th>Status</th>
     </tr>
     <?php
-    foreach ($analyzer->getCompleteTickets() as $ticket) {
+    foreach ($analyzer->getCompletedTickets() as $ticket) {
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
+        echo '<td>' . $ticket->completed_date . '</td>';
+        echo '<td>' . $ticket->total_estimate . '</td>';
+        echo '<td>' . $ticket->total_invested_hours . '</td>';
+        echo '<td>' . $ticket->workRatio . '%</td>';
+        echo '<td>' . $ticket->deviation . '</td>';
+        echo '<td>' . $ticket->errorPercentage . '%</td>';
         echo '<td>' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
 </table>
-<h4>Total completed tickets:<?php echo count($analyzer->getCompleteTickets()); ?></h4>
+<h4>Total completed tickets:<?php echo count($analyzer->getCompletedTickets()); ?></h4>
 
 <br>
 
@@ -85,12 +97,14 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $exceptions);
     <tr>
         <th>Ticket number</th>
         <th>Summary</th>
+        <th>Current Milestone</th>
         <th>Status</th>
     </tr>
     <?php
     foreach ($analyzer->getDeferredTickets() as $ticket) {
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
+        echo '<td>' . $ticket->currentMilestone . '</td>';
         echo '<td>' . $ticket->status . '</td>';
         echo '</tr>';
     }
@@ -98,21 +112,12 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $exceptions);
 </table>
 <h4>Total deferred tickets:<?php echo count($analyzer->getDeferredTickets()); ?></h4>
 <br><br>
-
 <h2>Milestone Indicators</h2><br>
-
 <h3>Total committed tickets: <?php echo $analyzer->getIndicators()->ticketsTotal; ?></h3><br>
-
 <h3>Total delivered tickets: <?php echo $analyzer->getIndicators()->totalCompleted; ?></h3>
-
 <h3>( <?php echo number_format($analyzer->getIndicators()->completedPercentage, 2); ?> %)</h3>
-
 <br>
-
 <h3>Total not delivered tickets: <?php echo $analyzer->getIndicators()->totalIncomplete; ?></h3>
-
 <h3>( <?php echo number_format($analyzer->getIndicators()->incompletePercentage, 2); ?> %)</h3>
-
 </body>
-
 </html>
