@@ -113,6 +113,14 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $exceptions);
 <h4>Total deferred tickets:<?php echo count($analyzer->getDeferredTickets()); ?></h4>
 <br><br>
 <h2>Milestone Indicators</h2><br>
+
+<h3>Average deviation (hours): <?php echo number_format($analyzer->getAvgDeviation(), 2); ?></h3>
+<br>
+<h3>Average Error Percentage: <?php echo number_format($analyzer->getAvgErrorPercentage(), 2); ?>%</h3>
+<br>
+<h3>General Work Ratio: <?php echo number_format($analyzer->getGeneralWorkRatio(), 2); ?>%</h3>
+<br>
+
 <h3>Total committed tickets: <?php echo $analyzer->getIndicators()->ticketsTotal; ?></h3><br>
 <h3>Total delivered tickets: <?php echo $analyzer->getIndicators()->totalCompleted; ?></h3>
 <h3>( <?php echo number_format($analyzer->getIndicators()->completedPercentage, 2); ?> %)</h3>
