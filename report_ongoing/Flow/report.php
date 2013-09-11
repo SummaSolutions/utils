@@ -33,16 +33,16 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
         <th>Work Ratio</th>
         <th>Deviation (hours)</th>
         <th>Error Percentage</th>
-        <th>Final Status</th>
+        <th>Status</th>
     </tr>
     <?php
-    foreach ($analyzer->getTickets() as $ticket) {
+    foreach ($analyzer->getCompletedTickets() as $ticket) {
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
         echo '<td>' . $ticket->total_estimate . '</td>';
         echo '<td>' . $ticket->total_invested_hours . '</td>';
-        echo '<td>' . $ticket->workRatio . '</td>';
+        echo '<td>' . $ticket->workRatio . '%</td>';
         echo '<td>' . $ticket->deviation . '</td>';
         echo '<td>' . $ticket->errorPercentage . '%</td>';
         echo '<td>' . $ticket->status . '</td>';
@@ -54,13 +54,13 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
 <br><br>
 <h2>Period Indicators</h2>
 <br>
-<h3>Total delivered tickets: <?php echo count($analyzer->getTickets()); ?></h3>
+<h3>Total delivered tickets: <?php echo count($analyzer->getCompletedTickets()); ?></h3>
 <br>
 <h3>Average deviation (hours): <?php echo number_format($analyzer->getAvgDeviation(), 2); ?></h3>
 <br>
 <h3>Average Error Percentage: <?php echo number_format($analyzer->getAvgErrorPercentage(), 2); ?>%</h3>
 <br>
-<h3>General Work Ratio: <?php echo number_format($analyzer->getGeneralWorkRatio(), 2); ?></h3>
+<h3>General Work Ratio: <?php echo number_format($analyzer->getGeneralWorkRatio(), 2); ?>%</h3>
 
 
 </body>
