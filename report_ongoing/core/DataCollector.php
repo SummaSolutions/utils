@@ -1,6 +1,6 @@
 <?php
 
-require_once('assembla.php');
+require_once('AssemblaConnector.php');
 require_once('StatusHandler.php');
 
 class DataCollector
