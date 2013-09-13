@@ -37,6 +37,7 @@ class FLowAnalyzer extends TicketsAnalyzer
         foreach ($tickets as $ticket) {
 
             if (!is_null($ticket->completed_date)) {
+
                 $this->processTicket($from, $to, $ticket);
             }
         }
@@ -55,8 +56,8 @@ class FLowAnalyzer extends TicketsAnalyzer
         $fromDate = strtotime($from);
         $toDate = strtotime($to);
 
-        if ($ticketDate >= $fromDate &&
-            $ticketDate <= $toDate
+        if (($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
+            !$this->ticketIsInExceptionList($ticket)
         ) {
             $this->_completedTickets[] = $ticket;
         }
