@@ -18,7 +18,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
 <h2><?php echo $_POST['project'] ?></h2>
 <br>
 
-<h2>range: <?php echo $_POST['dateFrom']; ?> to <?php echo $_POST['dateFrom']; ?></h2>
+<h2>range: <?php echo $_POST['dateFrom']; ?> to <?php echo $_POST['dateTo']; ?></h2>
 <br>
 <br>
 <h3>Completed Tickets</h3>
