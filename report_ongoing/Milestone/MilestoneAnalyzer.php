@@ -34,13 +34,12 @@ class MilestoneAnalyzer extends TicketsAnalyzer
     private $_incompleteTickets;
     private $_deferredTickets;
     private $_milestone;
-    private $_exceptionsList;
     private $_completedStates;
     private $_indicators;
 
-    function __construct($key, $secret, $space, $completedStates)
+    function __construct($key, $secret, $space, $completedStates, $exceptions)
     {
-        parent::__construct($key, $secret, $space);
+        parent::__construct($key, $secret, $space, $exceptions);
 
         $this->_completedStates = $completedStates;
         $this->_indicators = new MilestoneIndicators();
@@ -74,9 +73,8 @@ class MilestoneAnalyzer extends TicketsAnalyzer
      * Analize the requested milestone
      * @param $targetMilestoneID
      */
-    public function AnalyzeMilestone($targetMilestoneID, $exceptionsList = null)
+    public function AnalyzeMilestone($targetMilestoneID)
     {
-        $this->_exceptionsList = $exceptionsList;
         $this->_milestone = json_decode($this->_conn->getMilestone($targetMilestoneID));
         $this->analyzeTickets($targetMilestoneID);
         $this->calculateResults();
@@ -84,21 +82,42 @@ class MilestoneAnalyzer extends TicketsAnalyzer
     }
 
     /**
-     * Calculate the results of the milestone
+     * @param $targetMilestoneID
      */
-    private function calculateResults()
+    public function analyzeTickets($targetMilestoneID)
     {
+        // Fetch all tickets for the space.
+        $tickets = $this->_dataCollector->getAllTickets();
 
-        $this->_indicators->totalCompleted = count($this->_completedTickets);
-        $this->_indicators->totalIncomplete = count($this->_incompleteTickets) + count($this->_deferredTickets);
+        // Check each ticket.
+        foreach ($tickets as $ticket) {
 
-        $this->_indicators->ticketsTotal = $this->_indicators->totalCompleted + $this->_indicators->totalIncomplete;
+            if (!$this->ticketIsInExceptionList($ticket)) {
 
-        $this->_indicators->completedPercentage =
-            ($this->_indicators->totalCompleted / $this->_indicators->ticketsTotal) * 100;
+                if ($ticket->milestone_id == $targetMilestoneID) {
+                    $this->processTicketInMilestone($ticket);
 
-        $this->_indicators->incompletePercentage =
-            ($this->_indicators->totalIncomplete / $this->_indicators->ticketsTotal) * 100;
+                } else if ($ticket->milestone_id > $targetMilestoneID) {
+                    $this->processTicketNotInMilestone($ticket);
+                }
+            }
+        }
+    }
+
+    /**
+     * Verify of this ticket, that is in this sprint, needs to be counted as good or as bad.
+     *
+     * @param $ticket
+     */
+    private function processTicketInMilestone($ticket)
+    {
+        if ($this->ticketIsComplete($ticket)) {
+
+            $this->_completedTickets[] = $ticket;
+
+        } else {
+            $this->_incompleteTickets[] = $ticket;
+        }
     }
 
     /**
@@ -111,48 +130,16 @@ class MilestoneAnalyzer extends TicketsAnalyzer
     }
 
     /**
-     * Verify of this ticket, that is in this sprint, needs to be counted as good or as bad.
-     *
-     * @param $ticket
-     */
-    private function processTicketInMilestone($ticket)
-    {
-        if ($this->ticketIsComplete($ticket)) {
-            $this->_completedTickets[] = $ticket;
-
-        } else {
-            $this->_incompleteTickets[] = $ticket;
-        }
-    }
-
-    /**
      * Verify if the ticket, which is not in the sprint, was in it sometime.
      * @param $ticket
      */
     private function processTicketNotInMilestone($ticket)
     {
-        if (!$this->ticketIsInExceptionList($ticket) &&
-            $this->ticketDidBelongToMilestone($ticket)
+        if ($this->ticketDidBelongToMilestone($ticket)
         ) {
 
             $this->_deferredTickets[] = $ticket;
         }
-    }
-
-    /**
-     * Verify if the received ticket is in the exception
-     * list (if it was defined)
-     * @param $ticket
-     */
-    private function ticketIsInExceptionList($ticket)
-    {
-        $result = false;
-
-        if (is_array($this->_exceptionsList)) {
-            $result = in_array($ticket->number, $this->_exceptionsList);
-        }
-
-        return $result;
     }
 
     /**
@@ -187,22 +174,21 @@ class MilestoneAnalyzer extends TicketsAnalyzer
     }
 
     /**
-     * @param $targetMilestoneID
+     * Calculate the results of the milestone
      */
-    public function analyzeTickets($targetMilestoneID)
+    private function calculateResults()
     {
-        // Fetch all tickets for the space.
-        $tickets = $this->_dataCollector->getAllTickets();
 
-        // Check each ticket.
-        foreach ($tickets as $ticket) {
-            if ($ticket->milestone_id == $targetMilestoneID) {
-                $this->processTicketInMilestone($ticket);
+        $this->_indicators->totalCompleted = count($this->_completedTickets);
+        $this->_indicators->totalIncomplete = count($this->_incompleteTickets) + count($this->_deferredTickets);
 
-            } else if ($ticket->milestone_id > $targetMilestoneID) {
-                $this->processTicketNotInMilestone($ticket);
-            }
-        }
+        $this->_indicators->ticketsTotal = $this->_indicators->totalCompleted + $this->_indicators->totalIncomplete;
+
+        $this->_indicators->completedPercentage =
+            ($this->_indicators->totalCompleted / $this->_indicators->ticketsTotal) * 100;
+
+        $this->_indicators->incompletePercentage =
+            ($this->_indicators->totalIncomplete / $this->_indicators->ticketsTotal) * 100;
     }
 
 }

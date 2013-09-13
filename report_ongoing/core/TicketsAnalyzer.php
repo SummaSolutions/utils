@@ -18,10 +18,20 @@ class TicketsAnalyzer {
     protected $_avgDeviation;
     protected $_avgErrorPercentage;
     protected $_generalWorkRatio;
+    protected $_excludedTickets;
 
     public function getCompletedTickets()
     {
         return $this->_completedTickets;
+    }
+
+    public function getExcludedTickets()
+    {
+        return $this->_excludedTickets;
+    }
+
+    public function getExceptions(){
+        return $this->_exceptionsList;
     }
 
     public function getAvgDeviation()
@@ -38,10 +48,12 @@ class TicketsAnalyzer {
         return $this->_generalWorkRatio;
     }
 
-    function __construct($key, $secret, $space)
+    function __construct($key, $secret, $space, $exceptions)
     {
         $this->_conn = new AssemblaConnector($key, $secret, $space);
         $this->_dataCollector = new DataCollector($key, $secret, $space);
+        $this->_exceptionsList = $exceptions;
+        $this->_excludedTickets = array();
     }
 
     /**
@@ -73,5 +85,25 @@ class TicketsAnalyzer {
         $this->_generalWorkRatio = ($totalInvested / $totalEstimated) * 100;
     }
 
+
+    /**
+     * Verify if the received ticket is in the exception
+     * list (if it was defined)
+     * @param $ticket
+     */
+    protected function ticketIsInExceptionList($ticket)
+    {
+        $isInList = false;
+
+        if (is_array($this->_exceptionsList)) {
+
+            if(in_array($ticket->number, $this->_exceptionsList)){
+                $isInList = true;
+                $this->_excludedTickets[] = $ticket;
+            }
+        }
+
+        return $isInList;
+    }
 
 } 

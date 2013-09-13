@@ -30,6 +30,12 @@
         Fecha hasta: <input type="text" name="dateTo" value="2013-01-21" size="12"><br>
     </fieldset>
 
+    <fieldset>
+        <legend>Exceptions</legend>
+        Specify the tickets that should be ignored, if any (separate them with commas). <br>
+        <textarea name="exceptions" rows="4" cols="50"></textarea>
+    </fieldset>
+
     <INPUT type="submit" value="Next"> <INPUT type="reset">
 </form>
 

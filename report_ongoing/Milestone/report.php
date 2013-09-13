@@ -10,19 +10,20 @@
 
 require_once('MilestoneAnalyzer.php');
 
-$analyzer = new MilestoneAnalyzer(
-    $_POST['key'],
-    $_POST['secret'],
-    $_POST['project'],
-    $_POST['status']);
-
 if (trim($_POST['exceptions']) != '') {
     $exceptions = explode(',', $_POST['exceptions']);
 } else {
     $exceptions = null;
 }
 
-$analyzer->AnalyzeMilestone((int)$_POST['milestone'], $exceptions);
+$analyzer = new MilestoneAnalyzer(
+    $_POST['key'],
+    $_POST['secret'],
+    $_POST['project'],
+    $_POST['status'],
+    $exceptions);
+
+$analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 
 ?>
 
@@ -111,7 +112,30 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $exceptions);
     ?>
 </table>
 <h4>Total deferred tickets:<?php echo count($analyzer->getDeferredTickets()); ?></h4>
+
+<br>
+
+<h3>Excluded Tickets</h3>
+
+<table border="1">
+    <tr>
+        <th>Ticket number</th>
+        <th>Summary</th>
+        <th>Status</th>
+    </tr>
+    <?php
+    foreach ($analyzer->getExcludedTickets() as $ticket) {
+        echo '<td>' . $ticket->number . '</td>';
+        echo '<td>' . $ticket->summary . '</td>';
+        echo '<td>' . $ticket->status . '</td>';
+        echo '</tr>';
+    }
+    ?>
+</table>
+<h4>Total excluded tickets:<?php echo count($analyzer->getExcludedTickets()); ?></h4>
+
 <br><br>
+
 <h2>Milestone Indicators</h2><br>
 
 <h3>Average deviation (hours): <?php echo number_format($analyzer->getAvgDeviation(), 2); ?></h3>

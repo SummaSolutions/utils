@@ -8,8 +8,13 @@
 
 require_once("FLowAnalyzer.php");
 
+if (trim($_POST['exceptions']) != '') {
+    $exceptions = explode(',', $_POST['exceptions']);
+} else {
+    $exceptions = null;
+}
 
-$analyzer = new FLowAnalyzer($_POST['key'], $_POST['secret'], $_POST['project']);
+$analyzer = new FLowAnalyzer($_POST['key'], $_POST['secret'], $_POST['project'], $exceptions);
 $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
 
 ?>
@@ -50,6 +55,27 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
     }
     ?>
 </table>
+
+<br>
+
+<h3>Excluded Tickets</h3>
+
+<table border="1">
+    <tr>
+        <th>Ticket number</th>
+        <th>Summary</th>
+        <th>Status</th>
+    </tr>
+    <?php
+    foreach ($analyzer->getExcludedTickets() as $ticket) {
+        echo '<td>' . $ticket->number . '</td>';
+        echo '<td>' . $ticket->summary . '</td>';
+        echo '<td>' . $ticket->status . '</td>';
+        echo '</tr>';
+    }
+    ?>
+</table>
+<h4>Total excluded tickets:<?php echo count($analyzer->getExcludedTickets()); ?></h4>
 
 <br><br>
 <h2>Period Indicators</h2>
