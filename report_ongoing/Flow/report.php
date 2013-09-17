@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Milestone Based Project - Indicator report</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+
 <?php
 /**
  * Created by PhpStorm.
@@ -42,14 +52,21 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
     </tr>
     <?php
     foreach ($analyzer->getCompletedTickets() as $ticket) {
+
+        echo '<tr';
+        if( $ticket->isEpic){
+            echo ' bgcolor = "#BEE6CD" title="This is an Epic" ';
+        }
+        echo '>';
+
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
-        echo '<td>' . $ticket->total_estimate . '</td>';
+        echo '<td>' . $ticket->estimate . '</td>';
         echo '<td>' . $ticket->total_invested_hours . '</td>';
-        echo '<td>' . $ticket->workRatio . '%</td>';
-        echo '<td>' . $ticket->deviation . '</td>';
-        echo '<td>' . $ticket->errorPercentage . '%</td>';
+        echo '<td>' . number_format($ticket->workRatio, 2) . '%</td>';
+        echo '<td>' . number_format($ticket->deviation, 2) . '</td>';
+        echo '<td>' . number_format($ticket->errorPercentage, 2) . '%</td>';
         echo '<td>' . $ticket->status . '</td>';
         echo '</tr>';
     }
@@ -68,6 +85,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
     </tr>
     <?php
     foreach ($analyzer->getExcludedTickets() as $ticket) {
+        echo '<tr>';
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->status . '</td>';

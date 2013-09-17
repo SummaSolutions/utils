@@ -68,14 +68,10 @@ class TicketsAnalyzer {
 
         foreach ($this->_completedTickets as $ticket) {
 
-            $ticket->deviation = abs($ticket->total_estimate - $ticket->total_invested_hours);
-            $ticket->errorPercentage = ($ticket->deviation / $ticket->total_estimate) * 100;
+            $this->calculate($ticket);
 
             $totalDeviation += $ticket->deviation;
             $totalPercentage += $ticket->errorPercentage;
-
-            $ticket->workRatio = ($ticket->total_invested_hours / $ticket->total_estimate) * 100;
-
             $totalInvested += $ticket->total_invested_hours;
             $totalEstimated += $ticket->total_estimate;
         }
@@ -104,6 +100,27 @@ class TicketsAnalyzer {
         }
 
         return $isInList;
+    }
+
+    /**
+     * @param $ticket
+     */
+    protected function calculate($ticket)
+    {
+        if ($ticket->hierarchy_type != 3) {
+
+            $ticket->deviation = abs($ticket->estimate - $ticket->total_invested_hours);
+            $ticket->errorPercentage = ($ticket->deviation / $ticket->total_estimate) * 100;
+            $ticket->workRatio = ($ticket->total_invested_hours / $ticket->estimate) * 100;
+            $ticket->isEpic = false;
+
+        } else {
+
+            $ticket->isEpic = true;
+            $ticket->deviation = 0;
+            $ticket->errorPercentage = 0;
+            $ticket->workRatio = 0;
+        }
     }
 
 } 
