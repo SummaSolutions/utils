@@ -18,6 +18,7 @@ function alterTr($ticket)
     if ($ticket->draggingTime != '') {
 
         $output = 'bgcolor = "#EDBFAD"';
+
     } elseif ($ticket->fromPreviousPeriod) {
         $output = 'bgcolor = "#F2F255"';
     }
@@ -25,3 +26,4 @@ function alterTr($ticket)
 
     return $output;
 }
+
