@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Milestone Based Project - Indicator report</title>
+    <meta charset="utf-8">
 </head>
 
 <body>
@@ -54,14 +55,21 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     </tr>
     <?php
     foreach ($analyzer->getCompletedTickets() as $ticket) {
+
+        echo '<tr';
+        if( $ticket->isEpic){
+            echo ' bgcolor = "#2CFFA5" title="This is an Epic" ';
+        }
+        echo '>';
+
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
-        echo '<td>' . $ticket->total_estimate . '</td>';
-        echo '<td>' . $ticket->total_invested_hours . '</td>';
-        echo '<td>' . $ticket->workRatio . '%</td>';
-        echo '<td>' . $ticket->deviation . '</td>';
-        echo '<td>' . $ticket->errorPercentage . '%</td>';
+        echo '<td>' . $ticket->estimate . '</td>';
+        echo '<td>' . number_format($ticket->total_invested_hours, 2) . '</td>';
+        echo '<td>' . number_format($ticket->workRatio, 2)  . '%</td>';
+        echo '<td>' . number_format($ticket->deviation, 2) . '</td> ';
+        echo '<td>' . number_format($ticket->errorPercentage, 2) . '%</td>';
         echo '<td>' . $ticket->status . '</td>';
         echo '</tr>';
     }
@@ -81,6 +89,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     </tr>
     <?php
     foreach ($analyzer->getIncompleteTickets() as $ticket) {
+        echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->status . '</td>';
@@ -103,6 +112,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     </tr>
     <?php
     foreach ($analyzer->getDeferredTickets() as $ticket) {
+        echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->currentMilestone . '</td>';
@@ -125,6 +135,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     </tr>
     <?php
     foreach ($analyzer->getExcludedTickets() as $ticket) {
+        echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->status . '</td>';
