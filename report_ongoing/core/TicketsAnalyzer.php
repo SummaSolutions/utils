@@ -110,8 +110,16 @@ class TicketsAnalyzer {
         if ($ticket->hierarchy_type != 3) {
 
             $ticket->deviation = abs($ticket->estimate - $ticket->total_invested_hours);
-            $ticket->errorPercentage = ($ticket->deviation / $ticket->total_estimate) * 100;
-            $ticket->workRatio = ($ticket->total_invested_hours / $ticket->estimate) * 100;
+
+            if($ticket->total_estimate > 0){
+                $ticket->errorPercentage = ($ticket->deviation / $ticket->total_estimate) * 100;
+                $ticket->workRatio = ($ticket->total_invested_hours / $ticket->estimate) * 100;
+            }
+            else{
+                $ticket->errorPercentage = 100;
+                $ticket->workRatio = 1000;
+            }
+
             $ticket->isEpic = false;
 
         } else {
