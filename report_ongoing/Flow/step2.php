@@ -40,12 +40,12 @@ $users = json_decode($conn->getSpaceMembers());
         <?php
         foreach ($users as $user)
         {
-            echo '<input type ="checkbox" name="users[]" value="' . $user->id . '" checked>' . $user->name . '<br>';
+            echo '<input type ="checkbox" name="users[]" value="' . $user->id . '">' . $user->name . '<br>';
         }
         ?>
     </fieldset>
 
-    <INPUT type="submit" value="Next"> <INPUT type="reset">
+    <INPUT type="submit" value="Next">
 </form>
 
 </body>
