@@ -11,10 +11,11 @@
 <html>
 <head>
     <title>Milestone Based projects - Indicators report (step 1)</title>
+    <meta charset="utf-8">
 </head>
 
 <body>
-<form action="report.php" method="post">
+<form action="step2.php" method="post">
 
     <fieldset>
         <legend>Specify your Assembla credentials</legend>

@@ -11,6 +11,7 @@ require_once("../core/AssemblaConnector.php");
 $conn = new AssemblaConnector($_POST['key'], $_POST['secret'], $_POST['project']);
 
 $statuses = json_decode($conn->getSpaceStatuses());
+$users = json_decode($conn->getSpaceMembers());
 $milestones = json_decode($conn->getMilestones(0, 1000));
 
 ?>
@@ -22,6 +23,8 @@ $milestones = json_decode($conn->getMilestones(0, 1000));
 </head>
 
 <body>
+
+
 <h1>Specify report details</h1>
 
 <form action="report.php" method="post">
@@ -29,6 +32,7 @@ $milestones = json_decode($conn->getMilestones(0, 1000));
     <input type="hidden" name="key" value="<?php echo $_POST['key']; ?>">
     <input type="hidden" name="secret" value="<?php echo $_POST['secret']; ?>">
     <input type="hidden" name="project" value="<?php echo $_POST['project']; ?>">
+
 
     <fieldset>
         <legend>Specify the "delivered" statuses</legend>

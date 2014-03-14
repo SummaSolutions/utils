@@ -133,6 +133,16 @@ class AssemblaConnector
         return $this->callAssembla($url);
     }
 
+    public function getSpaceMembers()
+    {
+
+        $url = '/users';
+        $resp = $this->callAssembla($url);
+        return $resp;
+
+
+    }
+
     /**
      * Make a call to Assembla's API, utilizing cUrl and the user/key.
      * @param $url
