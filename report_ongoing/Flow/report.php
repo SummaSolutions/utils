@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Milestone Based Project - Indicator report</title>
+    <title>Flow Based Project - Indicator report</title>
     <meta charset="utf-8">
 </head>
 
@@ -25,7 +25,14 @@ if (trim($_POST['exceptions']) != '') {
 }
 
 $analyzer = new FLowAnalyzer($_POST['key'], $_POST['secret'], $_POST['project'], $exceptions);
-$analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo']);
+
+$users = null;
+if( !isset($_POST['skipUserValidation']))
+{
+    $users =  $_POST['users'];
+}
+
+$analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
 
 ?>
 

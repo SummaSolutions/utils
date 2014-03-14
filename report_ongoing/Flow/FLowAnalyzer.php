@@ -10,13 +10,17 @@ require_once('../core/TicketsAnalyzer.php');
 
 class FLowAnalyzer extends TicketsAnalyzer
 {
+
+    private $_users;
+
     /**
      * Analyze the specified period.
      * @param $from
      * @param $to
      */
-    function analyzePeriod($from, $to)
+    function analyzePeriod($from, $to, $users)
     {
+        $this->_users = $users;
         $this->filterTickets($from, $to);
         $this->calculateTicketResults();
     }
@@ -52,15 +56,41 @@ class FLowAnalyzer extends TicketsAnalyzer
     private function processTicket($from, $to, $ticket)
     {
         $ticketDate = strtotime($ticket->completed_date);
-
         $fromDate = strtotime($from);
         $toDate = strtotime($to);
 
         if (($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
-            !$this->ticketIsInExceptionList($ticket)
+            !$this->ticketIsInExceptionList($ticket) &&
+            $this->isTicketRelatedToProperUsers($ticket)
         ) {
+
             $this->_completedTickets[] = $ticket;
         }
+    }
+
+
+    /*
+     * Verify that the ticket includes at least one of the
+     * users defined to watch.
+     */
+    private function isTicketRelatedToProperUsers($ticket)
+    {
+        if( is_null($this->_users))
+        {
+            return true;
+        }
+
+        $comments = json_decode($this->_conn->getTicketComments($ticket->number));
+
+        foreach ($comments as $comment)
+        {
+            if( in_array($comment->user_id, $this->_users))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
