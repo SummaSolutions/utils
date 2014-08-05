@@ -12,7 +12,7 @@ $conn = new AssemblaConnector($_POST['key'], $_POST['secret'], $_POST['project']
 
 $statuses = json_decode($conn->getSpaceStatuses());
 $users = json_decode($conn->getSpaceMembers());
-$milestones = json_decode($conn->getMilestones(0, 1000));
+$milestones = json_decode($conn->getMilestones(0, 100));
 
 ?>
 
@@ -20,6 +20,7 @@ $milestones = json_decode($conn->getMilestones(0, 1000));
 <html>
 <head>
     <title>Milestone Based projects - Indicators report (step 2)</title>
+    <meta charset="utf-8">
 </head>
 
 <body>

@@ -106,9 +106,24 @@ class AssemblaConnector
 
         $url = '/milestones/all.json?page=' . $page . '&per_page=' . $pageSize;
 
-        return $this->callAssembla($url);
+        $milestones = $this->callAssembla($url);
+
+        return $milestones;
 
     }
+
+    public function getTicketByNumber($number)
+    {
+
+        $url = '/tickets/' . $number;
+
+        $ticket = json_decode($this->callAssembla($url));
+
+        return $ticket;
+
+    }
+
+
 
     /**
      * Get milestones.

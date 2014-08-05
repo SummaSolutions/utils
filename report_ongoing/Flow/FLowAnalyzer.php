@@ -20,6 +20,8 @@ class FLowAnalyzer extends TicketsAnalyzer
      */
     function analyzePeriod($from, $to, $users)
     {
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+
         $this->_users = $users;
         $this->filterTickets($from, $to);
         $this->calculateTicketResults();
@@ -34,16 +36,16 @@ class FLowAnalyzer extends TicketsAnalyzer
      */
     private function filterTickets($from, $to)
     {
-
         // Fetch all tickets for the space.
         $tickets = $this->_dataCollector->getAllTickets();
 
         foreach ($tickets as $ticket) {
 
-            if (!is_null($ticket->completed_date)) {
-
-                $this->processTicket($from, $to, $ticket);
-            }
+            $this->processTicket(
+                $from,
+                $to,
+                $ticket,
+                is_null($ticket->completed_date));
         }
     }
 
@@ -53,23 +55,58 @@ class FLowAnalyzer extends TicketsAnalyzer
      * @param $to
      * @param $ticket
      */
-    private function processTicket($from, $to, $ticket)
+    private function processTicket($from, $to, $ticket, $isPending = false)
     {
+
+        if( $isPending){
+            $this->processPending($from, $to, $ticket);
+        }
+        else{
+            $this->processCompleted($from, $to, $ticket);
+        }
+    }
+
+    /**
+     * Process the ticket that are completed. Consider the right date, and
+     * the exception list.
+     * @param $from
+     * @param $to
+     * @param $ticket
+     */
+    private function processCompleted($from, $to, $ticket){
+
         $ticketDate = strtotime($ticket->completed_date);
         $fromDate = strtotime($from);
         $toDate = strtotime($to);
 
-        if (($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
+        if ( ($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
             !$this->ticketIsInExceptionList($ticket) &&
             $this->isTicketRelatedToProperUsers($ticket)
         ) {
-
             $this->_completedTickets[] = $ticket;
         }
     }
 
+    /**
+     * Pending tickets. Consider the creation date, and the user.
+     * @param $from
+     * @param $to
+     * @param $ticket
+     */
+    private function processPending($from, $to, $ticket){
 
-    /*
+        $ticketDate =  strtotime($ticket->created_on);
+        $fromDate = strtotime($from);
+        $toDate = strtotime($to);
+
+        if( ($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
+            $this->isTicketRelatedToProperUsers($ticket)){
+
+            $this->_pendingTickets[] = $ticket;
+        }
+    }
+
+    /**
      * Verify that the ticket includes at least one of the
      * users defined to watch.
      */

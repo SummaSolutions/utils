@@ -3,6 +3,26 @@
 <head>
     <title>Milestone Based Project - Indicator report</title>
     <meta charset="utf-8">
+    <style>
+
+        table,td
+        {
+            border:1px solid black;
+            text-align: right;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        tfoot,th
+        {
+            text-align: left;
+            font-weight: bold;
+            background-color: #666666;
+            color: #dddddd;
+            font-size: 100%;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -41,16 +61,16 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 
 <h3>Completed Tickets</h3>
 
-<table border="1">
+<table>
     <tr>
-        <th>Ticket number</th>
+        <th>#</th>
         <th>Summary</th>
-        <th>Completed date</th>
-        <th>Estimated (hours)</th>
-        <th>Invested (hours)</th>
+        <th>Finished</th>
+        <th>Estimated</th>
+        <th>Invested</th>
         <th>Work Ratio</th>
-        <th>Deviation (hours)</th>
-        <th>Error Percentage</th>
+        <th>Deviation</th>
+        <th>Error(%)</th>
         <th>Status</th>
     </tr>
     <?php
@@ -63,14 +83,14 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
         echo '>';
 
         echo '<td>' . $ticket->number . '</td>';
-        echo '<td>' . $ticket->summary . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
         echo '<td>' . $ticket->estimate . '</td>';
         echo '<td>' . number_format($ticket->total_invested_hours, 2) . '</td>';
         echo '<td>' . number_format($ticket->workRatio, 2)  . '%</td>';
         echo '<td>' . number_format($ticket->deviation, 2) . '</td> ';
         echo '<td>' . number_format($ticket->errorPercentage, 2) . '%</td>';
-        echo '<td>' . $ticket->status . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
@@ -83,7 +103,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 
 <table border="1">
     <tr>
-        <th>Ticket number</th>
+        <th>#</th>
         <th>Summary</th>
         <th>Status</th>
     </tr>
@@ -91,8 +111,8 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     foreach ($analyzer->getIncompleteTickets() as $ticket) {
         echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
-        echo '<td>' . $ticket->summary . '</td>';
-        echo '<td>' . $ticket->status . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
@@ -105,7 +125,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 
 <table border="1">
     <tr>
-        <th>Ticket number</th>
+        <th>#</th>
         <th>Summary</th>
         <th>Current Milestone</th>
         <th>Status</th>
@@ -114,9 +134,9 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     foreach ($analyzer->getDeferredTickets() as $ticket) {
         echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
-        echo '<td>' . $ticket->summary . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->currentMilestone . '</td>';
-        echo '<td>' . $ticket->status . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
@@ -129,7 +149,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 
 <table border="1">
     <tr>
-        <th>Ticket number</th>
+        <th>#</th>
         <th>Summary</th>
         <th>Status</th>
     </tr>
@@ -137,8 +157,8 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     foreach ($analyzer->getExcludedTickets() as $ticket) {
         echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
-        echo '<td>' . $ticket->summary . '</td>';
-        echo '<td>' . $ticket->status . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
+        echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
@@ -149,10 +169,6 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 
 <h2>Milestone Indicators</h2><br>
 
-<h3>Average deviation (hours): <?php echo number_format($analyzer->getAvgDeviation(), 2); ?></h3>
-<br>
-<h3>Average Error Percentage: <?php echo number_format($analyzer->getAvgErrorPercentage(), 2); ?>%</h3>
-<br>
 <h3>General Work Ratio: <?php echo number_format($analyzer->getGeneralWorkRatio(), 2); ?>%</h3>
 <br>
 

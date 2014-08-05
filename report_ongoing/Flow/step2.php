@@ -16,7 +16,7 @@ $users = json_decode($conn->getSpaceMembers());
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Flow Based projects - Indicators report - Step 2)</title>
+    <title>Flow Based projects - Indicators report - Step 2</title>
     <meta charset="utf-8">
 </head>
 

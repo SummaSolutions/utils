@@ -11,6 +11,7 @@
 <html>
 <head>
     <title>Ongoing projects - Indicators report (step 1)</title>
+    <meta charset="utf-8">
 </head>
 
 <body>

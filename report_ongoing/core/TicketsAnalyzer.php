@@ -15,14 +15,34 @@ class TicketsAnalyzer {
     protected $_conn;
     protected $_dataCollector;
     protected $_completedTickets;
-    protected $_avgDeviation;
+    protected $_pendingTickets;
     protected $_avgErrorPercentage;
     protected $_generalWorkRatio;
     protected $_excludedTickets;
+    protected $_totalPonderatedDeviation;
+    protected $_totalDeviation;
+    protected $_totalInvestedHours;
+    protected $_totalEstimatedHours;
+    protected $_totalPonderation;
+
+    const EPIC = 3;
+
+    public function getTotalPonderation(){
+        return $this->_totalPonderation;
+    }
+
+    public function getTotalEstimatedHours(){
+        return $this->_totalEstimatedHours;
+    }
 
     public function getCompletedTickets()
     {
         return $this->_completedTickets;
+    }
+
+    public function getPendingTickets()
+    {
+        return $this->_pendingTickets;
     }
 
     public function getExcludedTickets()
@@ -34,9 +54,19 @@ class TicketsAnalyzer {
         return $this->_exceptionsList;
     }
 
-    public function getAvgDeviation()
+    public function getTotalPonderatedDeviation()
     {
-        return $this->_avgDeviation;
+        return $this->_totalPonderatedDeviation;
+    }
+
+    public function getTotalInvestedHours()
+    {
+        return $this->_totalInvestedHours;
+    }
+
+    public function getTotalDeviation()
+    {
+        return $this->_totalDeviation;
     }
 
     public function getAvgErrorPercentage()
@@ -54,6 +84,14 @@ class TicketsAnalyzer {
         $this->_dataCollector = new DataCollector($key, $secret, $space);
         $this->_exceptionsList = $exceptions;
         $this->_excludedTickets = array();
+        $this->_pendingTickets = array();
+        $this->_completedTickets = array();
+
+    }
+
+
+    function getTicketByNumber($number){
+        return $this->_conn->getTicketByNumber($number);
     }
 
     /**
@@ -61,26 +99,43 @@ class TicketsAnalyzer {
      */
     protected function calculateTicketResults()
     {
-        $totalDeviation = 0;
-        $totalPercentage = 0;
         $totalInvested = 0;
         $totalEstimated = 0;
+        $totalPonderatedDeviation = 0;
+        $this->_totalDeviation = 0;
+        $this->_totalInvestedHours = 0;
+        $this->_totalPonderation = 0;
+        $this->_totalEstimatedHours = 0;
 
+
+        // First loop. Measure totals
         foreach ($this->_completedTickets as $ticket) {
 
             $this->calculate($ticket);
-
-            $totalDeviation += $ticket->deviation;
-            $totalPercentage += $ticket->errorPercentage;
             $totalInvested += $ticket->total_invested_hours;
             $totalEstimated += $ticket->total_estimate;
+            $this->_totalDeviation += $ticket->deviation;
+
+            $ticketDate = strtotime($ticket->completed_date);
+            $ticket->completed_date = date('d/m/Y', $ticketDate);
         }
 
-        $this->_avgDeviation = $totalDeviation / count($this->_completedTickets);
-        $this->_avgErrorPercentage = $totalPercentage / count($this->_completedTickets);
-        $this->_generalWorkRatio = ($totalInvested / $totalEstimated) * 100;
-    }
+        // Second loop. Calculate ponderations.
+        foreach ($this->_completedTickets as $ticket) {
 
+            $ticket->ponderation = ($ticket->total_invested_hours / $totalInvested) * 100;
+            $this->_totalPonderation += $ticket->ponderation;
+            $ticket->ponderated_deviation = ($ticket->deviation * $ticket->ponderation) / 100;
+            $totalPonderatedDeviation += $ticket->ponderated_deviation;
+        }
+
+        if( count($this->_completedTickets) > 0){
+            $this->_totalPonderatedDeviation = $totalPonderatedDeviation;
+            $this->_generalWorkRatio = ($totalInvested / $totalEstimated) * 100;
+            $this->_totalInvestedHours = $totalInvested;
+            $this->_totalEstimatedHours = $totalEstimated;
+        }
+    }
 
     /**
      * Verify if the received ticket is in the exception
@@ -107,7 +162,7 @@ class TicketsAnalyzer {
      */
     protected function calculate($ticket)
     {
-        if ($ticket->hierarchy_type != 3) {
+        if ($ticket->hierarchy_type != TicketsAnalyzer::EPIC) {
 
             $ticket->deviation = abs($ticket->estimate - $ticket->total_invested_hours);
 

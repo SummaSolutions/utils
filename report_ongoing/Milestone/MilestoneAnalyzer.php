@@ -75,6 +75,7 @@ class MilestoneAnalyzer extends TicketsAnalyzer
      */
     public function AnalyzeMilestone($targetMilestoneID)
     {
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
         $this->_milestone = json_decode($this->_conn->getMilestone($targetMilestoneID));
         $this->analyzeTickets($targetMilestoneID);
         $this->calculateResults();
@@ -137,7 +138,6 @@ class MilestoneAnalyzer extends TicketsAnalyzer
     {
         if ($this->ticketDidBelongToMilestone($ticket)
         ) {
-
             $this->_deferredTickets[] = $ticket;
         }
     }
@@ -154,6 +154,10 @@ class MilestoneAnalyzer extends TicketsAnalyzer
 
         // Get the ticket comments.
         $comments = json_decode($this->_conn->getTicketComments($ticket->number));
+
+        if( !isset($comments)){
+            return false;
+        }
 
         foreach ($comments as $comment) {
 
