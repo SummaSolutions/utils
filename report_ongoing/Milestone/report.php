@@ -30,6 +30,7 @@
 <?php
 
 require_once('MilestoneAnalyzer.php');
+require_once("../core/misc.php");
 
 if (trim($_POST['exceptions']) != '') {
     $exceptions = explode(',', $_POST['exceptions']);
@@ -64,6 +65,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 <table>
     <tr>
         <th>#</th>
+        <th>Plan Level</th>
         <th>Summary</th>
         <th>Finished</th>
         <th>Estimated</th>
@@ -77,24 +79,25 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     foreach ($analyzer->getCompletedTickets() as $ticket) {
 
         echo '<tr';
-        if( $ticket->isEpic){
-            echo ' bgcolor = "#2CFFA5" title="This is an Epic" ';
-        }
+        echo alterTr($ticket);
         echo '>';
 
         echo '<td>' . $ticket->number . '</td>';
+        echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
+
         echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
         echo '<td>' . $ticket->total_estimate . '</td>';
-        echo '<td>' . number_format($ticket->total_invested_hours, 2) . '</td>';
-        echo '<td>' . number_format($ticket->workRatio, 2)  . '%</td>';
-        echo '<td>' . number_format($ticket->deviation, 2) . '</td> ';
-        echo '<td>' . number_format($ticket->errorPercentage, 2) . '%</td>';
+        echo '<td>' . formatValue($ticket->total_invested_hours) . '</td>';
+        echo '<td>' . formatValue($ticket->workRatio)  . '</td>';
+        echo '<td>' . formatValue($ticket->deviation) . '</td> ';
+        echo '<td>' . formatValue($ticket->errorPercentage) . '</td>';
         echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
 </table>
+
 <h4>Total completed tickets:<?php echo count($analyzer->getCompletedTickets()); ?></h4>
 
 <br>
@@ -104,6 +107,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 <table border="1">
     <tr>
         <th>#</th>
+        <th>Plan Level</th>
         <th>Summary</th>
         <th>Status</th>
     </tr>
@@ -111,6 +115,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     foreach ($analyzer->getIncompleteTickets() as $ticket) {
         echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
+        echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
@@ -126,6 +131,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 <table border="1">
     <tr>
         <th>#</th>
+        <th>Plan Level</th>
         <th>Summary</th>
         <th>Current Milestone</th>
         <th>Status</th>
@@ -134,6 +140,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     foreach ($analyzer->getDeferredTickets() as $ticket) {
         echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
+        echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->currentMilestone . '</td>';
         echo '<td  style="text-align: left">' . $ticket->status . '</td>';
@@ -150,6 +157,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 <table border="1">
     <tr>
         <th>#</th>
+        <th>Plan Level</th>
         <th>Summary</th>
         <th>Status</th>
     </tr>
@@ -157,6 +165,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
     foreach ($analyzer->getExcludedTickets() as $ticket) {
         echo '</tr>';
         echo '<td>' . $ticket->number . '</td>';
+        echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
@@ -169,14 +178,30 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 
 <h2>Milestone Indicators</h2><br>
 
-<h3>General Work Ratio: <?php echo number_format($analyzer->getGeneralWorkRatio(), 2); ?>%</h3>
-<br>
+<table>
+    <tr>
+        <th>Indicator</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td style="text-align: left">Commited Tickets</td>
+        <td><?php echo $analyzer->getIndicators()->ticketsTotal; ?></td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Delivered Tickets</td>
+        <td><?php echo $analyzer->getIndicators()->totalCompleted . ' (' . formatValue($analyzer->getIndicators()->completedPercentage) . ' %)'     ; ?></td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Not Delivered Tickets </td>
+        <td><?php echo $analyzer->getIndicators()->totalIncomplete . ' (' . formatValue($analyzer->getIndicators()->incompletePercentage) .' %)'; ?></td>
+    </tr>
+    <tr>
+       <td style="text-align: left">General Work Ratio</td>
+       <td><?php echo formatValue($analyzer->getGeneralWorkRatio()); ?>%</td>
+    </tr>
 
-<h3>Total committed tickets: <?php echo $analyzer->getIndicators()->ticketsTotal; ?></h3><br>
-<h3>Total delivered tickets: <?php echo $analyzer->getIndicators()->totalCompleted; ?></h3>
-<h3>( <?php echo number_format($analyzer->getIndicators()->completedPercentage, 2); ?> %)</h3>
-<br>
-<h3>Total not delivered tickets: <?php echo $analyzer->getIndicators()->totalIncomplete; ?></h3>
-<h3>( <?php echo number_format($analyzer->getIndicators()->incompletePercentage, 2); ?> %)</h3>
+</table>
+
+
 </body>
 </html>

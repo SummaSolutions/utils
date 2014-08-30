@@ -232,10 +232,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
     <?php
     foreach ($analyzer->getPendingTickets() as $ticket) {
 
-        echo '<tr';
-        echo alterTr($ticket);
-        echo '>';
-
+        echo '<tr>';
         echo '<td>' . $ticket->number . '</td>';
         echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td style="text-align: left">' . $ticket->summary . '</td>';
