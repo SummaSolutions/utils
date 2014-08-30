@@ -24,8 +24,14 @@ class TicketsAnalyzer {
     protected $_totalInvestedHours;
     protected $_totalEstimatedHours;
     protected $_totalPonderation;
+    protected $_ticketsWithNoEstimation;
 
     const EPIC = 3;
+
+    public function getTotalTicketsWithNoEstimation(){
+        return $this->_ticketsWithNoEstimation;
+    }
+
 
     public function getTotalPonderation(){
         return $this->_totalPonderation;
@@ -86,6 +92,7 @@ class TicketsAnalyzer {
         $this->_excludedTickets = array();
         $this->_pendingTickets = array();
         $this->_completedTickets = array();
+        $this->_ticketsWithNoEstimation = 0;
 
     }
 
@@ -125,12 +132,22 @@ class TicketsAnalyzer {
 
             $ticket->ponderation = ($ticket->total_invested_hours / $totalInvested) * 100;
             $this->_totalPonderation += $ticket->ponderation;
-            $ticket->ponderated_deviation = ($ticket->deviation * $ticket->ponderation) / 100;
-            $totalPonderatedDeviation += $ticket->ponderated_deviation;
+
+            if( is_numeric($ticket->errorPercentage)){
+                $ticket->ponderated_deviation = ($ticket->errorPercentage * $ticket->ponderation) / 100;
+                $totalPonderatedDeviation += $ticket->ponderated_deviation;
+            }
+            else{
+                $ticket->ponderated_deviation = "n/a";
+            }
         }
 
         if( count($this->_completedTickets) > 0){
-            $this->_totalPonderatedDeviation = $totalPonderatedDeviation;
+
+            if( is_numeric($totalPonderatedDeviation)){
+                $this->_totalPonderatedDeviation = $totalPonderatedDeviation;
+            }
+
             $this->_generalWorkRatio = ($totalInvested / $totalEstimated) * 100;
             $this->_totalInvestedHours = $totalInvested;
             $this->_totalEstimatedHours = $totalEstimated;
@@ -164,15 +181,16 @@ class TicketsAnalyzer {
     {
         if ($ticket->hierarchy_type != TicketsAnalyzer::EPIC) {
 
-            $ticket->deviation = abs($ticket->estimate - $ticket->total_invested_hours);
+            $ticket->deviation = abs($ticket->total_estimate - $ticket->total_invested_hours);
 
             if($ticket->total_estimate > 0){
                 $ticket->errorPercentage = ($ticket->deviation / $ticket->total_estimate) * 100;
-                $ticket->workRatio = ($ticket->total_invested_hours / $ticket->estimate) * 100;
+                $ticket->workRatio = ($ticket->total_invested_hours / $ticket->total_estimate) * 100;
             }
             else{
-                $ticket->errorPercentage = 100;
-                $ticket->workRatio = 1000;
+                $ticket->errorPercentage = "n/a";
+                $ticket->workRatio = "n/a";
+                $this->_ticketsWithNoEstimation++;
             }
 
             $ticket->isEpic = false;
@@ -180,9 +198,9 @@ class TicketsAnalyzer {
         } else {
 
             $ticket->isEpic = true;
-            $ticket->deviation = 0;
-            $ticket->errorPercentage = 0;
-            $ticket->workRatio = 0;
+            $ticket->deviation = "n/a";
+            $ticket->errorPercentage = "n/a";
+            $ticket->workRatio = "n/a";
         }
     }
 

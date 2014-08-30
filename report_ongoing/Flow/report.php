@@ -71,14 +71,16 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
 <table>
     <tr>
         <th>#</th>
+        <th>Plan Level</th>
         <th>Summary</th>
         <th>Finished</th>
         <th>Estimated</th>
         <th>Invested</th>
         <th>Work Ratio</th>
-        <th>Deviation</th>
+        <th>Deviation (hours)</th>
+        <th>Absolute error (%)</th>
         <th>Ticket Ponderation</th>
-        <th>Ponderated Deviation</th>
+        <th>Ponderated error</th>
         <th>Status</th>
     </tr>
     <?php
@@ -87,16 +89,17 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
         echo '<tr';
         echo alterTr($ticket);
         echo '>';
-
         echo '<td>' . $ticket->number . '</td>';
+        echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
-        echo '<td>' . $ticket->estimate . '</td>';
+        echo '<td>' . $ticket->total_estimate . '</td>';
         echo '<td>' . $ticket->total_invested_hours . '</td>';
-        echo '<td>' . number_format($ticket->workRatio, 2) . '%</td>';
-        echo '<td>' . number_format($ticket->deviation, 2) . '</td>';
-        echo '<td>' . number_format($ticket->ponderation, 2) . '</td>';
-        echo '<td>' . number_format($ticket->ponderated_deviation, 2) . '</td>';
+        echo '<td>' . formatValue($ticket->workRatio) . '</td>';
+        echo '<td>' . formatValue($ticket->deviation) . '</td>';
+        echo '<td>' . formatValue($ticket->errorPercentage) . '</td>';
+        echo '<td>' . formatValue($ticket->ponderation) . '</td>';
+        echo '<td>' . formatValue($ticket->ponderated_deviation) . '</td>';
         echo '<td style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
@@ -109,12 +112,14 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
         echo '<td>Totals</td>';
         echo '<td></td>';
         echo '<td></td>';
-        echo '<td>' . number_format($analyzer->getTotalEstimatedHours(),2) . '</td>';
-        echo '<td>' . number_format($analyzer->getTotalInvestedHours(),2) . '</td>';
-        echo '<td>' . number_format($analyzer->getGeneralWorkRatio(), 2) . '%</td>';
-        echo '<td>' . number_format($analyzer->getTotalDeviation(), 2). '</td>';
-        echo '<td>' . number_format($analyzer->getTotalPonderation(), 2) . '</td>';
-        echo '<td>' . number_format($analyzer->getTotalPonderatedDeviation(), 2) . '</td>';
+        echo '<td></td>';
+        echo '<td>' . formatValue($analyzer->getTotalEstimatedHours()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getTotalInvestedHours()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getGeneralWorkRatio()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getTotalDeviation()). '</td>';
+        echo '<td></td>';
+        echo '<td>' . formatValue($analyzer->getTotalPonderation()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getTotalPonderatedDeviation()) . '</td>';
         echo '<td></td>';
 
         ?>
@@ -131,6 +136,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
 <table border="1">
     <tr>
         <th>#</th>
+        <th>Plan Level</th>
         <th>Summary</th>
         <th>Status</th>
     </tr>
@@ -138,6 +144,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
     foreach ($analyzer->getExcludedTickets() as $ticket) {
         echo '<tr>';
         echo '<td>' . $ticket->number . '</td>';
+        echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td>' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->status . '</td>';
         echo '</tr>';
@@ -146,26 +153,76 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
 </table>
 <h4>Total excluded tickets:<?php echo count($analyzer->getExcludedTickets()); ?></h4>
 
-<br><br>
-<h2>Period Indicators</h2>
+<h2>Period Indicators (considers completed tickets)</h2>
 <br>
-<h3>Total delivered tickets: <?php echo count($analyzer->getCompletedTickets()); ?></h3>
-<br>
-<h3>Total invested hours (in the delivered tickets): <?php echo $analyzer->getTotalInvestedHours(); ?></h3>
-<br>
-<h3>Total deviation (hours): <?php echo $analyzer->getTotalDeviation(); ?></h3>
-<br>
-<h3>Ponderated deviation: <?php echo number_format($analyzer->getTotalPonderatedDeviation(), 2); ?></h3>
-<br>
-<h3>General Work Ratio: <?php echo number_format($analyzer->getGeneralWorkRatio(), 2); ?>%</h3>
-<br>
-<br>
+
+<table>
+
+    <tr>
+        <th>Indicator</th>
+        <th>value</th>
+    </tr>
+
+
+    <tr>
+        <td style="text-align: left">Tickets without estimation</td>
+        <td><?php echo $analyzer->getTotalTicketsWithNoEstimation(); ?></td>
+    </tr>
+
+
+    <tr>
+        <td style="text-align: left">Completed tickets</td>
+        <td><?php echo count($analyzer->getCompletedTickets()); ?></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">Estimated time</td>
+        <td><?php echo formatValue($analyzer->getTotalEstimatedHours()); ?></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">Invested hours</td>
+        <td><?php echo $analyzer->getTotalInvestedHours(); ?></td>
+    </tr>
+
+
+    <tr>
+        <td style="text-align: left">Perceived deviation (hours)</td>
+        <td><?php echo formatValue($analyzer->getTotalInvestedHours() - $analyzer->getTotalEstimatedHours()) ; ?></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">Perceived error (%)</td>
+        <td><?php echo formatValue( (($analyzer->getTotalInvestedHours() - $analyzer->getTotalEstimatedHours())  /
+                                     $analyzer->getTotalEstimatedHours()) * 100) ; ?></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">Absolute deviation (hours)</td>
+        <td><?php echo $analyzer->getTotalDeviation(); ?></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">Ponderated error</td>
+        <td><?php echo formatValue($analyzer->getTotalPonderatedDeviation(), 2); ?></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">General Work Ratio</td>
+        <td><?php echo formatValue($analyzer->getGeneralWorkRatio(), 2); ?></td>
+    </tr>
+
+
+</table>
+
+
 
 <h3>Ticket created in the period that are not completed: <?php echo count($analyzer->getPendingTickets()); ?></h3>
 
 <table border="1">
     <tr>
         <th>#</th>
+        <th>Plan Level</th>
         <th>Summary</th>
         <th>Creation Date</th>
         <th>Estimated</th>
@@ -180,9 +237,10 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
         echo '>';
 
         echo '<td>' . $ticket->number . '</td>';
+        echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->created_on . '</td>';
-        echo '<td>' . $ticket->estimate . '</td>';
+        echo '<td>' . $ticket->total_estimate . '</td>';
         echo '<td>' . $ticket->total_invested_hours . '</td>';
         echo '<td style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';

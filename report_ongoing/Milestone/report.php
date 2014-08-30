@@ -85,7 +85,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
         echo '<td>' . $ticket->number . '</td>';
         echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
-        echo '<td>' . $ticket->estimate . '</td>';
+        echo '<td>' . $ticket->total_estimate . '</td>';
         echo '<td>' . number_format($ticket->total_invested_hours, 2) . '</td>';
         echo '<td>' . number_format($ticket->workRatio, 2)  . '%</td>';
         echo '<td>' . number_format($ticket->deviation, 2) . '</td> ';
