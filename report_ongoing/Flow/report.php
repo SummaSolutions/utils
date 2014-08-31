@@ -188,13 +188,12 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
 
     <tr>
         <td style="text-align: left">Perceived deviation (hours)</td>
-        <td><?php echo formatValue($analyzer->getTotalInvestedHours() - $analyzer->getTotalEstimatedHours()) ; ?></td>
+        <td><?php echo formatValue($analyzer->getPerceivedDeviation()) ; ?></td>
     </tr>
 
     <tr>
         <td style="text-align: left">Perceived error (%)</td>
-        <td><?php echo formatValue( (($analyzer->getTotalInvestedHours() - $analyzer->getTotalEstimatedHours())  /
-                                     $analyzer->getTotalEstimatedHours()) * 100) ; ?></td>
+        <td><?php echo formatValue($analyzer->getPerceivedError()) ; ?></td>
     </tr>
 
     <tr>
@@ -230,6 +229,7 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
         <th>Status</th>
     </tr>
     <?php
+
     foreach ($analyzer->getPendingTickets() as $ticket) {
 
         echo '<tr>';
@@ -244,9 +244,9 @@ $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
     }
     ?>
 
-
-
 </table>
+
+<h4>Total time invested in incomplete tickets: <?php echo $analyzer->getIncompleteTicketsInvestedHours(); ?></h4>
 
 </body>
 

@@ -59,6 +59,21 @@ class MilestoneAnalyzer extends TicketsAnalyzer
         return $this->_incompleteTickets;
     }
 
+    function getIncompleteTicketsInvestedHours()
+    {
+        $total = 0;
+        foreach ($this->_incompleteTickets as $ticket) {
+
+            $total += $ticket->total_invested_hours;
+
+        }
+
+        return $total;
+
+    }
+
+
+
     public function getDeferredTickets()
     {
         return $this->_deferredTickets;

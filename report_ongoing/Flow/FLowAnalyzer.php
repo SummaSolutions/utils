@@ -13,6 +13,29 @@ class FLowAnalyzer extends TicketsAnalyzer
 
     private $_users;
 
+
+    function getPerceivedDeviation()
+    {
+
+        return $this->getTotalInvestedHours() - $this->getTotalEstimatedHours();
+
+    }
+
+    function getPerceivedError()
+    {
+
+        if($this->getTotalEstimatedHours() > 0){
+
+            return ($this->getPerceivedDeviation() / $this->getTotalEstimatedHours()) * 100;
+        }
+        else{
+            return "n/a";
+        }
+
+
+    }
+
+
     /**
      * Analyze the specified period.
      * @param $from

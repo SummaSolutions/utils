@@ -33,6 +33,7 @@ class TicketsAnalyzer {
     }
 
 
+
     public function getTotalPonderation(){
         return $this->_totalPonderation;
     }
@@ -94,6 +95,31 @@ class TicketsAnalyzer {
         $this->_completedTickets = array();
         $this->_ticketsWithNoEstimation = 0;
 
+    }
+
+    function getIncompleteTicketsInvestedHours()
+    {
+        $total = 0;
+        foreach ($this->_pendingTickets as $ticket) {
+
+            $total += $ticket->total_invested_hours;
+
+        }
+
+        return $total;
+
+    }
+
+    function getCompleteTicketsInvestedHours()
+    {
+        $total = 0;
+        foreach ($this->_completedTickets as $ticket) {
+
+            $total += $ticket->total_invested_hours;
+
+        }
+
+        return $total;
     }
 
 

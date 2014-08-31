@@ -99,6 +99,7 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
 </table>
 
 <h4>Total completed tickets:<?php echo count($analyzer->getCompletedTickets()); ?></h4>
+<h4>Total time invested in complete tickets: <?php echo $analyzer->getcompleteTicketsInvestedHours(); ?></h4>
 
 <br>
 
@@ -109,6 +110,8 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
         <th>#</th>
         <th>Plan Level</th>
         <th>Summary</th>
+        <th>Estimated</th>
+        <th>Invested</th>
         <th>Status</th>
     </tr>
     <?php
@@ -117,12 +120,16 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone']);
         echo '<td>' . $ticket->number . '</td>';
         echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
         echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
+        echo '<td>' . $ticket->total_estimate . '</td>';
+        echo '<td>' . $ticket->total_invested_hours . '</td>';
         echo '<td  style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
 </table>
 <h4>Total incomplete tickets:<?php echo count($analyzer->getIncompleteTickets()); ?></h4>
+<h4>Total time invested in incomplete tickets: <?php echo $analyzer->getIncompleteTicketsInvestedHours(); ?></h4>
+
 
 <br>
 
