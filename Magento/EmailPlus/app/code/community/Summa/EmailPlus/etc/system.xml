@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!-- Remove this file if your module does not have a system configuration interface -->
+<config>
+    <sections>
+        <system>
+            <groups>
+                <emailplus translate="label">
+                    <label>Mail Sending Plus</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>25</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment>Overrides Magento's default email "send" method from within the Mage_Core_Model_Email_Template class. Allows you to use any email server that supports SMTP to send emails in place of built in email server on your web host.</comment>
+                    <fields>
+                        <enable translate="label">
+                            <label>Use this SMTP server for email sending</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <auth translate="label">
+                            <label>Authentication method</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_smtpauth</source_model>
+                            <sort_order>20</sort_order>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </auth>
+                        <ssl translate="label">
+                            <label>SSL type</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssl>
+                        <host translate="label">
+                            <label>SMTP host</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </host>
+                        <port translate="label">
+                            <label>Port</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </port>
+                        <username translate="label">
+                            <label>Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </username>
+                        <password translate="label">
+                            <label>Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>70</sort_order>
+                            <depends>
+                                <enable>1</enable>
+                            </depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </password>
+                        <route_emails translate="label">
+                            <label>Enable Email Rounting?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Send all emails to one single emails despite of the receipt</comment>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </route_emails>
+                        <route_email_address>
+                            <label>Route email address receipt</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <validate>validate-email</validate>
+                            <depends>
+                                <route_emails>1</route_emails>
+                            </depends>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </route_email_address>
+                    </fields>
+                </emailplus>
+            </groups>
+        </system>
+    </sections>
+</config>
