@@ -32,6 +32,14 @@
 require_once('MilestoneAnalyzer.php');
 require_once("../core/misc.php");
 
+
+if( !isset($_POST["plan"])){
+    echo "You have selected no plan level at all. Nothing to do!";
+    die;
+}
+
+
+
 if (trim($_POST['exceptions']) != '') {
     $exceptions = explode(',', $_POST['exceptions']);
 } else {
@@ -45,7 +53,7 @@ $analyzer = new MilestoneAnalyzer(
     $_POST['status'],
     $exceptions);
 
-$analyzer->AnalyzeMilestone((int)$_POST['milestone']);
+$analyzer->AnalyzeMilestone((int)$_POST['milestone'], $_POST["plan"]);
 
 ?>
 

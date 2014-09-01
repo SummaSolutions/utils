@@ -41,12 +41,12 @@ class FLowAnalyzer extends TicketsAnalyzer
      * @param $from
      * @param $to
      */
-    function analyzePeriod($from, $to, $users)
+    function analyzePeriod($from, $to, $planLevels, $users)
     {
         date_default_timezone_set('America/Argentina/Buenos_Aires');
 
         $this->_users = $users;
-        $this->filterTickets($from, $to);
+        $this->filterTickets($from, $to, $planLevels);
         $this->calculateTicketResults();
     }
 
@@ -57,18 +57,21 @@ class FLowAnalyzer extends TicketsAnalyzer
      * @param $to
      * @return array
      */
-    private function filterTickets($from, $to)
+    private function filterTickets($from, $to, $planLevels)
     {
         // Fetch all tickets for the space.
         $tickets = $this->_dataCollector->getAllTickets();
 
         foreach ($tickets as $ticket) {
 
-            $this->processTicket(
-                $from,
-                $to,
-                $ticket,
-                is_null($ticket->completed_date));
+            if( in_array($ticket->hierarchy_type, $planLevels)){
+
+                $this->processTicket(
+                    $from,
+                    $to,
+                    $ticket,
+                    is_null($ticket->completed_date));
+            }
         }
     }
 

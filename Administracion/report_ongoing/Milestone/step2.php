@@ -34,6 +34,22 @@ $milestones = json_decode($conn->getMilestones(0, 100));
     <input type="hidden" name="secret" value="<?php echo $_POST['secret']; ?>">
     <input type="hidden" name="project" value="<?php echo $_POST['project']; ?>">
 
+    Select the milestone:
+    <select name="milestone">
+        <?php
+        foreach ($milestones as $milestone) {
+            echo '<option value="' . $milestone->id . '">' . $milestone->title . '</option>';
+        }
+        ?>
+    </select>
+
+    <fieldset>
+        <legend>Plan Levels to consider</legend>
+        <input type="checkbox"  name="plan[]" value="0">No Plan Level<br>
+        <input type="checkbox"  name="plan[]" value="1">Subtask<br>
+        <input type="checkbox" checked name="plan[]" value="2">Story<br>
+        <input type="checkbox"  name="plan[]" value="3">Epic<br>
+    </fieldset>
 
     <fieldset>
         <legend>Specify the "delivered" statuses</legend>
@@ -50,14 +66,6 @@ $milestones = json_decode($conn->getMilestones(0, 100));
         <textarea name="exceptions" rows="4" cols="50"></textarea>
     </fieldset>
 
-    Select the milestone:
-    <select name="milestone">
-        <?php
-        foreach ($milestones as $milestone) {
-            echo '<option value="' . $milestone->id . '">' . $milestone->title . '</option>';
-        }
-        ?>
-    </select>
 
     <INPUT type="submit" value="Next"> <INPUT type="reset">
 </form>
