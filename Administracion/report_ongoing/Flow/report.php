@@ -55,7 +55,13 @@ if( !isset($_POST['skipUserValidation']))
     }
 }
 
-$analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $users);
+if( !isset($_POST["plan"])){
+    echo "You have selected no plan level at all. Nothing to do!";
+    die;
+}
+else{
+    $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $_POST["plan"], $users);
+}
 
 ?>
 

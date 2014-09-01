@@ -45,6 +45,16 @@ $users = json_decode($conn->getSpaceMembers());
         ?>
     </fieldset>
 
+    <fieldset>
+        <legend>Plan Levels to consider</legend>
+        <input type="checkbox"  name="plan[]" value="0">No Plan Level<br>
+        <input type="checkbox"  name="plan[]" value="1">Subtask<br>
+        <input type="checkbox" checked name="plan[]" value="2">Story<br>
+        <input type="checkbox"  name="plan[]" value="3">Epic<br>
+    </fieldset>
+
+
+
     <INPUT type="submit" value="Next">
 </form>
 

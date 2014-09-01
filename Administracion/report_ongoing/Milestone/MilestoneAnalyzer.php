@@ -88,11 +88,11 @@ class MilestoneAnalyzer extends TicketsAnalyzer
      * Analize the requested milestone
      * @param $targetMilestoneID
      */
-    public function AnalyzeMilestone($targetMilestoneID)
+    public function AnalyzeMilestone($targetMilestoneID, $planLevels)
     {
         date_default_timezone_set('America/Argentina/Buenos_Aires');
         $this->_milestone = json_decode($this->_conn->getMilestone($targetMilestoneID));
-        $this->analyzeTickets($targetMilestoneID);
+        $this->analyzeTickets($targetMilestoneID, $planLevels);
         $this->calculateResults();
         $this->calculateTicketResults();
     }
@@ -100,7 +100,7 @@ class MilestoneAnalyzer extends TicketsAnalyzer
     /**
      * @param $targetMilestoneID
      */
-    public function analyzeTickets($targetMilestoneID)
+    public function analyzeTickets($targetMilestoneID, $planLevels)
     {
         // Fetch all tickets for the space.
         $tickets = $this->_dataCollector->getAllTickets();
@@ -108,13 +108,16 @@ class MilestoneAnalyzer extends TicketsAnalyzer
         // Check each ticket.
         foreach ($tickets as $ticket) {
 
-            if (!$this->ticketIsInExceptionList($ticket)) {
+            if( in_array($ticket->hierarchy_type, $planLevels)){
 
-                if ($ticket->milestone_id == $targetMilestoneID) {
-                    $this->processTicketInMilestone($ticket);
+                if (!$this->ticketIsInExceptionList($ticket)) {
 
-                } else if ($ticket->milestone_id > $targetMilestoneID) {
-                    $this->processTicketNotInMilestone($ticket);
+                    if ($ticket->milestone_id == $targetMilestoneID) {
+                        $this->processTicketInMilestone($ticket);
+
+                    } else if ($ticket->milestone_id > $targetMilestoneID) {
+                        $this->processTicketNotInMilestone($ticket);
+                    }
                 }
             }
         }
