@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_EmailPlus>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+            </depends>
+        </Summa_EmailPlus>
+    </modules>
+</config>

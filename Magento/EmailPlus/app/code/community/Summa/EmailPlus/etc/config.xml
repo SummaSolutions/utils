@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_EmailPlus>
+            <version>0.1.0</version>
+        </Summa_EmailPlus>
+    </modules>
+    <global>
+        <models>
+            <core>
+                <rewrite>
+                    <email_template>Summa_EmailPlus_Model_Core_Email_Template</email_template>
+                </rewrite>
+            </core>
+        </models>
+    </global>
+    <default>
+        <system>
+            <emailplus>
+                <enable>0</enable>
+                <auth>LOGIN</auth>
+                <ssl>tls</ssl>
+                <host>smtp.gmail.com</host>
+                <port>25</port>
+            </emailplus>
+        </system>
+    </default>
+</config>
