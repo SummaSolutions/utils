@@ -84,6 +84,14 @@ class FLowAnalyzer extends TicketsAnalyzer
     private function processTicket($from, $to, $ticket, $isPending = false)
     {
 
+        // Adjust ticket estimation.
+        // If it is task or no plan, copy the estimate
+        // to the total estimate.
+        if( $ticket->hierarchy_type <= 1){
+            $ticket->total_estimate = $ticket->estimate;
+        }
+
+
         if( $isPending){
             $this->processPending($from, $to, $ticket);
         }

@@ -110,6 +110,15 @@ class MilestoneAnalyzer extends TicketsAnalyzer
 
             if( in_array($ticket->hierarchy_type, $planLevels)){
 
+
+                // Adjust ticket estimation.
+                // If it is task or no plan, copy the estimate
+                // to the total estimate.
+                if( $ticket->hierarchy_type <= 1){
+                    $ticket->total_estimate = $ticket->estimate;
+                }
+                
+
                 if (!$this->ticketIsInExceptionList($ticket)) {
 
                     if ($ticket->milestone_id == $targetMilestoneID) {
