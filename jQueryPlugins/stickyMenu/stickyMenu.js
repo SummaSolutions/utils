@@ -12,7 +12,6 @@
 	// Required params
     var menu;
     var title;
-    var toggle;
     var list;
     var top;
     var links;
@@ -33,16 +32,10 @@
 				if (!areLinksShown){
 					menu.addClass('open');
 					list.slideDown().fadeIn();
-					if (toggle){
-						toggle.html('-');
-					}
 					areLinksShown = true;
 				}else{
 					menu.removeClass('open');
 					list.slideUp().fadeOut();
-					if (toggle){
-						toggle.html('+');
-					}
 					areLinksShown = false;
 				}
 			}
@@ -89,15 +82,7 @@ return this;
 		errorLog += "Undefined required Title.\n";
 		errorState = true;
 	}
-	
-	// toggle
-	if (options.toggle && options.toggle != 'undefined'){
-		toggle = $(options.toggle);
-	}
-	else{
-		toggle = false;
-	}
-	
+		
 	// list
 	if (options.list && options.list != 'undefined'){
 		list = $(options.list);
@@ -146,25 +131,14 @@ return this;
     function toggleLinksFix(toggleFix){
         if (toggleFix){
             isFixed = true;
-            menu.css({'top':top,  'z-index': '9999', 'cursor' : 'pointer', 'position' : 'fixed'}).addClass('open');
+            menu.css({'top':top,  'z-index': '9999', 'cursor' : 'pointer', 'position' : 'fixed'}).addClass('sticky').removeClass('open');
             title.css('cursor', 'pointer');
-            toggle.fadeIn();
             list.slideUp().fadeOut();
-            if (toggle){
-                toggle.html('+');
-            }
             areLinksShown = false;
         }else{
             isFixed = false;
-            menu.removeAttr('style').removeClass('open');
-            if (toggle){
-                toggle.fadeOut(function(){
-                    title.removeAttr('style');
-                });
-            }
-            else{
-                title.removeAttr('style');
-            }
+            menu.removeAttr('style').removeClass('sticky open');
+            title.removeAttr('style');
             list.slideDown().fadeIn();
         }
 	}

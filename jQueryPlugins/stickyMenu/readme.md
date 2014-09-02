@@ -9,6 +9,7 @@ Instrucciones:
 =================
 
 Ejemplo de Html:
+```
 <div class="quick-links">
 	<div class="sidebar-block-title">
 		<h3 class="title">Quick Links <span class="toggle-links">+</span></h3>
@@ -27,10 +28,9 @@ Ejemplo de Html:
 		</ul>
 	</div>
 </div>
+```
 
 Llamado del plugin:
-
-
 ```javascript
 jQuery('.quick-links').stickyMenu( {
 	title: '.quick-links .title',
@@ -38,16 +38,24 @@ jQuery('.quick-links').stickyMenu( {
 });
 ```
 
-Estos son los Argumentos necesarios para la ejecución del plugin, donde:
+Argumentos necesarios para la ejecución del plugin:
+
 "title" es el bloque que contendrá el titulo, el cual será donde se clickeará para mostrar o esconder el menu.
+
 "list" es el bloque que contiene el menu, es el que se esconde/muestra.
 
+
+
 Options/Arguments:
+
 "toggle" : elemento dentro del título al cual contiene un "+" y es cambiado por un '-' cuando se colapsa el menú.
 
 "smoothScrolling" : habilita una transición de scroll a links internos (anchor).
+
 "scrollingSpeed" : determina la velocidad de la transición del scroll (requiere smoothScrolling en true).
+
 "links" : elementos html "a" con que se lanzará el smoothScrolling.
+
 "extraTopMargin" : espacio superior al elemento que se realizó el smoothScrooling.
 
 top: Posición en la que se fijara el menú cuando este acompañe el scroll.
