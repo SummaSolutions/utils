@@ -1,7 +1,7 @@
 StickyMenu Plugin
 =================
 
-Crea un collapsible sticky Menu que acompaña mientras se scrollea la página.
+Crea un collapsible sticky Menu que acompaÃ±a mientras se scrollea la pÃ¡gina.
 
 URL: https://github.com/SummaSolutions/utils/jQueryPlugins/stickyMenu/
 
@@ -38,9 +38,11 @@ jQuery('.quick-links').stickyMenu( {
 });
 ```
 
-Argumentos necesarios para la ejecución del plugin:
 
-"title" es el bloque que contendrá el titulo, el cual será donde se clickeará para mostrar o esconder el menu.
+
+Argumentos necesarios para la ejecuciÃ³n del plugin:
+
+"title" es el bloque que contendrÃ¡ el titulo, el cual serÃ¡ donde se clickearÃ¡ para mostrar o esconder el menu.
 
 "list" es el bloque que contiene el menu, es el que se esconde/muestra.
 
@@ -48,14 +50,12 @@ Argumentos necesarios para la ejecución del plugin:
 
 Options/Arguments:
 
-"toggle" : elemento dentro del título al cual contiene un "+" y es cambiado por un '-' cuando se colapsa el menú.
+"smoothScrolling" : habilita una transiciÃ³n de scroll a links internos (anchor).
 
-"smoothScrolling" : habilita una transición de scroll a links internos (anchor).
+"scrollingSpeed" : determina la velocidad de la transiciÃ³n del scroll (requiere smoothScrolling en true).
 
-"scrollingSpeed" : determina la velocidad de la transición del scroll (requiere smoothScrolling en true).
+"links" : elementos html "a" con que se lanzarÃ¡ el smoothScrolling.
 
-"links" : elementos html "a" con que se lanzará el smoothScrolling.
+"extraTopMargin" : espacio superior al elemento que se realizÃ³ el smoothScrooling.
 
-"extraTopMargin" : espacio superior al elemento que se realizó el smoothScrooling.
-
-top: Posición en la que se fijara el menú cuando este acompañe el scroll.
+top: PosiciÃ³n en la que se fijara el menÃº cuando este acompaÃ±e el scroll.
