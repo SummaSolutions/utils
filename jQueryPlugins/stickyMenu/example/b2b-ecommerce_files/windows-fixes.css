@@ -1,0 +1,16 @@
+/**
+ * Windows-browser-specific style sheet fixes
+ */
+
+.node-type-work .social-media .share.fb { width: 45px; }
+.node-type-work .social-media .share.twt { width: 60px; }
+
+.path-partners.node-type-section-landing-page #main-wrapper, .path-services.node-type-section-landing-page #main-wrapper, .path-work.node-type-section-landing-page #main-wrapper {
+	padding-top: 40px; width: 100%;
+}
+
+body.node-type-infographic #main-wrapper .content .buttons-set .social-media .share.fb,
+body.node-type-blog #main-wrapper .content-area .buttons-set .social-media .share.fb,
+body.node-type-happening #main-wrapper .content-area .buttons-set .social-media .share.fb,
+body.node-type-newsroom-article #main-wrapper .content-area .buttons-set .social-media .share.fb,
+.path-careers.node-type-job-opening .buttons-set .social-media .share.fb { width:45px; }
