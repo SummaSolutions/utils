@@ -53,6 +53,11 @@ $users = json_decode($conn->getSpaceMembers());
         <input type="checkbox"  name="plan[]" value="3">Epic<br>
     </fieldset>
 
+    <fieldset>
+        <legend>Tags</legend>
+        <input type="checkbox"  name="filterByTag" value="1">Filter by Tags<br>
+        Tags to use: <input type="text" name="tags">
+    </fieldset>
 
 
     <INPUT type="submit" value="Next">

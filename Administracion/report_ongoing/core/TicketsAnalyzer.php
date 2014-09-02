@@ -168,6 +168,7 @@ class TicketsAnalyzer {
             }
         }
 
+
         if( count($this->_completedTickets) > 0){
 
             if( is_numeric($totalPonderatedDeviation)){

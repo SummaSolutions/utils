@@ -13,6 +13,18 @@ class FLowAnalyzer extends TicketsAnalyzer
 
     private $_users;
 
+    private $_tags = null;
+
+    function setTags($tags)
+    {
+
+        if (strlen(trim($tags)) == 0) {
+            $this->_tags = null;
+        } else {
+            $this->_tags = explode(',', $tags);
+        }
+    }
+
 
     function getPerceivedDeviation()
     {
@@ -24,11 +36,10 @@ class FLowAnalyzer extends TicketsAnalyzer
     function getPerceivedError()
     {
 
-        if($this->getTotalEstimatedHours() > 0){
+        if ($this->getTotalEstimatedHours() > 0) {
 
             return ($this->getPerceivedDeviation() / $this->getTotalEstimatedHours()) * 100;
-        }
-        else{
+        } else {
             return "n/a";
         }
 
@@ -64,7 +75,7 @@ class FLowAnalyzer extends TicketsAnalyzer
 
         foreach ($tickets as $ticket) {
 
-            if( in_array($ticket->hierarchy_type, $planLevels)){
+            if ($this->isTicketToBeProcessed($planLevels, $ticket)) {
 
                 $this->processTicket(
                     $from,
@@ -76,92 +87,143 @@ class FLowAnalyzer extends TicketsAnalyzer
     }
 
     /**
-     * Verify if this particular ticket needs to be included in the report.
-     * @param $from
-     * @param $to
+     * @param $planLevels
      * @param $ticket
      */
-    private function processTicket($from, $to, $ticket, $isPending = false)
+    private function isTicketToBeProcessed($planLevels, $ticket)
     {
 
-        // Adjust ticket estimation.
-        // If it is task or no plan, copy the estimate
-        // to the total estimate.
-        if( $ticket->hierarchy_type <= 1){
-            $ticket->total_estimate = $ticket->estimate;
-        }
-
-
-        if( $isPending){
-            $this->processPending($from, $to, $ticket);
-        }
-        else{
-            $this->processCompleted($from, $to, $ticket);
-        }
-    }
-
-    /**
-     * Process the ticket that are completed. Consider the right date, and
-     * the exception list.
-     * @param $from
-     * @param $to
-     * @param $ticket
-     */
-    private function processCompleted($from, $to, $ticket){
-
-        $ticketDate = strtotime($ticket->completed_date);
-        $fromDate = strtotime($from);
-        $toDate = strtotime($to);
-
-        if ( ($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
-            !$this->ticketIsInExceptionList($ticket) &&
-            $this->isTicketRelatedToProperUsers($ticket)
-        ) {
-            $this->_completedTickets[] = $ticket;
-        }
-    }
-
-    /**
-     * Pending tickets. Consider the creation date, and the user.
-     * @param $from
-     * @param $to
-     * @param $ticket
-     */
-    private function processPending($from, $to, $ticket){
-
-        $ticketDate =  strtotime($ticket->created_on);
-        $fromDate = strtotime($from);
-        $toDate = strtotime($to);
-
-        if( ($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
-            $this->isTicketRelatedToProperUsers($ticket)){
-
-            $this->_pendingTickets[] = $ticket;
-        }
-    }
-
-    /**
-     * Verify that the ticket includes at least one of the
-     * users defined to watch.
-     */
-    private function isTicketRelatedToProperUsers($ticket)
-    {
-        if( is_null($this->_users))
-        {
+        if (in_array($ticket->hierarchy_type, $planLevels)) {
             return true;
         }
 
-        $comments = json_decode($this->_conn->getTicketComments($ticket->number));
+    }
 
-        foreach ($comments as $comment)
-        {
-            if( in_array($comment->user_id, $this->_users))
-            {
-                return true;
+
+/**
+ * Verify if this particular ticket needs to be included in the report.
+ * @param $from
+ * @param $to
+ * @param $ticket
+ */
+private
+function processTicket($from, $to, $ticket, $isPending = false)
+{
+
+    // Adjust ticket estimation.
+    // If it is task or no plan, copy the estimate
+    // to the total estimate.
+    if ($ticket->hierarchy_type <= 1) {
+        $ticket->total_estimate = $ticket->estimate;
+    }
+
+    if ($isPending) {
+        $this->processPending($from, $to, $ticket);
+
+    } else {
+        $this->processCompleted($from, $to, $ticket);
+    }
+}
+
+/**
+ * Process the ticket that are completed. Consider the right date, and
+ * the exception list.
+ * @param $from
+ * @param $to
+ * @param $ticket
+ */
+private
+function processCompleted($from, $to, $ticket)
+{
+
+    $ticketDate = strtotime($ticket->completed_date);
+    $fromDate = strtotime($from);
+    $toDate = strtotime($to);
+
+    if (($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
+        !$this->ticketIsInExceptionList($ticket) &&
+        $this->isTicketRelatedToProperUsers($ticket)
+    ) {
+
+        if( $this->checkTags($ticket)){
+            $this->_completedTickets[] = $ticket;
+        }
+    }
+}
+
+/**
+ * Pending tickets. Consider the creation date, and the user.
+ * @param $from
+ * @param $to
+ * @param $ticket
+ */
+private
+function processPending($from, $to, $ticket)
+{
+
+    $ticketDate = strtotime($ticket->created_on);
+    $fromDate = strtotime($from);
+    $toDate = strtotime($to);
+
+    if (($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
+        $this->isTicketRelatedToProperUsers($ticket)
+    ) {
+
+        if( $this->checkTags($ticket)){
+            $this->_pendingTickets[] = $ticket;
+        }
+    }
+}
+
+/**
+ * Verify that the ticket includes at least one of the
+ * users defined to watch.
+ */
+private
+function isTicketRelatedToProperUsers($ticket)
+{
+    if (is_null($this->_users)) {
+        return true;
+    }
+
+    $comments = json_decode($this->_conn->getTicketComments($ticket->number));
+
+    foreach ($comments as $comment) {
+        if (in_array($comment->user_id, $this->_users)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+    /**
+     * @param $ticket
+     * @return bool
+     */
+    private function checkTags($ticket)
+    {
+        if (is_array($this->_tags)) {
+
+            // tags informed
+            $tags = $this->_conn->getTicketTags(1, 100, $ticket->number);
+            $tags = json_decode($tags);
+
+            if( !is_array($tags)){
+                return false;
+            }
+            else{
+                foreach ($tags as $tag) {
+                    if (in_array($tag->name, $this->_tags)) {
+                        return true;
+                    }
+                }
             }
         }
+        else{
+            return true;
+        }
 
-        return false;
     }
 
 

@@ -60,6 +60,11 @@ if( !isset($_POST["plan"])){
     die;
 }
 else{
+
+    if( isset($_POST['filterByTag']) && $_POST['filterByTag'] == "1"){
+        $analyzer->setTags($_POST['tags']);
+    }
+
     $analyzer->analyzePeriod($_POST['dateFrom'], $_POST['dateTo'], $_POST["plan"], $users);
 }
 
