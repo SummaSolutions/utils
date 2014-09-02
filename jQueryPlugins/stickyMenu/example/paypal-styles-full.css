@@ -1,0 +1,119 @@
+/** Begins: DELETE bfr Production **/
+* { margin:0;}
+
+body {
+    font-family: "Museo Sans 300", Arial, sans-serif;
+}
+
+#mfPreviewBar {
+    display: none !important;
+}
+
+/** Ends: DELETE bfr PRODUCTION **/
+
+.path-partners_paypal .left-col{
+    min-width: 600px;
+    padding-bottom: 80px;
+    padding-right: 65px;
+    display: table-cell;
+    vertical-align: top;
+}
+.path-partners_paypal .right-col{
+    display: table-cell;
+    min-width: 280px;
+    vertical-align: top;
+}
+.path-partners_paypal.node-type-service #main-wrapper .page-title {
+    float: none;
+    width: 600px;
+    margin-bottom: -1px;
+}
+.path-partners_paypal.node-type-service #main-wrapper .content-area{
+    float: none;
+}
+.path-partners_paypal.node-type-service #main-wrapper .links{
+    margin-top: 6px;
+}
+.path-partners_paypal .pp-vertical-line{
+    margin: 20px 0;
+}
+.path-partners_paypal .step-image{
+    margin: 15px 0 30px;
+}
+.path-partners_paypal .image-text-hider{
+    text-indent: -9999px;
+    position: relative;
+}
+.path-partners_paypal .image-text-hider img{
+    display: block;
+}
+.path-partners_paypal .image-text-hider p{
+    position: absolute;
+    top: 0;
+}
+.path-partners_paypal #main-wrapper .content-area .text ul.number-bullets{
+    list-style-image: none;
+    list-style-position: outside;
+    text-indent: 0;
+}
+.path-partners_paypal .text ul.number-bullets sup{
+    font-size: 10px;
+    margin-left: -9px;
+}
+.path-partners_paypal .quick-links{
+    margin-bottom: 60px;
+    width: 290px;
+    background: #fff;
+}
+.path-partners_paypal .sidebar-block-title{
+    background: #2b2b2b;
+    cursor: default;
+}
+.path-partners_paypal .sidebar-block-title h3{
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 100%;
+    position: relative;
+    padding: 11px 10px 9px;
+}
+.path-partners_paypal .quick-links .toggle-links {
+    font-size: 1.3em;
+    position: absolute;
+    right: 10px;
+    display: none;
+    top: 11px;
+}
+.path-partners_paypal .quick-links li{
+    border-bottom: 1px solid #d5d5d5;
+    padding: 0 10px;
+}
+.path-partners_paypal .quick-links li a{
+    color: #F15D22;
+    text-decoration: none;
+    font-size: 1.1em;
+    line-height: 2.8em;
+    vertical-align: middle;
+    outline: none;
+}
+.path-partners_paypal .quick-links li a:hover, .path-partners_paypal .quick-links li a.active{
+    color: #2B2B2B;
+}
+.path-partners_paypal .item-list{
+    margin: 15px 0 30px;
+}
+.path-partners_paypal .item-list .item{
+    margin-bottom: 22px;
+}
+.path-partners_paypal .item-list .item h2{
+    color: #2b2b2b;
+    font-size: 1.125em;
+    font-weight: 300;
+    margin: 0 0 10px;
+    cursor: default;
+}
+.path-partners_paypal .item-list .item .thumb{
+    border: none;
+    height: 155px;
+    overflow: hidden;
+    width: 279px;
+}
