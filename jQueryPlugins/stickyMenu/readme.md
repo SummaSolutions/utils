@@ -38,6 +38,8 @@ jQuery('.quick-links').stickyMenu( {
 });
 ```
 
+
+
 Argumentos necesarios para la ejecución del plugin:
 
 "title" es el bloque que contendrá el titulo, el cual será donde se clickeará para mostrar o esconder el menu.
@@ -47,8 +49,6 @@ Argumentos necesarios para la ejecución del plugin:
 
 
 Options/Arguments:
-
-"toggle" : elemento dentro del título al cual contiene un "+" y es cambiado por un '-' cuando se colapsa el menú.
 
 "smoothScrolling" : habilita una transición de scroll a links internos (anchor).
 
