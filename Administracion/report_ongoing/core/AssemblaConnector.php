@@ -66,6 +66,23 @@ class AssemblaConnector
         return $this->callAssembla($url);
     }
 
+    /**
+     * Get all the tags for a particular ticket
+     * @param $page
+     * @param $pageSize
+     * @param $ticket
+     * @return mixed
+     */
+    public function getTicketTags($page, $pageSize, $ticket){
+
+        $url = '/tickets/' . $ticket . '/tags.json?page=' . $page . '&per_page=' . $pageSize;
+        $test = $this->callAssembla($url);
+
+        return $test;
+
+
+    }
+
 
     /**
      * Get all time entries for a particular task

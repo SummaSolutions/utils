@@ -107,7 +107,8 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $_POST["plan"]);
 </table>
 
 <h4>Total completed tickets:<?php echo count($analyzer->getCompletedTickets()); ?></h4>
-<h4>Total time invested in complete tickets: <?php echo $analyzer->getcompleteTicketsInvestedHours(); ?></h4>
+<h4>Total estimated time in completed tickets: <?php echo $analyzer->getTotalEstimatedHours(); ?></h4>
+<h4>Total time invested in completed tickets: <?php echo $analyzer->getcompleteTicketsInvestedHours(); ?></h4>
 
 <br>
 
