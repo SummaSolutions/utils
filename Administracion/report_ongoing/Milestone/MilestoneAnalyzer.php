@@ -27,6 +27,7 @@
 define('MILESTONE_MARKUP', "\n- - milestone_id\n");
 
 require_once('../core/TicketsAnalyzer.php');
+require_once('../core/StatusHandler.php');
 require_once('MilestoneIndicators.php');
 
 class MilestoneAnalyzer extends TicketsAnalyzer
@@ -97,6 +98,25 @@ class MilestoneAnalyzer extends TicketsAnalyzer
         $this->calculateTicketResults();
     }
 
+
+    public function calculateTicketResults(){
+
+        parent::calculateTicketResults();
+
+        $stHandler = new StatusHandler($this->_conn);
+        $stHandler->initialize();
+
+        foreach($this->_completedTickets as $ticket){
+
+            if( is_null($ticket->completed_date)){
+
+                $ticket->completed_date = $stHandler->getCurrentStatusDate($ticket);
+            }
+        }
+
+    }
+
+
     /**
      * @param $targetMilestoneID
      */
@@ -144,6 +164,7 @@ class MilestoneAnalyzer extends TicketsAnalyzer
             $this->_completedTickets[] = $ticket;
 
         } else {
+
             $this->_incompleteTickets[] = $ticket;
         }
     }

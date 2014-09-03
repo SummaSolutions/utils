@@ -50,6 +50,9 @@ class DataCollector
     }
 
 
+
+
+
     private function checkTicketInclusion($ticket, $from, $to)
     {
 
@@ -103,6 +106,7 @@ class DataCollector
         $creation = new DateTime($item->created);
         $item->fromPreviousPeriod = ($creation < $from);
     }
+
 
     public function getAllTickets()
     {
