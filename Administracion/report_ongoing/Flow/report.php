@@ -243,6 +243,10 @@ else{
 
     foreach ($analyzer->getPendingTickets() as $ticket) {
 
+        $ticketDate = strtotime($ticket->created_on);
+        $ticket->created_on = date('d/m/Y', $ticketDate);
+
+
         echo '<tr>';
         echo '<td>' . $ticket->number . '</td>';
         echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';

@@ -29,6 +29,39 @@ class StatusHandler
         $this->statusRegex = $rBuilder->buildStatusRegex($this->statuses);
     }
 
+
+    public function getCurrentStatusDate($ticket){
+
+        $date = null;
+        $comments = json_decode($this->conn->getTicketComments($ticket->number));
+        $lastDate = strtotime('01/01/1900');
+
+        foreach ($comments as $comment) {
+
+            if (strpos($comment->ticket_changes, STATUS_MARKUP) !== false &&
+                preg_match($this->statusRegex, $comment->ticket_changes)
+            ) {
+                // This matched the status markup and the regex for statuses. Assuming it
+                // really is a status change!
+                $status = $this->extractStatus($comment);
+
+                if( $status->status_to == $ticket->status) {
+                    if( strtotime($status->date) > $lastDate){
+                        $lastDate = strtotime($status->date);
+                    }
+                }
+
+            }
+        }
+
+        if( $lastDate != strtotime('01/01/1900')){
+            $date = date('d/m/Y', $lastDate); ;
+        }
+
+        return $date;
+
+    }
+
     public function getStatusHistory($number)
     {
         $comments = json_decode($this->conn->getTicketComments($number));
@@ -47,6 +80,10 @@ class StatusHandler
 
         return $statusChanges;
     }
+
+
+
+
 
     private function fetchAllPossibleStatuses()
     {

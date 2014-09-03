@@ -149,8 +149,11 @@ class TicketsAnalyzer {
             $totalEstimated += $ticket->total_estimate;
             $this->_totalDeviation += $ticket->deviation;
 
-            $ticketDate = strtotime($ticket->completed_date);
-            $ticket->completed_date = date('d/m/Y', $ticketDate);
+            if( !is_null($ticket->completed_date)){
+                $ticketDate = strtotime($ticket->completed_date);
+                $ticket->completed_date = date('d/m/Y', $ticketDate);
+            }
+
         }
 
         // Second loop. Calculate ponderations.
