@@ -79,8 +79,10 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $_POST["plan"]);
         <th>Estimated</th>
         <th>Invested</th>
         <th>Work Ratio</th>
-        <th>Deviation</th>
-        <th>Error(%)</th>
+        <th>Deviation (hours)</th>
+        <th>Absolute error (%)</th>
+        <th>Ticket Ponderation</th>
+        <th>Ponderated error</th>
         <th>Status</th>
     </tr>
     <?php
@@ -89,22 +91,46 @@ $analyzer->AnalyzeMilestone((int)$_POST['milestone'], $_POST["plan"]);
         echo '<tr';
         echo alterTr($ticket);
         echo '>';
-
         echo '<td>' . $ticket->number . '</td>';
         echo '<td style="text-align: left">' . showPlanLevel($ticket->hierarchy_type) . '</td>';
-
-        echo '<td  style="text-align: left">' . $ticket->summary . '</td>';
+        echo '<td style="text-align: left">' . $ticket->summary . '</td>';
         echo '<td>' . $ticket->completed_date . '</td>';
         echo '<td>' . $ticket->total_estimate . '</td>';
-        echo '<td>' . formatValue($ticket->total_invested_hours) . '</td>';
-        echo '<td>' . formatValue($ticket->workRatio)  . '</td>';
-        echo '<td>' . formatValue($ticket->deviation) . '</td> ';
+        echo '<td>' . $ticket->total_invested_hours . '</td>';
+        echo '<td>' . formatValue($ticket->workRatio) . '</td>';
+        echo '<td>' . formatValue($ticket->deviation) . '</td>';
         echo '<td>' . formatValue($ticket->errorPercentage) . '</td>';
-        echo '<td  style="text-align: left">' . $ticket->status . '</td>';
+        echo '<td>' . formatValue($ticket->ponderation) . '</td>';
+        echo '<td>' . formatValue($ticket->ponderated_deviation) . '</td>';
+        echo '<td style="text-align: left">' . $ticket->status . '</td>';
         echo '</tr>';
     }
     ?>
+
+    <tfoot>
+    <tr style="font:bold">
+        <?php
+
+        echo '<td>Totals</td>';
+        echo '<td></td>';
+        echo '<td></td>';
+        echo '<td></td>';
+        echo '<td>' . formatValue($analyzer->getTotalEstimatedHours()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getTotalInvestedHours()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getGeneralWorkRatio()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getTotalDeviation()). '</td>';
+        echo '<td></td>';
+        echo '<td>' . formatValue($analyzer->getTotalPonderation()) . '</td>';
+        echo '<td>' . formatValue($analyzer->getTotalPonderatedDeviation()) . '</td>';
+        echo '<td></td>';
+
+        ?>
+
+    </tr>
+    </tfoot>
+
 </table>
+
 
 <h4>Total completed tickets:<?php echo count($analyzer->getCompletedTickets()); ?></h4>
 <h4>Total estimated time in completed tickets: <?php echo $analyzer->getTotalEstimatedHours(); ?></h4>
