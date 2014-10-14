@@ -144,7 +144,7 @@ class MilestoneAnalyzer extends TicketsAnalyzer
                     if ($ticket->milestone_id == $targetMilestoneID) {
                         $this->processTicketInMilestone($ticket);
 
-                    } else if ($ticket->milestone_id > $targetMilestoneID) {
+                    } else {
                         $this->processTicketNotInMilestone($ticket);
                     }
                 }
