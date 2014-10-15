@@ -159,6 +159,8 @@ class MilestoneAnalyzer extends TicketsAnalyzer
      */
     private function processTicketInMilestone($ticket)
     {
+        $this->calculateFromRelated($ticket);
+
         if ($this->ticketIsComplete($ticket)) {
 
             $this->_completedTickets[] = $ticket;

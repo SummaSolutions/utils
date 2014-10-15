@@ -127,6 +127,62 @@ class TicketsAnalyzer {
         return $this->_conn->getTicketByNumber($number);
     }
 
+
+    /**
+     * Calculate estimations and investments from the related subtasks.
+     * @param $parent
+     */
+    protected function calculateFromRelated($parent){
+
+        if( $parent->hierarchy_type != 2){
+            // Do this only for stories. All others, they remain as they are.
+            return;
+        }
+
+        // Get all related tickets
+        $associations = json_decode($this->_conn->getRelatedTickets($parent->number));
+
+        if( !is_array($associations)){
+            return; // Nothing to do here!
+        }
+
+        $totalEstimate = 0;
+        $totalInvested = 0;
+
+        foreach($associations as $association){
+
+            // Are we interested in this relationship?
+            // 5 & 6 are subtasks associations.
+            if( $association->relationship == 6 || $association->relationship == 5 ){
+
+                // what's the related ticket?
+                $related = null;
+                if( $association->ticket2_id == $parent->id ){
+                    $related = $association->ticket1_id;
+                }
+                else{
+                    $related = $association->ticket2_id;
+                }
+
+                // Get the details
+                $ticket = json_decode($this->_conn->getTicket(false, $related));
+
+                // Add up the values.
+                $totalEstimate += $ticket->estimate;
+                $totalInvested += $ticket->total_invested_hours;
+
+            }
+
+       }
+
+        $parent->estimate = $totalEstimate;
+        $parent->total_estimate = $totalEstimate;
+        $parent->total_invested_hours = $totalInvested;
+
+    }
+
+
+
     /**
      * Calculate the indicators for the period.
      */

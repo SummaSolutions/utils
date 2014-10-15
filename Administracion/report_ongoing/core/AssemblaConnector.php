@@ -80,7 +80,19 @@ class AssemblaConnector
 
         return $test;
 
+    }
 
+    /**
+     * Get the tickets related to this one.
+     * @param $ticket
+     * @return mixed
+     */
+    public function getRelatedTickets($ticket){
+
+        $url = '/tickets/' . $ticket . '/ticket_associations';
+        $test = $this->callAssembla($url);
+
+        return $test;
     }
 
 

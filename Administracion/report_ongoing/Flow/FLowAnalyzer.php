@@ -109,6 +109,7 @@ class FLowAnalyzer extends TicketsAnalyzer
 private
 function processTicket($from, $to, $ticket, $isPending = false)
 {
+    $this->calculateFromRelated($ticket);
 
     // Adjust ticket estimation.
     // If it is task or no plan, copy the estimate
