@@ -1,0 +1,71 @@
+<?php
+/**
+ * Summa Cms Import template.
+ *
+ * @category Summa
+ * @package  Summa_Cms
+ * @author   "Pablo Cianci" <pcianci@summasolutions.net>
+ *
+ */
+
+/**
+ * @var $this Summa_Cms_Block_Adminhtml_Cms_Import ?>
+ */
+
+/**
+ * @var $cmsHelper Summa_Cms_Helper_Data
+ */
+$cmsHelper = $this->helper('summa_cms');
+?>
+<div class="content-header">
+    <h3 class="icon-head head-cms-page"><?php echo $this->getTitle();  ?></h3>
+</div>
+<div class="pre-import">
+    <div class="existent-files-section f-left">
+        <h4><?php echo $cmsHelper->__('Import an existent file'); ?></h4>
+        <?php $filesToImport = $this->getFilesToImport(); ?>
+        <?php if (!empty($filesToImport)) : ?>
+            <form id="summa_cms_import_form" action="<?php echo $this->getProcessFileUrl(); ?>" method="post">
+                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+                <div class="fields">
+                    <select id="import-file" name="import-file">
+                        <option value="">-- <?php echo $cmsHelper->__('Select the file to import'); ?> --</option>
+                        <?php foreach ($filesToImport as $path=>$filename) : ?>
+                        <option value="<?php echo $path; ?>"><?php echo $filename; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="import-button">
+                    <input type="submit" value="<?php echo $cmsHelper->__('Import now!'); ?>" class="form-button" />
+                </div>
+            </form>
+        <?php else: ?>
+            <div class="messages">
+                <div class="warning-msg">
+                    <span>
+                        <?php echo $cmsHelper->__('There are no files to import. Try uploading a file.'); ?>
+                    </span>
+                </div>
+            <div>
+        <?php endif; ?>
+    </div>
+    <div class="or-section f-left">
+        <span><?php echo $cmsHelper->__('or'); ?></span>
+    </div>
+    <div class="new-file-section f-left">
+        <h4><?php echo $cmsHelper->__('Import a new file'); ?></h4>
+        <form id="summa_cms_upload_form" action="<?php echo $this->getUploadFileUrl(); ?>" method="post" enctype="multipart/form-data">
+            <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+            <div class="fields">
+                <input type="file" id="upload_file" name="upload_file" class="input-text" />
+                <label for="also-import-checkbox"><?php echo $cmsHelper->__('Upload and import?'); ?></label>
+                <input type="checkbox" id="also-import-checkbox" name="also-import-checkbox" value="1" <?php echo $this->getUploadAndImportByDefault() ? 'checked="checked"' : ''; ?> />
+            </div>
+            <div class="import-button">
+                <input type="submit" value="<?php echo $cmsHelper->__('Upload file'); ?>" class="form-button" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

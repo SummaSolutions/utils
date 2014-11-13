@@ -1,0 +1,43 @@
+<?php
+/**
+ * Summa Cms Export List template.
+ *
+ * @category Summa
+ * @package  Summa_Cms
+ * @author   "Pablo Cianci" <pcianci@summasolutions.net>
+ *
+ */
+
+/**
+ * @var $this Summa_Cms_Block_Adminhtml_Cms_Block_Export|Summa_Cms_Block_Adminhtml_Cms_Page_Export ?>
+ */
+
+/**
+ * @var $cmsHelper Summa_Cms_Helper_Data
+ */
+$cmsHelper = $this->helper('summa_cms');
+?>
+<?php $result = $this->getResult(); ?>
+<div class="content-header">
+    <h3 class="icon-head head-cms-page"><?php echo $this->getPageTitle(); ?></h3>
+</div>
+<div class="export-result">
+    <?php if ($result->getExportWasOk()) : ?>
+    <div class="title"><span><?php echo $cmsHelper->__('Generated export file:'); ?></span></div>
+    <div>
+        <span class="filename">
+            <a href="<?php echo $result->getDownloadUrl(); ?>">
+                <?php echo $result->getFilename(); ?>
+            </a>
+        </span>
+    </div>
+    <?php else: ?>
+    <div class="messages">
+        <div class="error-msg">
+            <span>
+                <?php echo $result->getErrorMessage(); ?>
+            </span>
+        </div>
+    <div>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,37 @@
+<?php
+/**
+ * Summa Cms Export Options template.
+ *
+ * @category Summa
+ * @package  Summa_Cms
+ * @author   "Pablo Cianci" <pcianci@summasolutions.net>
+ *
+ */
+
+/**
+ * @var $this Summa_Cms_Block_Adminhtml_Cms_Block_Export|Summa_Cms_Block_Adminhtml_Cms_Page_Export ?>
+ */
+
+/**
+ * @var $cmsHelper Summa_Cms_Helper_Data
+ */
+$cmsHelper = $this->helper('summa_cms');
+?>
+<div class="export-actions">
+    <div class="export-options" method="post">
+        <div class="title"><?php echo $cmsHelper->__('Actions'); ?></div>
+        <div class="option">
+            <input type="checkbox" id="auto_resolve_dependencies" name="auto_resolve_dependencies" value="1" <?php echo $this->getAutoResolveDependenciesByDefault() ? 'checked="checked"' : ''; ?>/>
+            <label for="auto_resolve_dependencies">
+                <span><?php echo $cmsHelper->__('Auto resolve dependencies'); ?></span>
+            </label>
+            <div class="explanation">
+                <?php echo $cmsHelper->__('The unresolved dependencies will be included in the export file.'); ?>
+            </div>
+        </div>
+        <div class="option">
+            <label for="custom_file_name"><?php echo $cmsHelper->__('Custom file name'); ?>:</label>
+            <input type="text" id="custom_file_name" name="custom_file_name" class="input-text wide" value="<?php echo $this->getDefaultFilename(); ?>" />
+        </div>
+    </div>
+ </div>

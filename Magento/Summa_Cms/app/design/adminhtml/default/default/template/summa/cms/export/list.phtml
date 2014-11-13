@@ -1,0 +1,80 @@
+<?php
+/**
+ * Summa Cms Export List template.
+ *
+ * @category Summa
+ * @package  Summa_Cms
+ * @author   "Pablo Cianci" <pcianci@summasolutions.net>
+ *
+ */
+
+/**
+ * @var $this Summa_Cms_Block_Adminhtml_Cms_Export|Summa_Cms_Block_Adminhtml_Cms_Block_Export|Summa_Cms_Block_Adminhtml_Cms_Page_Export ?>
+ */
+
+/**
+ * @var $cmsHelper Summa_Cms_Helper_Data
+ */
+$cmsHelper = $this->helper('summa_cms');
+?>
+<?php $result = $this->getResult(); ?>
+<div class="content-header">
+    <h3 class="icon-head head-cms-page"><?php echo $this->getPageTitle(); ?></h3>
+</div>
+<?php $entitiesToExportCollection   = $this->getToExportCollection(); ?>
+<?php $blocksToExportIdentifiers    = $this->getBlocksToExportIdentifiers(); ?>
+<?php $pagesToExportIdentifiers     = $this->getPagesToExportIdentifiers(); ?>
+<?php $hierarchyToExportIdentifiers = $this->getHierarchyToExportIdentifiers(); ?>
+<?php $entityType =  $this->getEntityTypeToExport(); ?>
+<?php if (!empty($entitiesToExportCollection)) : ?>
+<form id="summa_cms_export_form" name="summa_cms_export_form" method="post" action="<?php echo $this->getExportUrl(); ?>">
+    <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+    <input name="to_export_entity_type" type="hidden" value="<?php echo $entityType; ?>" />
+    <div class="pre-export-resume">
+        <?php foreach ($entitiesToExportCollection as $entity) : ?>
+        <div class="to-export">
+            <div class="name">
+                <input type="hidden" name="to_export_identifiers[<?php echo $this->getEntityTypeToExport(); ?>][]" value="<?php echo $entity->getId(); ?>" />
+                <span><?php echo $this->getIdentifierLabel($entityType, $entity); ?></span>
+            </div>
+            <?php $blockDependencies = $this->getBlockDependencies($entity->getId()); ?>
+            <?php $pageDependencies = $this->getPageDependencies($entity->getId()); ?>
+            <?php if (!empty($blockDependencies) || !empty($pageDependencies)) : ?>
+            <div class="all-dependencies">
+                <?php if (!empty($blockDependencies)) : ?>
+                <div class="dependencies">
+                    <div class="title"><?php echo $cmsHelper->__('Block Dependencies'); ?></div>
+                    <?php foreach ($blockDependencies as $blockId => $blockIdentifier) : ?>
+                    <div class="dependency <?php echo in_array($blockIdentifier,$blocksToExportIdentifiers) ? 'satisfied' : 'non-satisfied'; ?>">
+                        <input type="hidden" name="to_export_dependencies[<?php echo Summa_Cms_Model_ExportImport_Abstract::ENTITY_BLOCK; ?>][]" value="<?php echo $blockId; ?>" />
+                        <span><?php echo $this->getIdentifierLabel(Summa_Cms_Model_ExportImport_Abstract::ENTITY_BLOCK, $blockIdentifier); ?><span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+                <?php if (!empty($pageDependencies)) : ?>
+                <div class="dependencies">
+                    <div class="title"><?php echo $cmsHelper->__('Page Dependencies'); ?></div>
+                    <?php foreach ($pageDependencies as $pageId => $pageIdentifier) : ?>
+                    <div class="dependency <?php echo in_array($pageIdentifier,$pagesToExportIdentifiers) ? 'satisfied' : 'non-satisfied'; ?>">
+                        <input type="hidden" name="to_export_dependencies[<?php echo Summa_Cms_Model_ExportImport_Abstract::ENTITY_PAGE; ?>][]" value="<?php echo $pageId; ?>" />
+                        <?php echo $this->getIdentifierLabel(Summa_Cms_Model_ExportImport_Abstract::ENTITY_PAGE, $pageIdentifier); ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="pre-export-footer">
+        <?php echo $this->getChildHtml('summa_cms_export_actions'); ?>
+        <?php echo $this->getChildHtml('summa_cms_export_reference'); ?>
+    </div>
+    <div class="export-button">
+        <input type="submit" id="summa_cms_export_submit_button" value="<?php echo $cmsHelper->__('Export now!'); ?>" class="form-button" />
+    </div>
+    <div id="export-ajax-result" class="export-result"></div>
+    <?php endif; ?>
+</form>

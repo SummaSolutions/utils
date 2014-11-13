@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Summa Cms Layout Definition file.
+ *
+ * @author "Pablo Cianci" <pcianci@summasolutions.net>
+ *
+ */
+-->
+<layout>
+    <!-- CMS PAGES EXPORT SECTION -->
+    <adminhtml_cms_fullcsvexportpages>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_page_export" name="summa_cms_page_export" template="summa/cms/export/list.phtml">
+                <block type="summa_cms/adminhtml_cms_page_export" name="summa_cms_export_actions" template="summa/cms/export/actions.phtml" />
+                <block type="summa_cms/adminhtml_cms_page_export" name="summa_cms_export_reference" template="summa/cms/export/reference.phtml" />
+            </block>
+        </reference>
+    </adminhtml_cms_fullcsvexportpages>
+    <adminhtml_cms_masscsvexportpages>
+        <update handle="adminhtml_cms_fullcsvexportpages" />
+    </adminhtml_cms_masscsvexportpages>
+    <adminhtml_cms_exportpagespost>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_page_export" name="summa_cms_export_result" template="summa/cms/export/result.phtml" />
+        </reference>
+    </adminhtml_cms_exportpagespost>
+
+    <!-- STATIC BLOCKS EXPORT SECTION -->
+    <adminhtml_cms_fullcsvexportblocks>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_block_export" name="summa_cms_block_export" template="summa/cms/export/list.phtml" >
+                <block type="summa_cms/adminhtml_cms_block_export" name="summa_cms_export_actions" template="summa/cms/export/actions.phtml" />
+                <block type="summa_cms/adminhtml_cms_block_export" name="summa_cms_export_reference" template="summa/cms/export/reference.phtml" />
+            </block>
+        </reference>
+    </adminhtml_cms_fullcsvexportblocks>
+    <adminhtml_cms_masscsvexportblocks>
+        <update handle="adminhtml_cms_fullcsvexportblocks" />
+    </adminhtml_cms_masscsvexportblocks>
+    <adminhtml_cms_exportblockspost>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_block_export" name="summa_cms_export_result" template="summa/cms/export/result.phtml" />
+        </reference>
+    </adminhtml_cms_exportblockspost>
+
+    <!-- STATIC BLOCKS EXPORT SECTION -->
+    <adminhtml_cms_fullcsvexporthierarchy>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_hierarchy_export" name="summa_cms_node_export" template="summa/cms/export/list.phtml" >
+                <block type="summa_cms/adminhtml_cms_hierarchy_export" name="summa_cms_export_actions" template="summa/cms/export/actions.phtml" />
+                <block type="summa_cms/adminhtml_cms_hierarchy_export" name="summa_cms_export_reference" template="summa/cms/export/reference.phtml" />
+            </block>
+        </reference>
+    </adminhtml_cms_fullcsvexporthierarchy>
+    <adminhtml_cms_masscsvexporthierarchy>
+        <update handle="adminhtml_cms_fullcsvexportblocks" />
+    </adminhtml_cms_masscsvexporthierarchy>
+    <adminhtml_cms_exporthierarchyspost>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_hierarchy_export" name="summa_cms_export_result" template="summa/cms/export/result.phtml" />
+        </reference>
+    </adminhtml_cms_exporthierarchyspost>
+
+
+    <!-- CMS EXPORT SECTION -->
+    <adminhtml_cms_export>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_export" name="summa_cms_export" template="summa/cms/export.phtml" />
+        </reference>
+    </adminhtml_cms_export>
+    <adminhtml_cms_exportpost>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_export" name="summa_cms_export_result" template="summa/cms/export/result.phtml" />
+        </reference>
+    </adminhtml_cms_exportpost>
+
+    <!-- CMS IMPORT SECTION -->
+    <adminhtml_cms_import>
+        <reference name="head">
+            <action method="addJs"><name>varien/form.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>summa/css/cms.css</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery-1.9.1.min.js</name></action>
+            <action method="addItem" ifconfig="cms/summa_export_import/include_jquery"><type>skin_js</type><name>summa/js/jquery/jquery.noConflict.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>summa/js/cms.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="summa_cms/adminhtml_cms_import" name="summa_cms_import" template="summa/cms/import.phtml" />
+        </reference>
+    </adminhtml_cms_import>
+
+</layout>
