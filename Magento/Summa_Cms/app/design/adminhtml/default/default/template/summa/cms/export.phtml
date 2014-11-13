@@ -1,0 +1,47 @@
+<?php
+/**
+ * Summa Cms Export template.
+ *
+ * @category Summa
+ * @package  Summa_Cms
+ * @author   "Pablo Cianci" <pcianci@summasolutions.net>
+ *
+ */
+
+/**
+ * @var $this Summa_Cms_Block_Adminhtml_Cms_Export
+ */
+
+/**
+ * @var $cmsHelper Summa_Cms_Helper_Data
+ */
+$cmsHelper = $this->helper('summa_cms');
+?>
+<div class="content-header">
+    <h3 class="icon-head head-cms-page"><?php echo $this->getPageTitle();  ?></h3>
+</div>
+<div class="pre-export">
+    <div class="existent-files-section f-left">
+        <h4><?php echo $cmsHelper->__('Entities to export'); ?></h4>
+        <a href="#" id="select-all" class="selector-link" data-checked="1"><?php echo $cmsHelper->__('Select all'); ?></a>
+        <a href="#" id="select-none" class="selector-link" data-checked="0" style="display: none"><?php echo $cmsHelper->__('Select none'); ?></a>
+        <?php $entitiesToExport = $this->getEntitiesToExport(); ?>
+        <?php if (!empty($entitiesToExport)) : ?>
+            <form id="summa_cms_export_form" action="<?php echo $this->getExportPostUrl(); ?>" method="post">
+                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+                <div class="fields">
+                    <div class="field">
+                        <?php foreach ($entitiesToExport as $entityCode) : ?>
+                        <input type="checkbox" name="export_entity[<?php echo $entityCode; ?>]" id="export_entity_<?php echo $entityCode; ?>" class="validate-one-required" value="1" />
+                        <label for="export_entity_<?php echo $entityCode; ?>"><?php echo $cmsHelper->getLabelForEntityPlural($entityCode); ?></label>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="export-button">
+                    <input type="submit" value="<?php echo $cmsHelper->__('Export now!'); ?>" class="form-button" />
+                </div>
+            </form>
+        <?php endif; ?>
+    </div>
+    <div id="export-ajax-result" class="export-result"></div>
+</div>

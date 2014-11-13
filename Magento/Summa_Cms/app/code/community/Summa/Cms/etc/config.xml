@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Summa Cms Module Configuration file.
+ *
+ * @author "Pablo Cianci" <pcianci@summasolutions.net>
+ *
+ */
+-->
+<config>
+    <modules>
+        <Summa_Cms>
+            <version>0.1.0</version>
+        </Summa_Cms>
+    </modules>
+    <global>
+        <blocks>
+            <summa_cms>
+                <class>Summa_Cms_Block</class>
+            </summa_cms>
+            <adminhtml>
+                <rewrite>
+                    <cms_page_grid>Summa_Cms_Block_Adminhtml_Cms_Page_Grid</cms_page_grid>
+                    <cms_block_grid>Summa_Cms_Block_Adminhtml_Cms_Block_Grid</cms_block_grid>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+        <helpers>
+            <summa_cms>
+                <class>Summa_Cms_Helper</class>
+            </summa_cms>
+        </helpers>
+        <models>
+            <summa_cms>
+                <class>Summa_Cms_Model</class>
+            </summa_cms>
+        </models>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <summa_cms before="Enterprise_Cms">Summa_Cms_Adminhtml</summa_cms>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <translate>
+            <modules>
+                <summa_cms>
+                    <files>
+                        <default>summa/cms.csv</default>
+                    </files>
+                </summa_cms>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <summa_cms>
+                    <file>summa/cms.xml</file>
+                </summa_cms>
+            </updates>
+        </layout>
+    </adminhtml>
+    <default>
+        <cms>
+            <summa_export_import>
+                <destination_folder>var/export/summa/cms</destination_folder>
+                <auto_resolve_dependecies_by_default>0</auto_resolve_dependecies_by_default>
+                <upload_and_import_by_default>0</upload_and_import_by_default>
+                <include_jquery>1</include_jquery>
+            </summa_export_import>
+        </cms>
+    </default>
+</config>
