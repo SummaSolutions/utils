@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_Geolocation>
+            <version>0.1.0</version>
+        </Summa_Geolocation>
+    </modules>
+
+    <global>
+        <models>
+            <summa_geolocation>
+                <class>Summa_Geolocation_Model</class>
+            </summa_geolocation>
+        </models>
+        <helpers>
+            <summa_geolocation>
+                <class>Summa_Geolocation_Helper</class>
+            </summa_geolocation>
+        </helpers>
+        <blocks>
+            <summa_geolocation>
+                <class>Summa_Geolocation_Block</class>
+            </summa_geolocation>
+        </blocks>
+    </global>
+
+    <frontend>
+        <routers>
+            <summa_geolocation>
+                <use>standard</use>
+                <args>
+                    <module>Summa_Geolocation</module>
+                    <frontName>geolocation</frontName>
+                </args>
+            </summa_geolocation>
+        </routers>
+    </frontend>
+
+    <default>
+        <general>
+            <country>
+                <use_geolocation>0</use_geolocation>
+                <method>geoplugin</method>
+            </country>
+        </general>
+    </default>
+</config>

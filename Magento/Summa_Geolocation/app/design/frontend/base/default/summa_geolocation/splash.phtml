@@ -1,0 +1,13 @@
+<?php
+/** @var Summa_Geolocation_Block_Splash $this  */
+
+$_stores = $this->getStores();
+?>
+
+<?php if($_stores->getSize()): ?>
+    <ul>
+        <?php foreach($this->getStores() as $store): ?>
+        <li><a href="<?php echo $store->getUrl(); ?>"><?php echo $store->getLabel(); ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
