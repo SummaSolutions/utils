@@ -3,7 +3,7 @@ Summa Geolocation Magento Module
 
 Determina el pais del usuario en base a su IP y lo envia al store cuyo pais por defecto sea el del usuario, sino permite configurar una página de selección de pais.
 
-URL: https://github.com/SummaSolutions/utils/Magento/Summa_Geolocation
+URL: https://github.com/SummaSolutions/utils/tree/development/Magento/Summa_Geolocation
 
 Instrucciones:
 =================
@@ -53,3 +53,6 @@ Para agregarlo desde un layout el código ser´â:
 ```xml
 <block type="summa_geolocation/splash" name="splash" />
 ```
+
+#### *Notas*
+* Esto se probó en un CE 1.9 con la sample data instalada
