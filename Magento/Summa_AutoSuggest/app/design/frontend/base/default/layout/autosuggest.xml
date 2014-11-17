@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addItem"><type>skin_css</type><name>AutoSuggest/autosuggest.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>AutoSuggest/autosuggest.js</name></action>
+        </reference>
+
+        <reference name="footer">
+            <block type="autosuggest/results" name="autosuggest.results" as="autosuggest_results" template="autosuggest/results.phtml" />
+        </reference>
+    </default>
+
+    <catalogsearch_result_index>
+        <reference name="content">
+            <block type="autosuggest/result_cms" template="autosuggest/results/cms.phtml" name="search.results.cms" after="search.result" />
+        </reference>
+    </catalogsearch_result_index>
+</layout>

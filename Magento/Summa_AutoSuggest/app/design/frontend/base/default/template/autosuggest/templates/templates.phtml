@@ -1,0 +1,7 @@
+<?php /* @var $this Summa_AutoSuggest_Block_Results */ ?>
+
+<div id="autosuggest-templates">
+    <?php if($this->isResultAllowed("products")) { echo $this->getChildHtml('autosuggest_templates_products'); }?>
+    <?php if($this->isResultAllowed("categories")) { echo $this->getChildHtml('autosuggest_templates_categories'); }?>
+    <?php if($this->isResultAllowed("pages")) { echo $this->getChildHtml('autosuggest_templates_pages'); }?>
+</div>

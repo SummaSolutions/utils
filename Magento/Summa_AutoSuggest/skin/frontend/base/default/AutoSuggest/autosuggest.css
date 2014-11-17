@@ -1,0 +1,18 @@
+/* Main container with the results containers inside */
+.autosuggest-results {background:#f1f1f1; display:none; padding:0px 5px; position:absolute; width:200px; z-index:200;}
+
+/* List of results */
+.autosuggest-results .autosuggest-result ul {margin:5px 0px;}
+.autosuggest-results .autosuggest-result ul li {padding:5px 0px;}
+.autosuggest-results .autosuggest-result ul li h4 {margin:0px 0px 5px 0px;}
+.autosuggest-results .autosuggest-result ul li a {display:block;}
+
+.autosuggest-results .autosuggest-result ul li .as-image {margin:0px 5px 0px 0px;}
+.autosuggest-results .autosuggest-result ul li .as-price {float:right;}
+.autosuggest-results .autosuggest-result ul li .as-count {float:right;}
+
+/* The selected result after using the arrows */
+.autosuggest-results .autosuggest-result ul li.selected_result {background:red;}
+
+/* Templates to be used by the JS. Should remain hidden */
+.autosuggest-templates {display:none;}

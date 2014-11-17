@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<config>
+
+    <modules>
+        <Summa_AutoSuggest>
+            <version>0.1.0</version>
+        </Summa_AutoSuggest>
+    </modules>
+
+    <frontend>
+        <routers>
+            <summa_autosuggest>
+                <use>standard</use>
+                <args>
+                    <module>Summa_AutoSuggest</module>
+                    <frontName>autosuggest</frontName>
+                </args>
+            </summa_autosuggest>
+        </routers>
+        <layout>
+            <updates>
+                <autosuggest>
+                    <file>autosuggest.xml</file>
+                </autosuggest>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Summa_AutoSuggest>
+                    <files>
+                        <default>Summa_AutoSuggest.csv</default>
+                    </files>
+                </Summa_AutoSuggest>
+            </modules>
+        </translate>
+    </frontend>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <autosuggest before="Mage_Adminhtml">Summa_AutoSuggest_Adminhtml</autosuggest>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <global>
+        <resources>
+            <autosuggest_setup>
+                <setup>
+                    <module>Summa_AutoSuggest</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </autosuggest_setup>
+            <autosuggest_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </autosuggest_write>
+            <autosuggest_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </autosuggest_read>
+        </resources>
+
+        <blocks>
+            <autosuggest>
+                <class>Summa_AutoSuggest_Block</class>
+            </autosuggest>
+        </blocks>
+
+        <helpers>
+            <summa_autosuggest>
+                <class>Summa_AutoSuggest_Helper</class>
+            </summa_autosuggest>
+        </helpers>
+
+        <models>
+            <enterprise_search>
+                <rewrite>
+                    <adapter_httpStream>Summa_AutoSuggest_Model_Adapter_HttpStream</adapter_httpStream>
+                </rewrite>
+            </enterprise_search>
+            <enterprise_search_resource>
+                <rewrite>
+                    <engine>Summa_AutoSuggest_Model_Engine_Catalog</engine>
+                </rewrite>
+            </enterprise_search_resource>
+            <cms_resource>
+                <rewrite>
+                    <page_collection>Summa_AutoSuggest_Model_Resource_Page_Collection</page_collection>
+                </rewrite>
+            </cms_resource>
+            <summa_autosuggest>
+                <class>Summa_AutoSuggest_Model</class>
+            </summa_autosuggest>
+        </models>
+
+        <index>
+            <indexer>
+                <summa_cms_page>
+                    <model>summa_autosuggest/indexer_cms</model>
+                </summa_cms_page>
+            </indexer>
+        </index>
+    </global>
+
+    <default>
+        <autosuggest>
+            <basic>
+                <number_results>4</number_results>
+            </basic>
+            <products>
+                <show>1</show>
+                <limit>5</limit>
+                <display_thumbnail>1</display_thumbnail>
+                <thumbnail_width>70</thumbnail_width>
+                <thumbnail_height>50</thumbnail_height>
+            </products>
+            <categories>
+                <show>1</show>
+                <limit>5</limit>
+                <display_count>1</display_count>
+                <min_level>3</min_level>
+                <link_type>1</link_type>
+            </categories>
+            <pages>
+                <show>1</show>
+                <limit>5</limit>
+            </pages>
+            <advanced>
+                <min_length>3</min_length>
+                <delay_ms>200</delay_ms>
+            </advanced>
+
+            <config>
+
+            </config>
+        </autosuggest>
+    </default>
+</config>

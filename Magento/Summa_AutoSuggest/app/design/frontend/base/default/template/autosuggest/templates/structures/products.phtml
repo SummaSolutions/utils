@@ -1,0 +1,16 @@
+<div class="autosuggest-result autosuggest-products">
+    <h4><?php echo $this->__('Products') ?></h4>
+    <ul>
+        <li>
+            <a href="{{url}}">
+                <?php if($this->isThumbnailAllowed()) : ?>
+                <img height="<?php echo $this->getImageHeight(); ?>" width="<?php echo $this->getImageWidth(); ?>" class="as-image" />
+                <?php endif; ?>
+                <div class="autosuggest-data">
+                    <span class="as-name">{{name}}</span>
+                    <span class="as-price">{{price}}</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>

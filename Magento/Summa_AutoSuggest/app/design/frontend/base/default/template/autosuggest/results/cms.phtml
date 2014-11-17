@@ -1,0 +1,19 @@
+<?php $_helper = Mage::helper('summa_autosuggest'); ?>
+<?php if($this->isCmsSearchEnabled()): ?>
+    <div style="clear:both;"></div>
+    <h1 class="cms-result-title"><?php echo $_helper->__('CMS Pages') ?></h1>
+    <?php $_pagesCollection = $this->getCollection(); ?>
+    <?php if($_pagesCollection->count()): ?>
+        <ul class="cms-result-list">
+            <?php foreach($_pagesCollection as $_page): ?>
+            <li>
+                <h3><?php echo ($_page->getContentHeading()) ? $_page->getContentHeading() : $_page->getTitle(); ?></h3>
+                <a href="<?php echo Mage::helper('cms/page')->getPageUrl($_page->getId()); ?>"><?php echo $_helper->__('View More'); ?></a>
+                <hr />
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p class="cms-result-title no-results"><?php echo $this->__('No Pages Found'); ?></p>
+    <?php endif; ?>
+<?php endif; ?>

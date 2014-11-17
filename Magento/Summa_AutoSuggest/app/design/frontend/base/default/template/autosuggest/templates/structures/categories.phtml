@@ -1,0 +1,13 @@
+<div class="autosuggest-result autosuggest-categories">
+    <h4><?php echo $this->__('Categories') ?></h4>
+    <ul>
+        <li>
+            <a href="{{url}}">
+                <span class="as-name">{{name}}</span>
+                <?php if($this->isDisplayCountActivated()) : ?>
+                <span class="as-count">{{count}}</span>
+                <?php endif; ?>
+            </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,25 @@
+<?php /* @var $this Summa_AutoSuggest_Block_Results */ ?>
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        /** Initialize AutoSuggest plugin hardcoding, if you want, the following parameters
+         *  taking into account that right now the plugin depends on the Magento Admin Panel
+         *  configuration (you better change things there).
+         *
+         * minLength: the minimum number of characters in order to proceed with the
+         *      request to Solr.
+         * delay: the milliseconds the plugin must wait before execute.
+         * url: the controller that talks with Solr
+         */
+        jQuery(".autosuggest-form").each(function(){
+            jQuery(this).AutoSuggest({
+                minLength: <?php echo $this->getMinLength(); ?>,
+                delay:  <?php echo $this->getDelay(); ?>,
+                url: '<?php echo Mage::getUrl('summa_autosuggest/ajax/search'); ?>',
+                templatesUrl: '<?php echo Mage::getUrl('summa_autosuggest/ajax/templates'); ?>'
+            });
+        });
+    });
+</script>
+
+<div class="autosuggest-results"></div>
