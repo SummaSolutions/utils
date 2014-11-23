@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+    <catalog_category_default>
+        <reference name="head">
+            <!-- Defer Images -->
+            <action method="addItem" ifconfig="catalog/defer_images/enable">
+                <type>skin_js</type>
+                <name>js/deferImages.js</name>
+            </action>
+        </reference>
+        <reference name="product_list">
+            <action method="setTemplate">
+                <template>summa_deferimage/catalog/product/list.phtml</template>
+            </action>
+        </reference>
+    </catalog_category_default>
+
+    <catalog_category_layered>
+        <reference name="head">
+            <!-- Defer Images -->
+            <action method="addItem" ifconfig="catalog/defer_images/enable">
+                <type>skin_js</type>
+                <name>js/deferImages.js</name>
+            </action>
+        </reference>
+        <reference name="product_list">
+            <action method="setTemplate">
+                <template>summa_deferimage/catalog/product/list.phtml</template>
+            </action>
+        </reference>
+    </catalog_category_layered>
+</layout>

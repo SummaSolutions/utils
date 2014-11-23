@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_DeferImage>
+            <version>0.1.0</version>
+        </Summa_DeferImage>
+    </modules>
+    <global>
+        <helpers>
+            <summa_deferimage>
+                <class>Summa_DeferImage_Helper</class>
+            </summa_deferimage>
+        </helpers>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <summa_deferimage>
+                    <file>summa_deferimage.xml</file>
+                </summa_deferimage>
+            </updates>
+        </layout>
+    </frontend>
+</config>
