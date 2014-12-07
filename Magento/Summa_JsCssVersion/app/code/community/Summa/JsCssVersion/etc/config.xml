@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_JsCssVersion>
+            <version>0.1.0</version>
+        </Summa_JsCssVersion>
+    </modules>
+    <global>
+        <blocks>
+            <page>
+                <rewrite>
+                    <html_head>Summa_JsCssVersion_Block_Html_Head</html_head>
+                </rewrite>
+            </page>
+        </blocks>
+        <helpers>
+            <summa_jscssversion>
+                <class>Summa_JsCssVersion_Helper</class>
+            </summa_jscssversion>
+        </helpers>
+    </global>
+    <default>
+        <dev>
+            <summa_jscss_version>
+                <enable>0</enable>
+                <version>1.0</version>
+            </summa_jscss_version>
+        </dev>
+    </default>
+</config>

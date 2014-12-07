@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_JsCssVersion>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Summa_JsCssVersion>
+    </modules>
+</config>
