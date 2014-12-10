@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <summa module="core">
+            <groups>
+                <emails>
+                    <label>View E-mails in Browser</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enable View in Browser</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enabled>
+                        <clear_email_archive translate="label">
+                            <label>Clear saved emails</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><enabled>1</enabled></depends>
+                        </clear_email_archive>
+                        <period translate="label">
+                            <label>Days to expire</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                                <clear_email_archive>1</clear_email_archive>
+                            </depends>
+                            <depends>clear_email_archive</depends>
+                        </period>
+                    </fields>
+                </emails>
+            </groups>
+        </summa>
+    </sections>
+</config>

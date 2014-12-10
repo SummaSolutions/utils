@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_ViewMails>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Summa_ViewMails>
+    </modules>
+</config>

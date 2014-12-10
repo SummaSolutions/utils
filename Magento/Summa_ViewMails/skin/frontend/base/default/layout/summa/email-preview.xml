@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <systemPreview>
+        <block type="core/template" name="root" output="toHtml" template="viewmails/preview.phtml">
+            <block type="summa_viewmails/email_preview" name="content" as="content"></block>
+        </block>
+    </systemPreview>
+</layout>
