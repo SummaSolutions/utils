@@ -8,7 +8,7 @@ $installer->startSetup();
  * Create table 'sitemap'
  */
 $table = $installer->getConnection()
-    ->newTable($installer->getTable('holdyourfire_viewmails/email_archive'))
+    ->newTable($installer->getTable('summa_viewmails/email_archive'))
     ->addColumn('archive_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'identity'  => true,
         'unsigned'  => true,

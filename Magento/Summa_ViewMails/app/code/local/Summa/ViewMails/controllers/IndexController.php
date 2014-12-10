@@ -13,7 +13,7 @@ class Summa_ViewMails_IndexController extends Mage_Core_Controller_Front_Action
 
         $code = $this->getRequest()->getParam('code');
         if ($code) {
-            $archive = Mage::getModel('holdyourfire_viewmails/email_archive');
+            $archive = Mage::getModel('summa_viewmails/email_archive');
             $archive->load($code, 'hash');
             if($archive->getId()) {
                 $block =  $this->getLayout()->getBlock('content');

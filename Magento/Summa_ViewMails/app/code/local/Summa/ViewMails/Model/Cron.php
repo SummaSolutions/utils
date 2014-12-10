@@ -10,7 +10,7 @@ class Summa_ViewMails_Model_Cron extends Mage_Core_Model_Abstract
     public function clearEmailArchive()
     {
         /* @var $helper Summa_ViewMails_Helper_Data */
-        $helper = Mage::helper('holdyourfire_viewmails');
+        $helper = Mage::helper('summa_viewmails');
 
         $period = $helper->getPeriod();
 
@@ -18,7 +18,7 @@ class Summa_ViewMails_Model_Cron extends Mage_Core_Model_Abstract
             $date = time() - $period * 3600 * 24;
             $date = date('Y-m-d H:i:s', $date);
             /* @var $collection Summa_ViewMails_Model_Resource_Email_Archive_Collection */
-            $collection = Mage::getModel('holdyourfire_viewmails/email_archive')->getCollection();
+            $collection = Mage::getModel('summa_viewmails/email_archive')->getCollection();
             $collection->addFieldToFilter('created_at', array('lt' => $date));
             try {
                 $collection->delete();

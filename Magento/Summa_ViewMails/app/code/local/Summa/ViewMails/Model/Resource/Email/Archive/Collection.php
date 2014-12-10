@@ -14,7 +14,7 @@ class Summa_ViewMails_Model_Resource_Email_Archive_Collection
      */
     public function _construct()
     {
-        $this->_init('holdyourfire_viewmails/email_archive');
+        $this->_init('summa_viewmails/email_archive');
     }
 
     public function delete()

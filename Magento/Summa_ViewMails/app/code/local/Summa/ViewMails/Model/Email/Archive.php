@@ -13,6 +13,6 @@ class Summa_ViewMails_Model_Email_Archive extends Mage_Core_Model_Abstract
      */
     protected function _construct()
     {
-        $this->_init('holdyourfire_viewmails/email_archive');
+        $this->_init('summa_viewmails/email_archive');
     }
 }
