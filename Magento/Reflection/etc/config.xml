@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * utilities to get information about classes through PHP Reflection API
+ *
+ * @author      Guidance Magento Team <magento@guidance.com>
+ * @category    Guidance
+ * @package     Reflection
+ * @copyright   Copyright (c) 2014 Guidance Solutions (http://www.guidance.com)
+ */
+-->
+<config>
+    <modules>
+        <Guidance_Reflection>
+            <version>0.0.1</version>
+        </Guidance_Reflection>
+    </modules>
+
+    <global>
+        <helpers>
+            <Guidance_Reflection>
+                <class>Guidance_Reflection_Helper</class>
+            </Guidance_Reflection>
+        </helpers>
+    </global>
+</config>
