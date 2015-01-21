@@ -12,7 +12,7 @@ Funcionamiento:
 =================
 Instanciar Helper del modulo.
 
-Para obtener nombre de la clase 2 niveles arriba de la indicada (Grand Parent ClassName)
+Para obtener nombre de la clase 2 niveles arriba de la indicada (Grand Parent ClassName):
 
 $foo = getGrandParentClassName('miNombreClase');
 ```
