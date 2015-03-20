@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <menu>
+        <sucursales translate="title" module="summa_andreani">
+            <title>Sucursales Andreani</title>
+            <sort_order>40</sort_order>
+            <children>
+                <index module="summa_andreani">
+                    <title>Administrar Sucursales</title>
+                    <sort_order>40</sort_order>
+                    <action>adminhtml/sucursal</action>
+                </index>
+            </children>
+        </sucursales>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <sucursales translate="title" module="summa_andreani">
+                        <title>Sucursales Andreani</title>
+                        <sort_order>40</sort_order>
+                    </sucursales>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <andreani_config translate="title">
+                                        <title>Andreani</title>
+                                        <sort_order>320</sort_order>
+                                        <children>
+                                            <sucursal_tab>
+                                                <title>Sucursales</title>
+                                            </sucursal_tab>
+                                        </children>
+                                    </andreani_config>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
