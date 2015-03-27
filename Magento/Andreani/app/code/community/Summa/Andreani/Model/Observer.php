@@ -9,7 +9,7 @@ class Summa_Andreani_Model_Observer
 
         $shippingAddress = $quote->getShippingAddress();
         
-        $code = Mage::getModel('summa_andreani/shipping_sucursal')->getCode();
+        $code = Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getCode();
         
         if ($shippingAddress->getShippingMethod() == ($code . '_' . $code)) {            
             $branchId = $request->getPost('branches_id');
@@ -17,27 +17,27 @@ class Summa_Andreani_Model_Observer
             // Set branch ID to the address
             $shippingAddress->setBranchId($branchId);
             
-            $store = Mage::getModel('summa_andreani/sucursal')->load($branchId, 'sucursal_id');
-            if ($store) {
-                $shippingAddress->setStreet($store->getDireccion());
-                $shippingAddress->setCity(ucwords(strtolower($store->getLocalidad())));
+            $branch = Mage::getModel('summa_andreani/branch')->load($branchId, 'branch_id');
+            if ($branch) {
+                $shippingAddress->setStreet($branch->getAddress());
+                $shippingAddress->setCity(ucwords(strtolower($branch->getCity())));
                 
-                $region = Mage::getModel('directory/region')->load($store->getRegionId());
+                $region = Mage::getModel('directory/region')->load($branch->getRegionId());
                 if ($region) {
                     $shippingAddress->setRegion($region->getDefaultName());
                 }
                 
-                $shippingAddress->setRegionId($store->getRegionId());
-                $shippingAddress->setPostcode($store->getCodigoPostal());
+                $shippingAddress->setRegionId($branch->getRegionId());
+                $shippingAddress->setPostcode($branch->getPostalCode());
                 
-                $phone = $store->getTelefono1();
+                $phone = $branch->getPhone1();
                 if (!$phone) {
                     $phone = 'N/A';
                 }
                 $shippingAddress->setTelephone($phone);
                 
-                $storeName = ucwords(strtolower($store->getDescripcion()));
-                $shippingAddress->setCompany(Mage::getModel('summa_andreani/shipping_sucursal')->getConfigData('title') . ' - ' . $storeName );
+                $storeName = ucwords(strtolower($branch->getDescription()));
+                $shippingAddress->setCompany(Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getConfigData('title') . ' - ' . $storeName );
             }
         }        
     }
@@ -48,17 +48,14 @@ class Summa_Andreani_Model_Observer
      */
     public function afterInvoiceSave(Varien_Event_Observer $observer)
     {
-        $order = $observer->getData('data_object')->getOrder();
+        /*$order = $observer->getData('data_object')->getOrder();
         $shippingMethod = $order->getShippingMethod();
         if(
-            (
-                $shippingMethod == 'storepickup_andreani_storepickup_andreani' ||
-                strpos($shippingMethod,'matrixrate') !== false
-            ) &&
+            $this->_getHelper()->isAndreaniShippingMethod($shippingMethod) &&
             $this->_getHelper()->isAutoCreateShipmentEnabled()
         ){
             $this->_getHelper()->generateAndreaniShipment($order);
-        }
+        }*/
     }
 
 
@@ -70,9 +67,16 @@ class Summa_Andreani_Model_Observer
         return Mage::helper('summa_andreani');
     }
 
+    /**
+     * Function to generate Shipment Request to andreani before save shipment on Admin
+     * @param Varien_Event_Observer $observer
+     *
+     * @return $this
+     * @throws Mage_Adminhtml_Exception
+     */
     public function shipmentSaveBefore(Varien_Event_Observer $observer)
     {
-        $shipment = $observer->getShipment();
+        /*$shipment = $observer->getShipment();
         if ((bool)$shipment->getAllTracks()) {
             return $this;
         }
@@ -80,14 +84,14 @@ class Summa_Andreani_Model_Observer
         $shippingMethod = $order->getShippingMethod();
         if (Mage::app()->getRequest()->getControllerName() === 'sales_order_shipment' &&
             Mage::app()->getRequest()->getActionName() === "save" &&
-            (strpos($shippingMethod,'matrixrate') !== false || $shippingMethod == 'storepickup_andreani_storepickup_andreani')
+            $this->_getHelper()->isAndreaniShippingMethod($shippingMethod)
             )
         {
 
-            /* Get Andreani model */
+            // Get Andreani model
             $andreani = Mage::getModel('summa_andreani/shipping_carrier_andreani');
 
-            /* Do Shipment Request to Andreani */
+            // Do Shipment Request to Andreani
             $response = $andreani->doShipmentRequest($order, $shipment->getAllItems());
             if($response === false || !$response->ConfirmarCompraResult || !$response->ConfirmarCompraResult->NumeroAndreani){
                 throw new Mage_Adminhtml_Exception('Could not create shipment in Andreani');
@@ -95,7 +99,7 @@ class Summa_Andreani_Model_Observer
 
             $this->_getHelper()->addTrackingComment($order,$shipment,$response->ConfirmarCompraResult->NumeroAndreani);
 
-            if($shippingMethod == 'storepickup_andreani_storepickup_andreani'){
+            if($shippingMethod == 'storepickup_andreani_storepickup_andreani'){ // TODO: research what must be here
                 $carrierCode = 'storepickup_andreani';
             } else {
                 $carrierCode = 'matrixrate';
@@ -107,6 +111,6 @@ class Summa_Andreani_Model_Observer
                 ->setNumber($response->ConfirmarCompraResult->NumeroAndreani);
             $shipment->addTrack($track);
         }
-        return $this;
+        return $this;*/
     }
 }

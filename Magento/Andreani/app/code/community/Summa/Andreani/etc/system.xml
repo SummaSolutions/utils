@@ -3,7 +3,7 @@
 <sections>
     <carriers>
         <groups>
-            <global_andreani translate="label" module="summa_andreani">
+            <andreani_global translate="label" module="summa_andreani">
                 <label>Andreani Global Configuration</label>
                 <sort_order>12</sort_order>
                 <show_in_default>1</show_in_default>
@@ -55,6 +55,48 @@
                         <show_in_website>1</show_in_website>
                         <show_in_store>0</show_in_store>
                     </limit_weight>
+                    <insurance translate="label comment" module="summa_andreani">
+                        <label>Insurance</label>
+                        <frontend_type>text</frontend_type>
+                        <validate>validate-number</validate>
+                        <sort_order>12</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                    </insurance>
+                    <apply_insurance_on_shipping_price translate="label comment" module="summa_andreani">
+                        <label>Apply Insurance over shipping Price</label>
+                        <frontend_type>select</frontend_type>
+                        <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <sort_order>13</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <comment><![CDATA[If it's not, then Insurance will be showed like subtotal]]></comment>
+                    </apply_insurance_on_shipping_price>
+                    <insurance_subtotal_title>
+                        <label>Title for Subtotal of Insurance</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>14</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <depends>
+                            <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
+                        </depends>
+                    </insurance_subtotal_title>
+                    <apply_insurance_when_free_shipping>
+                        <label>Apply insurance when free-shipping</label>
+                        <frontend_type>select</frontend_type>
+                        <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <sort_order>30</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <depends>
+                            <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
+                        </depends>
+                    </apply_insurance_when_free_shipping>
                     <gateway_url translate="label comment" module="summa_andreani">
                         <label>Gateway URL</label>
                         <frontend_type>text</frontend_type>
@@ -96,8 +138,8 @@
                         <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/CotizacionEnvio.svc]]></comment>
                     </gateway_rates_url>
                 </fields>
-            </global_andreani>
-            <standard_andreani translate="label" module="summa_andreani">
+            </andreani_global>
+            <andreani_standard translate="label" module="summa_andreani">
                 <label>Andreani Standard</label>
                 <sort_order>13</sort_order>
                 <show_in_default>1</show_in_default>
@@ -147,6 +189,43 @@
                         </depends>
                         <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                     </contract>
+                    <specificerrmsg translate="label">
+                        <label>Displayed Error Message</label>
+                        <frontend_type>textarea</frontend_type>
+                        <sort_order>50</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </specificerrmsg>
+                    <sallowspecific translate="label">
+                        <label>Ship to Applicable Countries</label>
+                        <frontend_type>select</frontend_type>
+                        <sort_order>51</sort_order>
+                        <frontend_class>shipping-applicable-country</frontend_class>
+                        <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </sallowspecific>
+                    <specificcountry translate="label">
+                        <label>Ship to Specific Countries</label>
+                        <frontend_type>multiselect</frontend_type>
+                        <sort_order>52</sort_order>
+                        <source_model>adminhtml/system_config_source_country</source_model>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <can_be_empty>1</can_be_empty>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </specificcountry>
                     <debug_mode translate="label">
                         <label>Debugging Enabled</label>
                         <frontend_type>select</frontend_type>
@@ -161,8 +240,8 @@
                         <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
                     </debug_mode>
                 </fields>
-            </standard_andreani>
-            <storepickup_andreani translate="label" module="summa_andreani">
+            </andreani_standard>
+            <andreani_storepickup translate="label" module="summa_andreani">
                 <label>Andreani Storepickup</label>
                 <sort_order>14</sort_order>
                 <show_in_default>1</show_in_default>
@@ -212,6 +291,43 @@
                         </depends>
                         <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                     </contract>
+                    <specificerrmsg translate="label">
+                        <label>Displayed Error Message</label>
+                        <frontend_type>textarea</frontend_type>
+                        <sort_order>50</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </specificerrmsg>
+                    <sallowspecific translate="label">
+                        <label>Ship to Applicable Countries</label>
+                        <frontend_type>select</frontend_type>
+                        <sort_order>51</sort_order>
+                        <frontend_class>shipping-applicable-country</frontend_class>
+                        <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </sallowspecific>
+                    <specificcountry translate="label">
+                        <label>Ship to Specific Countries</label>
+                        <frontend_type>multiselect</frontend_type>
+                        <sort_order>52</sort_order>
+                        <source_model>adminhtml/system_config_source_country</source_model>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <can_be_empty>1</can_be_empty>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </specificcountry>
                     <debug_mode translate="label">
                         <label>Debugging Enabled</label>
                         <frontend_type>select</frontend_type>
@@ -225,6 +341,18 @@
                         </depends>
                         <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
                     </debug_mode>
+                    <postal_codes_disabled>
+                        <label>Postal Codes Disabled</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>60</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                        <comment><![CDATA[Fill this input with postal codes to disable new branches by default. To use more than one postal code connect them with a comma. Ex. 5870,7000,7005]]></comment>
+                    </postal_codes_disabled>
                     <storepickup_cron>
                         <label>Time to update Andreani stores</label>
                         <comment>Ex. (All day at 12AM): 0 0 * * *</comment>
@@ -238,8 +366,8 @@
                         </depends>
                     </storepickup_cron>
                 </fields>
-            </storepickup_andreani>
-            <urgent_andreani translate="label" module="summa_andreani">
+            </andreani_storepickup>
+            <andreani_urgent translate="label" module="summa_andreani">
                 <label>Andreani Urgent</label>
                 <sort_order>15</sort_order>
                 <show_in_default>1</show_in_default>
@@ -289,6 +417,43 @@
                         </depends>
                         <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                     </contract>
+                    <specificerrmsg translate="label">
+                        <label>Displayed Error Message</label>
+                        <frontend_type>textarea</frontend_type>
+                        <sort_order>50</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </specificerrmsg>
+                    <sallowspecific translate="label">
+                        <label>Ship to Applicable Countries</label>
+                        <frontend_type>select</frontend_type>
+                        <sort_order>51</sort_order>
+                        <frontend_class>shipping-applicable-country</frontend_class>
+                        <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </sallowspecific>
+                    <specificcountry translate="label">
+                        <label>Ship to Specific Countries</label>
+                        <frontend_type>multiselect</frontend_type>
+                        <sort_order>52</sort_order>
+                        <source_model>adminhtml/system_config_source_country</source_model>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>0</show_in_store>
+                        <can_be_empty>1</can_be_empty>
+                        <depends>
+                            <active>1</active>
+                        </depends>
+                    </specificcountry>
                     <debug_mode translate="label">
                         <label>Debugging Enabled</label>
                         <frontend_type>select</frontend_type>
@@ -303,7 +468,7 @@
                         <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
                     </debug_mode>
                 </fields>
-            </urgent_andreani>
+            </andreani_urgent>
         </groups>
     </carriers>
     <!--<andreani_config translate="label">

@@ -1,20 +1,28 @@
 <?php
+/**
+ * Created for  Andreani.
+ * @author:     mhidalgo@summasolutions.net
+ * Date:        26/03/15
+ * Time:        16:51
+ * @copyright   Copyright (c) 2015 Summa Solutions (http://www.summasolutions.net)
+ */
 
-class Summa_Andreani_Block_Adminhtml_Sucursal_Grid extends Mage_Adminhtml_Block_Widget_Grid
+class Summa_Andreani_Block_Adminhtml_Branch_Grid
+    extends Mage_Adminhtml_Block_Widget_Grid
 {
     public function __construct()
     {
         parent::__construct();
 
-        $this->setDefaultSort('sucursal_id');
-        $this->setId('sucursalGrid');
+        $this->setDefaultSort('branch_id');
+        $this->setId('branchGrid');
         $this->setDefaultDir('asc');
         $this->setSaveParametersInSession(true);
     }
 
     protected function _prepareCollection()
     {
-        $collection = Mage::getModel('summa_andreani/sucursal')->getCollection();
+        $collection = Mage::getModel('summa_andreani/branch')->getCollection();
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
@@ -30,31 +38,31 @@ class Summa_Andreani_Block_Adminhtml_Sucursal_Grid extends Mage_Adminhtml_Block_
             )
         );
 
-        $this->addColumn('descripcion',
+        $this->addColumn('description',
             array(
-                'header'=> $this->__('Descripcion'),
-                'index' => 'descripcion'
+                'header'=> $this->__('Description'),
+                'index' => 'description'
             )
         );
 
-        $this->addColumn('sucursal_id',
+        $this->addColumn('branch_id',
             array(
-                'header'=> $this->__('Sucursal ID'),
-                'index' => 'sucursal_id'
+                'header'=> $this->__('Branch ID'),
+                'index' => 'branch_id'
             )
         );
 
-        $this->addColumn('direccion',
+        $this->addColumn('address',
             array(
-                'header'=> $this->__('Direccion'),
-                'index' => 'direccion'
+                'header'=> $this->__('Address'),
+                'index' => 'address'
             )
         );
 
-        $this->addColumn('horario',
+        $this->addColumn('time_attendance',
             array(
-                'header'=> $this->__('Horario'),
-                'index' => 'horario'
+                'header'=> $this->__('Time Attendance'),
+                'index' => 'time_attendance'
             )
         );
 
@@ -65,24 +73,24 @@ class Summa_Andreani_Block_Adminhtml_Sucursal_Grid extends Mage_Adminhtml_Block_
             )
         );
 
-        $this->addColumn('tipo_telefono_1',
+        $this->addColumn('kind_phone_1',
             array(
-                'header'=> $this->__('Tipo Telefono 1'),
-                'index' => 'tipo_telefono_1'
+                'header'=> $this->__('Kind Phone 1'),
+                'index' => 'kind_phone_1'
             )
         );
 
-        $this->addColumn('telefono_1',
+        $this->addColumn('phone_1',
             array(
-                'header'=> $this->__('Telefono 1'),
-                'index' => 'telefono_1'
+                'header'=> $this->__('Phone 1'),
+                'index' => 'phone_1'
             )
         );
 
-        $this->addColumn('provincia',
+        $this->addColumn('region',
             array(
-                'header'=> $this->__('Provincia'),
-                'index' => 'provincia'
+                'header'=> $this->__('Region'),
+                'index' => 'region'
             )
         );
 
@@ -92,7 +100,7 @@ class Summa_Andreani_Block_Adminhtml_Sucursal_Grid extends Mage_Adminhtml_Block_
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('id');
-        $this->getMassactionBlock()->setFormFieldName('sucursal');
+        $this->getMassactionBlock()->setFormFieldName('branch');
 
         $this->getMassactionBlock()->addItem('delete', array(
              'label'    => Mage::helper('summa_andreani')->__('Delete'),

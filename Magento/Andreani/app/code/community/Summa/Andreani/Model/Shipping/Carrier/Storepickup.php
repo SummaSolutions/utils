@@ -23,27 +23,67 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
 
     public function getAllowedMethods()
     {
-        return array($this->getConfigData('title')=>$this->getConfigData('name'));
+        return array($this->_code=>$this->getConfigData('name'));
     }
 
-    /**
-     * Function to get Standard Rate
-     * @return Mage_Shipping_Model_Rate_Result_Method
-     */
-    protected function _getStandardRate()
+    public function fetchBranches($branches = null)
     {
-        /** @var $rate Mage_Shipping_Model_Rate_Result_Method */
-        $rate = Mage::getModel('shipping/rate_result_method');
+        try
+        {
 
-        $rate->setCarrier($this->_code);
-        $rate->setCarrierTitle($this->_getHelper()->getConfigData('title'));
-        $rate->setMethod($this->_code);
-        $rate->setMethodTitle($this->_getHelper()->getConfigData('name'));
+            $options = array(
+                'soap_version' => SOAP_1_2,
+                'exceptions' => true,
+                'trace' => 1,
+                'wdsl_local_copy' => true
+            );
+            $username   = $this->_getHelper()->getConfigData('username');
+            $password   = $this->_getHelper()->getConfigData('password');
 
-        // Starts at zero cost, calculates after picking a store
-        $rate->setPrice(0);// TODO: look for another solution
-        $rate->setCost(0);
+            $gatewayUrl = $this->_getHelper()->getConfigData('gateway_storepickup_url');
 
-        return $rate;
+            $this->_getHelper()->debugging('fetchBranchesDataConnexion:',$this->getServiceType());
+            $this->_getHelper()->debugging(array(
+                'username' => $username,
+                'password' => $password,
+                'gatewayStorePickupUrl' => $gatewayUrl,
+                'options' => $options
+            ),$this->getServiceType());
+
+            $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username'=> $username, 'password'=>$password));
+
+            $client = new SoapClient($gatewayUrl, $options);
+            $client->__setSoapHeaders(array($wsse_header));
+
+            if (is_null($branches)) {
+                $branchesToGet = array(
+                    'consulta' => array()
+                );
+            } else {
+                $branchesToGet = array(
+                    'consulta' => $branches
+                );
+            }
+
+            $this->_getHelper()->debugging('fetchBranchesDataSent:',$this->getServiceType());
+            $this->_getHelper()->debugging($branchesToGet,$this->getServiceType());
+
+            $andreaniResponse = $client->ConsultarSucursales($branchesToGet);
+
+            $this->_getHelper()->debugging('fetchBranchesResponse:',$this->getServiceType());
+            $this->_getHelper()->debugging($andreaniResponse,$this->getServiceType());
+
+            return $andreaniResponse;
+        } catch (SoapFault $e) {
+            $error = libxml_get_last_error();
+            $error .= "<BR><BR>";
+            $error .= $e;
+
+            $this->_getHelper()->debugging('fetchBranchesException:',$this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(),$this->getServiceType());
+            $this->_getHelper()->debugging($error,$this->getServiceType());
+
+            return false;
+        }
     }
 }

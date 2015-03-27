@@ -1,0 +1,19 @@
+<config>
+    <modules>
+        <Summa_Matrixrate>
+            <version>1.0.0</version>
+        </Summa_Matrixrate>
+    </modules>
+    <global>
+        <models>
+            <matrixrate_mysql4>
+                <rewrite>
+                    <carrier_matrixrate>Grandmarche_Matrixrate_Model_Mysql4_Carrier_Matrixrate</carrier_matrixrate>
+                </rewrite>
+            </matrixrate_mysql4>
+            <summa_matrixrate>
+                <class>Grandmarche_Matrixrate_Model</class>
+            </summa_matrixrate>
+        </models>
+    </global>
+</config>

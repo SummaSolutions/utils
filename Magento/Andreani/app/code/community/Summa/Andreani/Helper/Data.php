@@ -6,19 +6,19 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function formatBranchInfo(Summa_Andreani_Model_Sucursal $branch)
     {
-        return ucwords(strtolower($branch->getDescripcion() . ' - ' . $branch->getDireccion()));
+        return ucwords(strtolower($branch->getDescription() . ' - ' . $branch->getAddress()));
     }
 
     public function getSucursalesJson()
     {
-        $sucursales = Mage::getModel('summa_andreani/sucursal')->getBranches();
+        $branches = Mage::getModel('summa_andreani/branch')->getBranches();
 
         $stores = array();
 
-        foreach ($sucursales as $sucursal) {
-            $stores[$sucursal->getRegionId()][$sucursal->getSucursalId()] = array(
-                'code' => $sucursal->getSucursalId(),
-                'name' => $this->formatBranchInfo($sucursal)
+        foreach ($branches as $branch) {
+            $stores[$branch->getRegionId()][$branch->getBranchId()] = array(
+                'code' => $branch->getBranchId(),
+                'name' => $this->formatBranchInfo($branch)
             );
         }
         $json = Mage::helper('core')->jsonEncode($stores);
@@ -28,17 +28,23 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getRegionIds()
     {
-        $sucursales = Mage::getModel('summa_andreani/sucursal')->getBranches();
+        $branches = Mage::getModel('summa_andreani/branch')->getBranches();
         
         $ids = array();
 
-        foreach ($sucursales as $sucursal) {
-            $ids[] = $sucursal->getRegionId();
+        foreach ($branches as $branch) {
+            $ids[] = $branch->getRegionId();
         }
 
         return $ids;
     }
 
+    /**
+     * Function to split date from web service Andreani on TrackingCodes.
+     * @param $dateTime
+     *
+     * @return array
+     */
     public function splitDate($dateTime)
     {
         if(empty($dateTime)){
@@ -57,6 +63,89 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Function to show button on admin shipment view to call Andreani Web service and get Constancy Link
+     * @param $shipment Mage_Sales_Model_Order_Shipment
+     * @return bool
+     */
+    public function canGenerateConstancy($shipment)
+    {
+        $shippingMethod = $shipment->getOrder()->getShippingMethod();
+        if ($this->isAndreaniShippingMethod($shippingMethod)) {
+            return false;
+        }
+
+        $tracks = $shipment->getAllTracks();
+        if(empty($tracks)){
+            return false;
+        }
+        $found = false;
+        $comments = $shipment->getCommentsCollection();
+        /** @var $comment Mage_Sales_Model_Resource_Order_Shipment_Comment */
+        foreach ($comments as $comment)
+        {
+            if (strpos($comment->getComment(),'Constancia PDF: |SEPARATOR| <a href') !== false) {
+                $found = true;
+                break;
+            }
+        }
+        return !$found;
+    }
+
+    /**
+     * Function to show button on admin shipment view to call Andreani Web service and get Constancy Link
+     * @param $shipment Mage_Sales_Model_Order_Shipment
+     * @return bool
+     */
+    public function canCancelShipment($shipment)
+    {
+        $shippingMethod = $shipment->getOrder()->getShippingMethod();
+        if ($this->isAndreaniShippingMethod($shippingMethod)) {
+            return false;
+        }
+        if ($shipment->getOrder()->canShip()) {
+            return false;
+        }
+        if ($shipment->getShipmentStatus() == "Shipped") {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Function to know if the shipping Method is one of enabled andreani shipping methods
+     * @param $shippingMethod
+     *
+     * @return bool
+     */
+    public function isAndreaniShippingMethod($shippingMethod)
+    {
+        return in_array($shippingMethod,$this->getEnabledAndreaniMethods());
+    }
+
+    /**
+     * Function to get array with enabled Andreani Methods
+     * @return array
+     */
+    public function getEnabledAndreaniMethods()
+    {
+        $methods = array();
+
+        if (Mage::getSingleton('summa_andreani/shipping_carrier_standard')->isShipmentAvailable()) {
+            $methods[] = implode('_',array(Mage::getSingleton('summa_andreani/shipping_carrier_standard')->getCode(),Mage::getSingleton('summa_andreani/shipping_carrier_standard')->getCode()));
+        }
+
+        if (Mage::getSingleton('summa_andreani/shipping_carrier_urgent')->isShipmentAvailable()) {
+            $methods[] = implode('_',array(Mage::getSingleton('summa_andreani/shipping_carrier_urgent')->getCode(),Mage::getSingleton('summa_andreani/shipping_carrier_urgent')->getCode()));
+        }
+
+        if (Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->isShipmentAvailable()) {
+            $methods[] = implode('_',array(Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->getCode(),Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->getCode()));
+        }
+
+        return $methods;
+    }
+
+    /**
      * Function to generate Andreani Shipment and Magento Shipment natively
      * If you want don't create Magento Shipment (ex. if you are generating the
      * shipment using Magento Admin) you can send $generateMagentoShipment false
@@ -71,7 +160,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     {
         /* Get Andreani model */
         /** @var  $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
-        $andreani = Mage::getSingleton('summa_andreani/shipping_carrier_andreani');
+        $andreani = Mage::getSingleton('summa_andreani/shipping_carrier_andreani'); // TODO FIX
 
         /* Get Helper of Shipments */
         /** @var $helper Summa_Andreani_Helper_Shipments */
@@ -97,13 +186,13 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             $response = $andreani->doShipmentRequest($order);
 
             if($response === false || !$response->ConfirmarCompraResult || !$response->ConfirmarCompraResult->NumeroAndreani){
-                throw new Mage_Adminhtml_Exception('Could not create shipment in Andreani');
+                $this->throwException();
             }
             if ($generateMagentoShipment === true) {
 
                 $data['order_info']['order'] = $order;
-                $data['order_info']['carrier'] = 'matrixrate';
-                $data['order_info']['date'] = "Recibo " . $response->ConfirmarCompraResult->Recibo;
+                $data['order_info']['carrier'] = 'matrixrate'; //TODO FIX
+                $data['order_info']['date'] = $this->__('Receive') . ' '  . $response->ConfirmarCompraResult->Recibo;
                 $data['order_info']['tracking_number'] = $response->ConfirmarCompraResult->NumeroAndreani;
 
                 $shipment_id = $helper->saveShipment($data);
@@ -113,15 +202,15 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             } elseif ($shipmentToAddTracks !== null) { // support for generation of shipments from Magento Admin
 
                 $track = Mage::getModel('sales/order_shipment_track');
-                $track->setCarrierCode('matrixrate')
-                    ->setTitle("Recibo " . $response->ConfirmarCompraResult->Recibo)
+                $track->setCarrierCode('matrixrate')//TODO FIX
+                    ->setTitle($this->__('Receive') . ' ' . $response->ConfirmarCompraResult->Recibo)
                     ->setNumber($response->ConfirmarCompraResult->NumeroAndreani);
                 $shipmentToAddTracks->addTrack($track);
 
             }
         } catch (Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
-            Mage::log($e->getMessage(), null, 'Summa_Andreani_Model_Observer.log');
+            $this->debugging($e->getMessage());
         }
     }
 
@@ -129,19 +218,19 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     {
         /* Get Andreani model */
         /** @var  $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
-        $andreani = Mage::getModel('summa_andreani/shipping_carrier_andreani');
+        $andreani = Mage::getModel('summa_andreani/shipping_carrier_andreani'); // TODO FIX
 
         /* Get Link to Andreani PDF */
-        $linkConstancia = $andreani->getLinkConstancia($trackingNumber,$order);
+        $linkConstancia = $andreani->getLinkConstancy($trackingNumber);
         if (isset($linkConstancia->ImprimirConstanciaResult)) {
-            /* Create Comment with Link to PDF */
+            /* Create Comment with Link to PDF */ // TODO FOUND SOMETHING BETTER
             $comment = 'Constancia PDF: |SEPARATOR| <a href="' . $linkConstancia->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile . '" target="_blank"> Click Aqui </a>';
 
             /* Save Link in History */
             if ($shipment->getId()) {
                 Mage::getModel('sales/order_shipment_api')->addComment($shipment->getIncrementId(), $comment);
             }
-
+            // TODO CONFIGURATION FOR ALL
             //Send Email
             /*
             $sender = array(
@@ -185,7 +274,20 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getConfigData($path,$service = 'global')
     {
-        return Mage::getStoreConfig('carriers/' . $service . '_andreani/' . $path);
+        return Mage::getStoreConfig('carriers/andreani_' . $service . '/' . $path);
+    }
+
+    /**
+     * Returns config Data from MatrixRates
+     *
+     * @param        $path
+     * @param string $service
+     *
+     * @return mixed
+     */
+    public function getConfigDataFromMatrixRates($path)
+    {
+        return Mage::getStoreConfig('carriers/matrixrate/' . $path);
     }
 
     /**
@@ -198,8 +300,10 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function debugging($toLog,$service = 'global')
     {
-        if (is_null($this->_debuggingEnabled)) {
+        if ($service != 'global') {
             $this->_debuggingEnabled = $this->getConfigData('debug_mode',$service);
+        } else {
+            $this->_debuggingEnabled = true;
         }
 
         if ($this->_debuggingEnabled) {
@@ -217,10 +321,10 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @throws Mage_Adminhtml_Exception
      */
-    public function throwException($reason,$service)
+    public function throwException($reason = '',$service = 'global')
     {
         $info = '';
-        if ($this->getConfigData('debug_mode',$service)) {
+        if ($service !== 'global' && $this->getConfigData('debug_mode',$service)) {
             $info = $reason;
         }
         throw new Mage_Adminhtml_Exception(

@@ -1,17 +1,26 @@
 <?php
-class Summa_Andreani_Block_Adminhtml_Sucursal_Edit
+
+/**
+ * Created for  Andreani.
+ * @author:     mhidalgo@summasolutions.net
+ * Date:        26/03/15
+ * Time:        16:51
+ * @copyright   Copyright (c) 2015 Summa Solutions (http://www.summasolutions.net)
+ */
+
+class Summa_Andreani_Block_Adminhtml_Branch_Edit
     extends Mage_Adminhtml_Block_Widget_Form_Container
 {
 
     public function __construct()
     {
         $this->_blockGroup = 'summa_andreani';
-        $this->_controller = 'adminhtml_sucursal';
+        $this->_controller = 'adminhtml_branch';
 
         parent::__construct();
 
-        $this->_updateButton('save', 'label', $this->__('Guardar Sucursal'));
-        $this->_updateButton('delete', 'label', $this->__('Borrar Sucursal'));
+        $this->_updateButton('save', 'label', $this->__('Save Branch'));
+        $this->_updateButton('delete', 'label', $this->__('Delete Branch'));
         $this->_addButton('saveandcontinue', array(
             'label'     => Mage::helper('adminhtml')->__('Save And Continue Edit'),
             'onclick'   => 'saveAndContinueEdit()',
@@ -28,10 +37,10 @@ class Summa_Andreani_Block_Adminhtml_Sucursal_Edit
 
     public function getHeaderText()
     {
-        if (Mage::registry('sucursales_sucursal')->getId()) {
-            return $this->__('Edit Brand');
+        if (Mage::registry('branches_branch')->getId()) {
+            return $this->__('Edit Branch');
         } else {
-            return $this->__('New Brand');
+            return $this->__('New Branch');
         }
     }
 }

@@ -7,19 +7,19 @@ class Summa_Andreani_Block_Shipping_Additional extends Mage_Core_Block_Template
         parent::_construct();
     }
 
-    protected function _getBranches($provinceId = null)
+    protected function _getBranches($regionId = null)
     {
-        return Mage::getModel('summa_andreani/sucursal')->getBranches($provinceId);
+        return Mage::getModel('summa_andreani/branch')->getBranches($regionId);
     }
 
-    public function getBranches($provinceId)
+    public function getBranches($regionId)
     {
-        return $this->_getBranches($provinceId);
+        return $this->_getBranches($regionId);
     }
 
-    public function getProvinces()
+    public function getRegions()
     {
-        $provincias = array();
+        $regionsToReturn = array();
         $ids = $this->helper('summa_andreani')->getRegionIds();
         $regions = Mage::getSingleton('directory/country')
             ->loadByCode('AR')
@@ -27,11 +27,11 @@ class Summa_Andreani_Block_Shipping_Additional extends Mage_Core_Block_Template
 
         foreach ($regions as $region) {
             if(in_array($region->getRegionId(), $ids)){
-                $provincias[] = $region;
+                $regionsToReturn[] = $region;
             }
         }
 
-        return $provincias;
+        return $regionsToReturn;
     }
 
     public function getJson()
@@ -40,17 +40,17 @@ class Summa_Andreani_Block_Shipping_Additional extends Mage_Core_Block_Template
 
         $ret = array();
         foreach ($branches as $branch) {
-            $ret['id_' . $branch->getSucursalId()]['nombre'] = $branch->getDescripcion();
-            $ret['id_' . $branch->getSucursalId()]['direccion'] = $branch->getDireccion();
-            $ret['id_' . $branch->getSucursalId()]['telefono'] = $branch->getTelefono_1();
-            $ret['id_' . $branch->getSucursalId()]['email'] = $branch->getEmail();
-            $ret['id_' . $branch->getSucursalId()]['horario_atencion'] = $branch->getHorario();
+            $ret['id_' . $branch->getBranchId()]['name'] = $branch->getDescription();
+            $ret['id_' . $branch->getBranchId()]['address'] = $branch->getAddress();
+            $ret['id_' . $branch->getBranchId()]['phone'] = $branch->getPhone1();
+            $ret['id_' . $branch->getBranchId()]['email'] = $branch->getEmail();
+            $ret['id_' . $branch->getBranchId()]['time_attendance'] = $branch->getTimeAttendance();
         }
 
         return Mage::helper('core')->jsonEncode($ret);
     }
 
-    public function getProvince()
+    public function getRegion()
     {
         $model = Mage::getSingleton('directory/region');
         $countryCode = 'AR';

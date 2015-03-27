@@ -12,12 +12,14 @@ $installer = $this;
 $salesSetup = Mage::getResourceModel('sales/setup', 'core_setup');
 
 $installer->startSetup();
+$entities = array('quote_address', 'order_address');
 
-$installer->run("
-    ALTER TABLE {$this->getTable('sales_flat_order_address')} ADD COLUMN `summa_andreani_insurance` DECIMAL DEFAULT NULL;"
-);
-$installer->run("
-    ALTER TABLE {$this->getTable('sales_flat_quote_address')} ADD COLUMN `summa_andreani_insurance` DECIMAL DEFAULT NULL;"
-);
+$fields  = array('dni');
+$options = array('type' => Varien_Db_Ddl_Table::TYPE_VARCHAR);
 
+foreach ($entities as $entity) {
+    foreach ($fields as $field){
+        $salesSetup->addAttribute($entity, $field, $options );
+    }
+}
 $installer->endSetup();

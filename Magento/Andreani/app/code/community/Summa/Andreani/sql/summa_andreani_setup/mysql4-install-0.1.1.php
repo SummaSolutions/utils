@@ -11,54 +11,54 @@ $table = $installer->getConnection()
         'nullable'  => false,
         'primary'   => true,
     ), 'ID')
-    ->addColumn('descripcion', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ->addColumn('description', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Descripcion')
-    ->addColumn('sucursal_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Description')
+    ->addColumn('branch_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Sucursal ID')
-    ->addColumn('direccion', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Branch ID')
+    ->addColumn('address', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Direccion')
-    ->addColumn('horario', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Address')
+    ->addColumn('time_attendance', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Horario')
-    ->addColumn('latitud', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Time Attendance')
+    ->addColumn('lat', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Latitud')
-    ->addColumn('longitud', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Lat')
+    ->addColumn('long', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Longitud')
+    ), 'Long')
     ->addColumn('email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
     ), 'Email')
-    ->addColumn('tipo_telefono_1', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ->addColumn('kind_phone_1', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Tipo Telefono 1')
-    ->addColumn('telefono_1', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Kind Phone 1')
+    ->addColumn('phone_1', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Telefono 1')
-    ->addColumn('tipo_telefono_2', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Phone 1')
+    ->addColumn('kind_phone_2', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
-    ), 'Tipo Telefono 2')
-    ->addColumn('telefono_2', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Kind Phone 2')
+    ->addColumn('phone_2', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
-    ), 'Telefono 2')
-    ->addColumn('tipo_telefono_3', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Phone 2')
+    ->addColumn('kind_phone_3', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
-    ), 'Tipo Telefono 3')
-    ->addColumn('telefono_3', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Kind Phone 3')
+    ->addColumn('phone_3', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
-    ), 'Telefono 3')
-    ->addColumn('codigo_postal', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Phone 3')
+    ->addColumn('postal_code', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => false,
-    ), 'Codigo Postal')
-    ->addColumn('localidad', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'Postal Code')
+    ->addColumn('city', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => false,
-    ), 'Localidad')
-    ->addColumn('provincia', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ), 'City')
+    ->addColumn('region', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => false,
-    ), 'Provincia')
+    ), 'Region')
     ->addColumn('enabled', Varien_Db_Ddl_Table::TYPE_BOOLEAN, 255, array(
         'nullable' => false,
     ), 'Enabled')

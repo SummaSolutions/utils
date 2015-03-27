@@ -1,43 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <menu>
-        <sucursales translate="title" module="summa_andreani">
-            <title>Sucursales Andreani</title>
+        <andreani_branches translate="title" module="summa_andreani">
+            <title>Andreani Branches</title>
             <sort_order>40</sort_order>
             <children>
-                <index module="summa_andreani">
-                    <title>Administrar Sucursales</title>
+                <index translate="title" module="summa_andreani">
+                    <title>Admin Branches</title>
                     <sort_order>40</sort_order>
-                    <action>adminhtml/sucursal</action>
+                    <action>adminhtml/branch</action>
                 </index>
             </children>
-        </sucursales>
+        </andreani_branches>
     </menu>
     <acl>
         <resources>
             <admin>
                 <children>
-                    <sucursales translate="title" module="summa_andreani">
-                        <title>Sucursales Andreani</title>
+                    <andreani_branches translate="title" module="summa_andreani">
+                        <title>Andreani Branches</title>
                         <sort_order>40</sort_order>
-                    </sucursales>
-                    <system>
+                    </andreani_branches>
+                    <sales>
                         <children>
-                            <config>
+                            <order>
                                 <children>
-                                    <andreani_config translate="title">
-                                        <title>Andreani</title>
-                                        <sort_order>320</sort_order>
+                                    <actions>
                                         <children>
-                                            <sucursal_tab>
-                                                <title>Sucursales</title>
-                                            </sucursal_tab>
+                                            <generate_shippings translate="title"><title>Create pending shipments</title></generate_shippings>
                                         </children>
-                                    </andreani_config>
+                                    </actions>
                                 </children>
-                            </config>
+                            </order>
                         </children>
-                    </system>
+                    </sales>
                 </children>
             </admin>
         </resources>
