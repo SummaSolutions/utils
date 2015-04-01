@@ -12,7 +12,7 @@ class Summa_Andreani_Model_Branch
     protected $_serviceType = null;
     protected function _construct()
     {
-        $this->_init('summa_andreani/storepickup');
+        $this->_init('summa_andreani/branch');
     }
 
     /**

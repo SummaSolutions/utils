@@ -6,7 +6,7 @@ $connection = $installer->getConnection();
 
 $installer->startSetup();
 
-$table = $installer->getTable('summa_andreani/storepickup');
+$table = $installer->getTable('summa_andreani/branch');
 $regionTable = $installer->getTable('directory/country_region');
 
 $installer->getConnection()->addColumn($table,

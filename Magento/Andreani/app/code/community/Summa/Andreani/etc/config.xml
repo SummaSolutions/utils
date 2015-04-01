@@ -14,9 +14,9 @@
             <summa_andreani_mysql4>
                 <class>Summa_Andreani_Model_Resource</class>
                 <entities>
-                    <storepickup>
+                    <branch>
                         <table>andreani_storepickup</table>
-                    </storepickup>
+                    </branch>
                 </entities>
             </summa_andreani_mysql4>
         </models>

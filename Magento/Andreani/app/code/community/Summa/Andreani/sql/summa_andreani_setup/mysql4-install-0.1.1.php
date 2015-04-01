@@ -5,7 +5,7 @@ $installer = $this;
 $installer->startSetup();
 
 $table = $installer->getConnection()
-    ->newTable($installer->getTable('summa_andreani/storepickup'))
+    ->newTable($installer->getTable('summa_andreani/branch'))
     ->addColumn('id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'identity'  => true,
         'nullable'  => false,

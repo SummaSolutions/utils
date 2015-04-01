@@ -9,7 +9,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         return ucwords(strtolower($branch->getDescription() . ' - ' . $branch->getAddress()));
     }
 
-    public function getSucursalesJson()
+    public function getBranchesJson()
     {
         $branches = Mage::getModel('summa_andreani/branch')->getBranches();
 
@@ -105,7 +105,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         if ($shipment->getOrder()->canShip()) {
             return false;
         }
-        if ($shipment->getShipmentStatus() == "Shipped") {
+        if ($shipment->getShipmentStatus() == "Shipped") { // TODO: Change to status Shipped
             return true;
         }
         return false;
@@ -160,7 +160,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     {
         /* Get Andreani model */
         /** @var  $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
-        $andreani = Mage::getSingleton('summa_andreani/shipping_carrier_andreani'); // TODO FIX
+        $andreani = $order->getShippingCarrier();
 
         /* Get Helper of Shipments */
         /** @var $helper Summa_Andreani_Helper_Shipments */
@@ -173,11 +173,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             if ($item->getQtyToShip()>0 && !$item->getIsVirtual()
                 && !$item->getLockedDoShip())
             {
-                if (!isset($data['items_info'][$item->getId()])) {
-                    $data['items_info'][$item->getId()] = 1;
-                } else {
-                    $data['items_info'][$item->getId()] += 1;
-                }
+                $data['items_info'][$item->getId()] = $item->getQtyInvoiced();
             }
         }
 
@@ -191,7 +187,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             if ($generateMagentoShipment === true) {
 
                 $data['order_info']['order'] = $order;
-                $data['order_info']['carrier'] = 'matrixrate'; //TODO FIX
+                $data['order_info']['carrier'] = $andreani->getCode();
                 $data['order_info']['date'] = $this->__('Receive') . ' '  . $response->ConfirmarCompraResult->Recibo;
                 $data['order_info']['tracking_number'] = $response->ConfirmarCompraResult->NumeroAndreani;
 
@@ -202,7 +198,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             } elseif ($shipmentToAddTracks !== null) { // support for generation of shipments from Magento Admin
 
                 $track = Mage::getModel('sales/order_shipment_track');
-                $track->setCarrierCode('matrixrate')//TODO FIX
+                $track->setCarrierCode($andreani->getCode())
                     ->setTitle($this->__('Receive') . ' ' . $response->ConfirmarCompraResult->Recibo)
                     ->setNumber($response->ConfirmarCompraResult->NumeroAndreani);
                 $shipmentToAddTracks->addTrack($track);
@@ -214,11 +210,19 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * Function to add tracking comment with constancy link
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Shipment $shipment
+     * @param string $trackingNumber
+     *
+     * @return bool
+     */
     public function addTrackingComment($order, $shipment, $trackingNumber)
     {
         /* Get Andreani model */
-        /** @var  $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
-        $andreani = Mage::getModel('summa_andreani/shipping_carrier_andreani'); // TODO FIX
+        /** @var $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
+        $andreani = $order->getShippingCarrier();
 
         /* Get Link to Andreani PDF */
         $linkConstancia = $andreani->getLinkConstancy($trackingNumber);
@@ -243,7 +247,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             $vars = array(
                 'link_pdf' => $linkConstancia->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile,
                 'order'    => $order,
-                'payment'  => ($order->getPayment()->getMethod() == 'mpexpress') ? "Mercado Pago" : "Efectivo",// ¿?
+                'payment'  => $order->getPayment()->getMethodInstance()->getTitle(),
                 'shipment' => $shipment
             );
 
@@ -251,7 +255,9 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             $email->emulateDesign(1);
             $email->sendTransactional($templateId, $sender, Mage::getStoreConfig('trans_email/ident_sales/email'), Mage::getStoreConfig('trans_email/ident_sales/name'), $vars, Mage::app()->getStore()->getStoreId());
             */
+            return true;
         }
+        return false;
     }
 
     /**

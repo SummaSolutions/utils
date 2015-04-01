@@ -25,6 +25,16 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         return true;
     }
 
+    /**
+     * Check if carrier has shipping label option available
+     *
+     * @return boolean
+     */
+    public function isShippingLabelsAvailable()
+    {
+        return false; // TODO: Develop this...
+    }
+
     public function isShipmentAvailable()
     {
         return $this->_getHelper()->isEnabled($this->getServiceType());
@@ -75,7 +85,44 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     {
         $this->_getHelper()->debugging('requestToShipment:',$this->getServiceType());
         $this->_getHelper()->debugging($request,$this->getServiceType());
-        return new Varien_Object();
+        return new Varien_Object();// TODO: Develop this...
+        /*
+         *
+        $packages = $request->getPackages();
+        if (!is_array($packages) || !$packages) {
+            Mage::throwException(Mage::helper('usa')->__('No packages for request'));
+        }
+        if ($request->getStoreId() != null) {
+            $this->setStore($request->getStoreId());
+        }
+        $data = array();
+        foreach ($packages as $packageId => $package) {
+            $request->setPackageId($packageId);
+            $request->setPackagingType($package['params']['container']);
+            $request->setPackageWeight($package['params']['weight']);
+            $request->setPackageParams(new Varien_Object($package['params']));
+            $request->setPackageItems($package['items']);
+            $result = $this->_doShipmentRequest($request);
+
+            if ($result->hasErrors()) {
+                $this->rollBack($data);
+                break;
+            } else {
+                $data[] = array(
+                    'tracking_number' => $result->getTrackingNumber(),
+                    'label_content'   => $result->getShippingLabelContent()
+                );
+            }
+            if (!isset($isFirstRequest)) {
+                $request->setMasterTrackingId($result->getTrackingNumber());
+                $isFirstRequest = false;
+            }
+        }
+
+        $response = new Varien_Object(array(
+            'info'   => $data
+        ));
+         * */
     }
 
     /**
@@ -88,7 +135,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     {
         $this->_getHelper()->debugging('returnOfShipment:',$this->getServiceType());
         $this->_getHelper()->debugging($request,$this->getServiceType());
-        return new Varien_Object();
+        return new Varien_Object();// TODO: Develop this...
     }
 
     /**
@@ -294,7 +341,6 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      * Get tracking
      *
      * @param mixed $trackings
-     * @param $order
      * @return mixed
      */
     public function getTracking($trackings)
