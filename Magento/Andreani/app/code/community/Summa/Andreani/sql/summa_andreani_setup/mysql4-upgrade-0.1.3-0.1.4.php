@@ -13,11 +13,35 @@ $salesSetup = Mage::getResourceModel('sales/setup', 'core_setup');
 
 $installer->startSetup();
 
-$installer->run("
-    ALTER TABLE {$this->getTable('sales_flat_order_address')} ADD COLUMN `summa_andreani_insurance` DECIMAL DEFAULT NULL;"
-);
-$installer->run("
-    ALTER TABLE {$this->getTable('sales_flat_quote_address')} ADD COLUMN `summa_andreani_insurance` DECIMAL DEFAULT NULL;"
-);
+try {
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/quote_address'), 'summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 12,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/quote_address'), 'base_summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'base_summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 12,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order_address'), 'summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 12,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order_address'), 'base_summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'base_summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 12,
+        ));
+} catch(Exception $e) {}
 
 $installer->endSetup();

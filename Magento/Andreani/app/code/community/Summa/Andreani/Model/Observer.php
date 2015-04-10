@@ -12,10 +12,10 @@ class Summa_Andreani_Model_Observer
         $code = Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getCode();
         
         if ($shippingAddress->getShippingMethod() == ($code . '_' . $code)) {            
-            $branchId = $request->getPost('branches_id');
+            $branchId = $request->getPost('andreani_branch_id');
             
             // Set branch ID to the address
-            $shippingAddress->setBranchId($branchId);
+            $shippingAddress->setAndreaniBranchId($branchId);
             
             $branch = Mage::getModel('summa_andreani/branch')->load($branchId, 'branch_id');
             if ($branch) {
@@ -52,7 +52,7 @@ class Summa_Andreani_Model_Observer
         $shippingMethod = $order->getShippingMethod();
         if(
             $this->_getHelper()->isAndreaniShippingMethod($shippingMethod) &&
-            $this->_getHelper()->isAutoCreateShipmentEnabled()
+            $this->_getHelper()->isAutoCreateShipmentOnInvoiceEnabled()
         ){
             $this->_getHelper()->generateAndreaniShipment($order);
         }*/

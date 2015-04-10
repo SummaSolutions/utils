@@ -23,7 +23,7 @@ class Summa_Andreani_Model_Sales_Order_Creditmemo_Total_Insurance
     {
 
         $address = $creditmemo->getOrder()->getShippingAddress();
-        $amount     = $address->getData('summa_andreani_insurance');
+        $amount     = $address->getData('summa_andreani_insurance_amount');
         
         if ($amount) {
             $creditmemo->setGrandTotal($creditmemo->getGrandTotal() + $amount);

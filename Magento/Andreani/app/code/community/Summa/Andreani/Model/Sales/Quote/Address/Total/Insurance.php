@@ -31,10 +31,11 @@ class Summa_Andreani_Model_Sales_Quote_Address_Total_Insurance
      */
     protected function _resetFields(Mage_Sales_Model_Quote_Address $address)
     {
-        // Reset ammount Amount
+        // Reset insurance Amount
         $this->_setAmount(0);
         $this->_setBaseAmount(0);
-        $address->unsetData('summa_andreani_insurance');
+        $address->unsetData('summa_andreani_insurance_amount');
+        $address->unsetData('base_summa_andreani_insurance_amount');
 
         return $this;
     }
@@ -113,7 +114,8 @@ class Summa_Andreani_Model_Sales_Quote_Address_Total_Insurance
         $amount = $this->_getInsuranceAmount($address);
         
         if($amount){
-            $address->setSummaAndreaniInsurance($amount);
+            $address->setSummaAndreaniInsuranceAmount($amount);
+            $address->setBaseSummaAndreaniInsuranceAmount($amount);
             $this->_addAmount($amount);
             $this->_addBaseAmount($amount);
         }

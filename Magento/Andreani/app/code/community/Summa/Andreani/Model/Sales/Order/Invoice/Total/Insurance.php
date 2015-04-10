@@ -23,7 +23,7 @@ class Summa_Andreani_Model_Sales_Order_Invoice_Total_Insurance
     {
 
         $address = $invoice->getOrder()->getShippingAddress();
-        $amount     = $address->getData('summa_andreani_insurance');
+        $amount     = $address->getData('summa_andreani_insurance_amount');
         
         if ($amount) {
             $invoice->setGrandTotal($invoice->getGrandTotal() + $amount);

@@ -261,13 +261,13 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Return Auto Create Shipment Enabled true or false
+     * Return Auto Create Shipment On Invoice creation Enabled true or false
      *
      * @return bool
      */
-    public function isAutoCreateShipmentEnabled()
+    public function isAutoCreateShipmentOnInvoiceEnabled()
     {
-        return $this->getConfigData('autocreate_shipping');
+        return $this->getConfigData('autocreate_shipping_on_invoice_create');
     }
 
     /**
@@ -350,5 +350,85 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     public function isEnabled($service)
     {
         return $this->getConfigData('active',$service);
+    }
+
+    /**
+     * Function to get Username
+     * @param string $service
+     *
+     * @return mixed
+     */
+    public function getUsername($service = 'global')
+    {
+        return $this->getConfigData('username',$service);
+    }
+
+    /**
+     * Function to get Password
+     * @param string $service
+     *
+     * @return mixed
+     */
+    public function getPassword($service = 'global')
+    {
+        return $this->getConfigData('password',$service);
+    }
+
+    /**
+     * Function to get Contract
+     * @param string $service
+     *
+     * @return mixed
+     */
+    public function getContract($service = 'global')
+    {
+        return $this->getConfigData('contract',$service);
+    }
+
+    /**
+     * Function to get Client Number
+     * @param string $service
+     *
+     * @return mixed
+     */
+    public function getClientNumber($service = 'global')
+    {
+        return $this->getConfigData('client_number',$service);
+    }
+
+    /**
+     * Function to get SOAP Options
+     * @return array
+     */
+    public function getSoapOptions()
+    {
+        return array(
+            'soap_version' => SOAP_1_2,
+            'exceptions' => true,
+            'trace' => 1,
+            'wdsl_local_copy' => true
+        );
+    }
+
+    /**
+     * Function to Calculate Insurance
+     * @param $subtotal
+     *
+     * @return float
+     */
+    public function calculateInsurance($subtotal)
+    {
+        return $subtotal * $this->getConfigData('insurance') / 100;
+    }
+
+    /**
+     * Function to Calculate IVA
+     * @param $ratePrice
+     *
+     * @return float
+     */
+    public function calculateIVA($ratePrice)
+    {
+        return $ratePrice * $this->getConfigData('iva_percentage') / 100;
     }
 }

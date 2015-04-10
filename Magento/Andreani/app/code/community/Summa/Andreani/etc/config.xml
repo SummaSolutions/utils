@@ -36,22 +36,6 @@
             <summa_andreani>
                 <class>Summa_Andreani_Block</class>
             </summa_andreani>
-            <adminhtml>
-                <rewrite>
-                    <sales_order_totals>Summa_Andreani_Block_Adminhtml_Sales_Order_Totals</sales_order_totals>
-                    <sales_order_invoice_totals>Summa_Andreani_Block_Adminhtml_Sales_Order_Invoice_Totals</sales_order_invoice_totals>
-                    <sales_order_creditmemo_totals>Summa_Andreani_Block_Adminhtml_Sales_Order_Creditmemo_Totals</sales_order_creditmemo_totals>
-                    <sales_order_view>Summa_Andreani_Block_Adminhtml_Sales_Order_View</sales_order_view>
-                    <sales_order_shipment_view>Summa_Andreani_Block_Adminhtml_Sales_Order_Shipment_View</sales_order_shipment_view>
-                </rewrite>
-            </adminhtml>
-            <sales>
-                <rewrite>
-                    <order_totals>Summa_Andreani_Block_Sales_Order_Totals</order_totals>
-                    <order_invoice_totals>Summa_Andreani_Block_Sales_Order_Invoice_Totals</order_invoice_totals>
-                    <order_creditmemo_totals>Summa_Andreani_Block_Sales_Order_Creditmemo_Totals</order_creditmemo_totals>
-                </rewrite>
-            </sales>
         </blocks>
         <events>
             <checkout_controller_onepage_save_shipping_method>
@@ -200,16 +184,28 @@
     <default>
         <carriers>
             <andreani_global>
+                <!-- GLOBAL SETTINGS -->
                 <active>0</active>
                 <client_number>ANDCORREO</client_number>
                 <username>eCommerce_Integra</username>
                 <password>passw0rd</password>
-                <autocreate_shipping>1</autocreate_shipping>
+                <autocreate_shipping_on_invoice_create>1</autocreate_shipping_on_invoice_create>
+                <autocreate_shipping_on_shipment_create>1</autocreate_shipping_on_shipment_create>
+                <limit_weight>30000</limit_weight>
+                <source_rates>1</source_rates>
+                <include_virtual_price>1</include_virtual_price>
+                <allow_free_shipping_promotions>1</allow_free_shipping_promotions>
+                <include_free_ship_items>0</include_free_ship_items>
+                <!-- MATRIX RATES SETTINGS -->
+                <condition_name>package_weight</condition_name>
+                <add_iva_to_rates>0</add_iva_to_rates>
+                <iva_percentage>21</iva_percentage>
+                <!-- GATEWAY SETTINGS -->
                 <gateway_tracking_url>https://www.e-andreani.com/eAndreaniWSStaging/Service.svc?wsdl</gateway_tracking_url>
                 <gateway_storepickup_url>https://www.e-andreani.com/CasaStaging/eCommerce/ConsultaSucursales.svc?singleWsdl</gateway_storepickup_url>
                 <gateway_url>https://www.e-andreani.com/CasaStaging/ecommerce/ImposicionRemota.svc?wsdl</gateway_url>
                 <gateway_rates_url>https://www.e-andreani.com.ar/CasaStaging/eCommerce/CotizacionEnvio.svc</gateway_rates_url>
-                <limit_weight>30000</limit_weight>
+                <!-- INSURANCE SETTINGS -->
                 <insurance>2</insurance>
                 <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
                 <insurance_subtotal_title>Insurance for Andreani Shipping</insurance_subtotal_title>
@@ -222,6 +218,8 @@
                 <title>Andreani Standard</title>
                 <name>Shipping Standard</name>
                 <sort_order>10</sort_order>
+                <shipping_type_for_matrixrates>Standard</shipping_type_for_matrixrates>
+                <free_method_text>Free Shipping using Andreani Standard</free_method_text>
             </andreani_standard>
             <andreani_storepickup>
                 <active>0</active>
@@ -234,6 +232,8 @@
                 <express_max_weight>1</express_max_weight>
                 <storepickup_cron>0 5 * * 1</storepickup_cron>
                 <postal_codes_disabled>5870</postal_codes_disabled>
+                <shipping_type_for_matrixrates>Storepickup</shipping_type_for_matrixrates>
+                <free_method_text>Free Shipping using Andreani StorePickup</free_method_text>
             </andreani_storepickup>
             <andreani_urgent>
                 <active>0</active>
@@ -242,6 +242,8 @@
                 <title>Andreani Urgent</title>
                 <name>Shipping Urgent</name>
                 <sort_order>11</sort_order>
+                <shipping_type_for_matrixrates>Urgent</shipping_type_for_matrixrates>
+                <free_method_text>Free Shipping using Andreani Urgent</free_method_text>
             </andreani_urgent>
         </carriers>
         <sales>
