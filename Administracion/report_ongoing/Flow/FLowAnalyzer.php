@@ -138,8 +138,8 @@ function processCompleted($from, $to, $ticket)
 {
 
     $ticketDate = strtotime($ticket->completed_date);
-    $fromDate = strtotime($from);
-    $toDate = strtotime($to);
+    $fromDate = strtotime($from . ' 00:00:00');
+    $toDate = strtotime($to . ' 23:59:59');
 
     if (($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
         !$this->ticketIsInExceptionList($ticket) &&
@@ -163,8 +163,8 @@ function processPending($from, $to, $ticket)
 {
 
     $ticketDate = strtotime($ticket->created_on);
-    $fromDate = strtotime($from);
-    $toDate = strtotime($to);
+    $fromDate = strtotime($from . ' 00:00:00');
+    $toDate = strtotime($to . ' 23:59:59');
 
     if (($ticketDate >= $fromDate && $ticketDate <= $toDate) &&
         $this->isTicketRelatedToProperUsers($ticket)
