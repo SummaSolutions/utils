@@ -1,0 +1,25 @@
+<?php
+/**
+ * Created for  Andreani.
+ * @author:     mhidalgo@summasolutions.net
+ * Date:        01/10/14
+ * Time:        09:43
+ * @copyright   Copyright (c) 2015 Summa Solutions (http://www.summasolutions.net)
+ */
+?>
+<?php if($this->getSource() instanceof Mage_Sales_Model_Order): ?>
+    <?php if ((float) $this->getSource()->getSummaAndreaniInsuranceAmountRefunded()): ?>
+        <tr>
+            <td class="label"><strong><?php echo Mage::helper('summa_andreani')->__('Insurance for Andreani refunded to customer') ?></strong></td>
+            <td><strong><?php echo $this->getSource()->getSummaAndreaniInsuranceAmountRefunded(); ?></strong></td>
+        </tr>
+    <?php endif; ?>
+<?php else: ?>
+    <?php if ((float) $this->getSource()->getSummaAndreaniInsuranceAmount()): ?>
+        <tr>
+            <td class="label"><strong><?php echo Mage::helper('summa_andreani')->__('Insurance for Andreani Refunded') ?></strong></td>
+            <td><strong><?php echo $this->getSource()->getSummaAndreaniInsuranceAmount(); ?></strong></td>
+        </tr>
+    <?php endif;?>
+<?php endif; ?>
+

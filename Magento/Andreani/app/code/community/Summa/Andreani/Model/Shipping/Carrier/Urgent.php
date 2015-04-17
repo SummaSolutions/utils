@@ -12,7 +12,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Urgent
     implements Mage_Shipping_Model_Carrier_Interface
 {
 
-    protected $_code = 'andreani_urgent';
+    protected $_code = 'andreaniUrgent';
     protected $_serviceType = 'urgent';
     protected $_shippingTypeForMatrixrates = 'Urgent';
 

@@ -12,7 +12,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Standard
     implements Mage_Shipping_Model_Carrier_Interface
 {
 
-    protected $_code = 'andreani_standard';
+    protected $_code = 'andreaniStandard';
     protected $_serviceType = 'standard';
     protected $_shippingTypeForMatrixrates = 'Standard';
 

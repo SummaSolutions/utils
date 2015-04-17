@@ -280,7 +280,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getConfigData($path,$service = 'global')
     {
-        return Mage::getStoreConfig('carriers/andreani_' . $service . '/' . $path);
+        return Mage::getStoreConfig('carriers/andreani' . ucfirst($service) . '/' . $path);
     }
 
     /**
@@ -353,6 +353,18 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Function to get is Custom for $config based on $service
+     * @param $config
+     * @param $service
+     *
+     * @return mixed
+     */
+    public function isCustomConfigEnabled($config,$service)
+    {
+        return ($this->getConfigData('is_custom_'.$config,$service)) ? $service : 'global' ;
+    }
+
+    /**
      * Function to get Username
      * @param string $service
      *
@@ -360,7 +372,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getUsername($service = 'global')
     {
-        return $this->getConfigData('username',$service);
+        return $this->getConfigData('username',$this->isCustomConfigEnabled('username',$service));
     }
 
     /**
@@ -371,7 +383,18 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getPassword($service = 'global')
     {
-        return $this->getConfigData('password',$service);
+        return $this->getConfigData('password',$this->isCustomConfigEnabled('password',$service));
+    }
+
+    /**
+     * Function to get Client Number
+     * @param string $service
+     *
+     * @return mixed
+     */
+    public function getClientNumber($service = 'global')
+    {
+        return $this->getConfigData('client_number',$this->isCustomConfigEnabled('client_number',$service));
     }
 
     /**
@@ -391,9 +414,9 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return mixed
      */
-    public function getClientNumber($service = 'global')
+    public function getFreeMethodText($service = 'global')
     {
-        return $this->getConfigData('client_number',$service);
+        return $this->getConfigData('free_method_text',$service);
     }
 
     /**
@@ -408,6 +431,19 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             'trace' => 1,
             'wdsl_local_copy' => true
         );
+    }
+
+    /**
+     * Function to get Singleton of WsseHeader
+     *
+     * @param $username
+     * @param $password
+     *
+     * @return Summa_Andreani_Model_Api_Soap_Header
+     */
+    public function getWsseHeader($username,$password)
+    {
+        return Mage::getSingleton('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
     }
 
     /**
@@ -430,5 +466,52 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     public function calculateIVA($ratePrice)
     {
         return $ratePrice * $this->getConfigData('iva_percentage') / 100;
+    }
+
+    /**
+     * Function to Calculate Weight
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return float
+     */
+    public function calculateWeight($product)
+    {
+        $height = 0;
+        $width = 0;
+        $length = 0;
+        if ($product->getTypeId() === "simple") {
+            $height =
+                Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
+                    $product->getId(),
+                    $this->getConfigData('attribute_height'),
+                    Mage::app()->getStore()
+                );
+            $height = ($height)?$height:0;
+
+            $width =
+                Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
+                    $product->getId(),
+                    $this->getConfigData('attribute_width'),
+                    Mage::app()->getStore()
+                );
+            $width = ($width)?$width:0;
+
+            $length =
+                Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
+                    $product->getId(),
+                    $this->getConfigData('attribute_length'),
+                    Mage::app()->getStore()
+                );
+            $length = ($length)?$length:0;
+        }
+        return ($width * $height * $length) * 350 / 10000;
+    }
+
+    /**
+     * @return Summa_Andreani_Model_Status
+     */
+    public function getStatusSingleton()
+    {
+        return Mage::getSingleton('summa_andreani/status');
     }
 }

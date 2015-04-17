@@ -42,6 +42,76 @@ try {
             'scale'     => 2,
             'precision' => 12,
         ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order'), 'summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 12,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order'), 'base_summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'base_summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 12,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order'), 'summa_andreani_insurance_amount_invoiced', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'summa_andreani_insurance_amount_invoiced',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order'), 'base_summa_andreani_insurance_amount_invoiced', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'base_summa_andreani_insurance_amount_invoiced',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/invoice'), 'summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/invoice'), 'base_summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'base_summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order'), 'summa_andreani_insurance_amount_refunded', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'summa_andreani_insurance_amount_refunded',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/order'), 'base_summa_andreani_insurance_amount_refunded', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'base_summa_andreani_insurance_amount_refunded',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/creditmemo'), 'summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
+    $installer->getConnection()
+        ->addColumn($installer->getTable('sales/creditmemo'), 'base_summa_andreani_insurance_amount', array(
+            'type'    => Varien_Db_Ddl_Table::TYPE_DECIMAL,
+            'comment' => 'base_summa_andreani_insurance_amount',
+            'scale'     => 2,
+            'precision' => 10,
+        ));
 } catch(Exception $e) {}
 
 $installer->endSetup();

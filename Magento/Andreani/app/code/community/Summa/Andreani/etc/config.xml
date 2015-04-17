@@ -29,6 +29,7 @@
             <summa_andreani_setup>
                 <setup>
                     <module>Summa_Andreani</module>
+                    <class>Mage_Core_Model_Resource_Setup</class>
                 </setup>
             </summa_andreani_setup>
         </resources>
@@ -56,13 +57,55 @@
                     </summa_andreani_invoice_save_after>
                 </observers>
             </sales_order_invoice_save_commit_after>
+            <paypal_prepare_line_items>
+                <observers>
+                    <summa_andreani_insurance_paypal_prepare_line_items>
+                        <class>summa_andreani/observer</class>
+                        <method>updatePaypalTotal</method>
+                    </summa_andreani_insurance_paypal_prepare_line_items>
+                </observers>
+            </paypal_prepare_line_items>
+            <sales_order_invoice_save_after>
+                <observers>
+                    <summa_andreani_insurance_sales_order_invoice_save_after>
+                        <class>summa_andreani/observer</class>
+                        <method>invoiceSaveAfter</method>
+                    </summa_andreani_insurance_sales_order_invoice_save_after>
+                </observers>
+            </sales_order_invoice_save_after>
+            <sales_order_creditmemo_save_after>
+                <observers>
+                    <summa_andreani_insurance_sales_order_creditmemo_save_after>
+                        <class>summa_andreani/observer</class>
+                        <method>creditmemoSaveAfter</method>
+                    </summa_andreani_insurance_sales_order_creditmemo_save_after>
+                </observers>
+            </sales_order_creditmemo_save_after>
+            <sales_order_shipment_track_delete_before>
+                <observers>
+                    <summa_andreani_track_delete_before>
+                        <type>model</type>
+                        <class>summa_andreani/observer</class>
+                        <method>beforeTrackDelete</method>
+                    </summa_andreani_track_delete_before>
+                </observers>
+            </sales_order_shipment_track_delete_before>
+            <catalog_product_save_before>
+                <observers>
+                    <summa_andreani_product_save_before>
+                        <type>model</type>
+                        <class>summa_andreani/observer</class>
+                        <method>beforeProductSave</method>
+                    </summa_andreani_product_save_before>
+                </observers>
+            </catalog_product_save_before>
         </events>
         <sales>
             <quote>
                 <totals>
                     <summa_andreani_insurance>
                         <class>summa_andreani/sales_quote_address_total_insurance</class>
-                        <after>subtotal</after>
+                        <after>subtotal,discount</after>
                     </summa_andreani_insurance>
                 </totals>
             </quote>
@@ -70,7 +113,7 @@
                 <totals>
                     <summa_andreani_insurance>
                         <class>summa_andreani/sales_order_invoice_total_insurance</class>
-                        <after>subtotal</after>
+                        <after>subtotal,discount</after>
                     </summa_andreani_insurance>
                 </totals>
             </order_invoice>
@@ -78,16 +121,21 @@
                 <totals>
                     <summa_andreani_insurance>
                         <class>summa_andreani/sales_order_creditmemo_total_insurance</class>
-                        <after>subtotal</after>
+                        <after>subtotal,discount</after>
                     </summa_andreani_insurance>
                 </totals>
             </order_creditmemo>
         </sales>
         <fieldsets>
             <sales_convert_quote_address>
-                <summa_andreani_insurance>
+                <summa_andreani_insurance_amount>
+                    <to_order>*</to_order>
                     <to_order_address>*</to_order_address>
-                </summa_andreani_insurance>
+                </summa_andreani_insurance_amount>
+                <base_summa_andreani_insurance_amount>
+                    <to_order>*</to_order>
+                    <to_order_address>*</to_order_address>
+                </base_summa_andreani_insurance_amount>
                 <summa_andreani_branch_id>
                     <to_order_address>*</to_order_address>
                 </summa_andreani_branch_id>
@@ -97,9 +145,14 @@
                 </dni>-->
             </sales_convert_quote_address>
             <sales_convert_order_address>
-                <summa_andreani_insurance>
+                <summa_andreani_insurance_amount>
+                    <to_order>*</to_order>
                     <to_quote_address>*</to_quote_address>
-                </summa_andreani_insurance>
+                </summa_andreani_insurance_amount>
+                <base_summa_andreani_insurance_amount>
+                    <to_order>*</to_order>
+                    <to_quote_address>*</to_quote_address>
+                </base_summa_andreani_insurance_amount>
                 <summa_andreani_branch_id>
                     <to_quote_address>*</to_quote_address>
                 </summa_andreani_branch_id>
@@ -113,6 +166,18 @@
                 </dni>
             </customer_address>-->
         </fieldsets>
+        <pdf>
+            <totals>
+                <summa_andreani_insurance translate="title">
+                    <title>Insurance for andreani</title>
+                    <source_field>summa_andreani_insurance_amount</source_field>
+                    <font_size>7</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>650</sort_order>
+                    <amount_prefix>-</amount_prefix>
+                </summa_andreani_insurance>
+            </totals>
+        </pdf>
     </global>
     <frontend>
         <routers>
@@ -183,7 +248,7 @@
     </adminhtml>
     <default>
         <carriers>
-            <andreani_global>
+            <andreaniGlobal>
                 <!-- GLOBAL SETTINGS -->
                 <active>0</active>
                 <client_number>ANDCORREO</client_number>
@@ -191,28 +256,42 @@
                 <password>passw0rd</password>
                 <autocreate_shipping_on_invoice_create>1</autocreate_shipping_on_invoice_create>
                 <autocreate_shipping_on_shipment_create>1</autocreate_shipping_on_shipment_create>
+                <statuses_update_cron>0 0 * * *</statuses_update_cron>
                 <limit_weight>30000</limit_weight>
                 <source_rates>1</source_rates>
                 <include_virtual_price>1</include_virtual_price>
                 <allow_free_shipping_promotions>1</allow_free_shipping_promotions>
+                <show_only_free>1</show_only_free>
                 <include_free_ship_items>0</include_free_ship_items>
                 <!-- MATRIX RATES SETTINGS -->
                 <condition_name>package_weight</condition_name>
+                <conditionable_filters>1,2</conditionable_filters>
                 <add_iva_to_rates>0</add_iva_to_rates>
                 <iva_percentage>21</iva_percentage>
                 <!-- GATEWAY SETTINGS -->
                 <gateway_tracking_url>https://www.e-andreani.com/eAndreaniWSStaging/Service.svc?wsdl</gateway_tracking_url>
                 <gateway_storepickup_url>https://www.e-andreani.com/CasaStaging/eCommerce/ConsultaSucursales.svc?singleWsdl</gateway_storepickup_url>
                 <gateway_url>https://www.e-andreani.com/CasaStaging/ecommerce/ImposicionRemota.svc?wsdl</gateway_url>
-                <gateway_rates_url>https://www.e-andreani.com.ar/CasaStaging/eCommerce/CotizacionEnvio.svc</gateway_rates_url>
+                <gateway_rates_url>https://www.e-andreani.com.ar/CasaStaging/eCommerce/CotizacionEnvio.svc?wsdl</gateway_rates_url>
                 <!-- INSURANCE SETTINGS -->
                 <insurance>2</insurance>
                 <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
                 <insurance_subtotal_title>Insurance for Andreani Shipping</insurance_subtotal_title>
                 <apply_insurance_when_free_shipping>0</apply_insurance_when_free_shipping>
-            </andreani_global>
-            <andreani_standard>
+                <!-- ATTRIBUTES SETTINGS -->
+                <attribute_weight>weight_andreani</attribute_weight>
+                <attribute_height>height_andreani</attribute_height>
+                <attribute_width>width_andreani</attribute_width>
+                <attribute_length>length_andreani</attribute_length>
+            </andreaniGlobal>
+            <andreaniStandard>
                 <active>0</active>
+                <is_custom_client_number>0</is_custom_client_number>
+                <client_number>ANDCORREO</client_number>
+                <is_custom_username>0</is_custom_username>
+                <username>eCommerce_Integra</username>
+                <is_custom_password>0</is_custom_password>
+                <password>passw0rd</password>
                 <model>summa_andreani/shipping_carrier_standard</model>
                 <contract>AND00EST</contract>
                 <title>Andreani Standard</title>
@@ -220,9 +299,15 @@
                 <sort_order>10</sort_order>
                 <shipping_type_for_matrixrates>Standard</shipping_type_for_matrixrates>
                 <free_method_text>Free Shipping using Andreani Standard</free_method_text>
-            </andreani_standard>
-            <andreani_storepickup>
+            </andreaniStandard>
+            <andreaniStorepickup>
                 <active>0</active>
+                <is_custom_client_number>0</is_custom_client_number>
+                <client_number>ANDCORREO</client_number>
+                <is_custom_username>0</is_custom_username>
+                <username>eCommerce_Integra</username>
+                <is_custom_password>0</is_custom_password>
+                <password>passw0rd</password>
                 <model>summa_andreani/shipping_carrier_storepickup</model>
                 <contract>AND00SUC</contract>
                 <title>Andreani StorePickup</title>
@@ -234,9 +319,15 @@
                 <postal_codes_disabled>5870</postal_codes_disabled>
                 <shipping_type_for_matrixrates>Storepickup</shipping_type_for_matrixrates>
                 <free_method_text>Free Shipping using Andreani StorePickup</free_method_text>
-            </andreani_storepickup>
-            <andreani_urgent>
+            </andreaniStorepickup>
+            <andreaniUrgent>
                 <active>0</active>
+                <is_custom_client_number>0</is_custom_client_number>
+                <client_number>ANDCORREO</client_number>
+                <is_custom_username>0</is_custom_username>
+                <username>eCommerce_Integra</username>
+                <is_custom_password>0</is_custom_password>
+                <password>passw0rd</password>
                 <model>summa_andreani/shipping_carrier_urgent</model>
                 <contract>AND00URG</contract>
                 <title>Andreani Urgent</title>
@@ -244,7 +335,7 @@
                 <sort_order>11</sort_order>
                 <shipping_type_for_matrixrates>Urgent</shipping_type_for_matrixrates>
                 <free_method_text>Free Shipping using Andreani Urgent</free_method_text>
-            </andreani_urgent>
+            </andreaniUrgent>
         </carriers>
         <sales>
             <totals_sort>
@@ -257,12 +348,20 @@
         <jobs>
             <summa_andreani_storepickup>
                 <schedule>
-                    <config_path>carriers/andreani_storepickup/storepickup_cron</config_path>
+                    <config_path>carriers/andreaniStorepickup/storepickup_cron</config_path>
                 </schedule>
                 <run>
                     <model>summa_andreani/branch::fetchBranches</model>
                 </run>
             </summa_andreani_storepickup>
+            <summa_andreani_shipping_statuses_update>
+                <schedule>
+                    <config_path>carriers/andreaniGlobal/statuses_update_cron</config_path>
+                </schedule>
+                <run>
+                    <model>summa_andreani/status::updateAllAndreaniShipmentStatuses</model>
+                </run>
+            </summa_andreani_shipping_statuses_update>
         </jobs>
     </crontab>
 </config>

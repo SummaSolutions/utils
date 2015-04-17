@@ -1,872 +1,938 @@
 <?xml version="1.0"?>
 <config>
-<sections>
-    <carriers>
-        <groups>
-            <andreani_global translate="label" module="summa_andreani">
-                <label>Andreani Global settings</label>
-                <sort_order>12</sort_order>
-                <show_in_default>1</show_in_default>
-                <show_in_website>1</show_in_website>
-                <show_in_store>1</show_in_store>
-                <fields>
-                    <heading_global translate="label" module="summa_andreani">
-                        <label>Global settings</label>
-                        <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                        <sort_order>0</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                    </heading_global>
-                    <client_number translate="label comment" module="summa_andreani">
-                        <label>Client Number</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>1</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <comment><![CDATA[The default client number is only for test purposes, for production purposes use your credentials]]></comment>
-                    </client_number>
-                    <username translate="label comment" module="summa_andreani">
-                        <label>Username</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>2</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <comment><![CDATA[The default username is only for test purposes, for production purposes use your credentials]]></comment>
-                    </username>
-                    <password translate="label comment" module="summa_andreani">
-                        <label>Password</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>3</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <comment><![CDATA[The default password is only for test purposes, for production purposes use your credentials]]></comment>
-                    </password>
-                    <autocreate_shipping_on_invoice_create translate="label comment" module="summa_andreani">
-                        <label>Autocreate Shipping after Invoice</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>10</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </autocreate_shipping_on_invoice_create>
-                    <autocreate_shipping_on_shipment_create translate="label comment" module="summa_andreani">
-                        <label>Autocreate Shipping after Shipment create (from Admin)</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>11</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </autocreate_shipping_on_shipment_create>
-                    <limit_weight translate="label comment" module="summa_andreani">
-                        <label>Limit Weight</label>
-                        <frontend_type>text</frontend_type>
-                        <validate>validate-number</validate>
-                        <sort_order>15</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </limit_weight>
-                    <source_rates translate="label comment" module="summa_andreani">
-                        <label>Source of rates</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>summa_andreani/system_config_source_shipping_services</source_model>
-                        <sort_order>16</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </source_rates>
-                    <!-- MATRIX RATES SETTINGS -->
-                    <condition_name translate="label comment" module="summa_andreani">
-                        <label>Condition to match on Matrix Rates</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>summa_andreani/system_config_source_shipping_condition</source_model>
-                        <sort_order>17</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <depends>
-                            <source_rates>2</source_rates>
-                        </depends>
-                        <comment>Filter prices based on destination AND weight, price or quantity</comment>
-                    </condition_name>
-                    <allow_free_shipping_promotions translate="label comment" module="summa_andreani">
-                        <label>Free Shipping Promotions</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_enabledisable</source_model>
-                        <sort_order>18</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <source_rates>2</source_rates>
-                        </depends>
-                        <comment>Allow free shipping promotions to apply to matrixrate</comment>
-                    </allow_free_shipping_promotions>
-                    <include_free_ship_items translate="label comment" module="summa_andreani">
-                        <label>Include Free Shipping Items in Rate Calculation</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>18</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <source_rates>2</source_rates>
-                        </depends>
-                        <comment>Include weight, qty of Free Shipping Products in calculation of shipping rates</comment>
-                    </include_free_ship_items>
-                    <include_virtual_price translate="label comment" module="summa_andreani">
-                        <label>Include Virtual Products in Rate Calculation</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>18</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <depends>
-                            <source_rates>2</source_rates>
-                        </depends>
-                        <comment>Include price, qty of Virtual Products in calculation of shipping rates</comment>
-                    </include_virtual_price>
-                    <add_iva_to_rates translate="label comment" module="summa_andreani">
-                        <label>Add IVA to rates</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>19</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <source_rates>2</source_rates>
-                        </depends>
-                    </add_iva_to_rates>
-                    <iva_percentage translate="label comment" module="summa_andreani">
-                        <label>Limit Weight</label>
-                        <frontend_type>text</frontend_type>
-                        <validate>validate-number</validate>
-                        <sort_order>19</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <source_rates>2</source_rates>
-                            <add_iva_to_rates>1</add_iva_to_rates>
-                        </depends>
-                    </iva_percentage>
+    <sections>
+        <carriers>
+            <groups>
+                <andreaniGlobal translate="label" module="summa_andreani">
+                    <label>Andreani Global settings</label>
+                    <sort_order>12</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <heading_global translate="label" module="summa_andreani">
+                            <label>Global settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                        </heading_global>
+                        <client_number translate="label comment" module="summa_andreani">
+                            <label>Client Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default client number is only for test purposes, for production purposes use your credentials]]></comment>
+                        </client_number>
+                        <username translate="label comment" module="summa_andreani">
+                            <label>Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default username is only for test purposes, for production purposes use your credentials]]></comment>
+                        </username>
+                        <password translate="label comment" module="summa_andreani">
+                            <label>Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default password is only for test purposes, for production purposes use your credentials]]></comment>
+                        </password>
+                        <autocreate_shipping_on_invoice_create translate="label comment" module="summa_andreani">
+                            <label>Autocreate Shipping after Invoice</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </autocreate_shipping_on_invoice_create>
+                        <autocreate_shipping_on_shipment_create translate="label comment" module="summa_andreani">
+                            <label>Autocreate Shipping after Shipment create (from Admin)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </autocreate_shipping_on_shipment_create>
+                        <storepickup_cron>
+                            <label>Time to update Andreani Shipment Statuses</label>
+                            <comment>Ex. (All day at 12AM): 0 0 * * *</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </storepickup_cron>
+                        <limit_weight translate="label comment" module="summa_andreani">
+                            <label>Limit Weight</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </limit_weight>
+                        <allow_free_shipping_promotions translate="label comment" module="summa_andreani">
+                            <label>Free Shipping Promotions</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Allow free shipping promotions to apply to matrixrate</comment>
+                        </allow_free_shipping_promotions>
+                        <show_only_free translate="label">
+                            <label>Only Display Free Shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>If free shipping applies dont show other shipping rates</comment>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_only_free>
+                        <include_free_ship_items translate="label comment" module="summa_andreani">
+                            <label>Include Free Shipping Items in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Include weight, qty of Free Shipping Products in calculation of shipping rates</comment>
+                        </include_free_ship_items>
+                        <include_virtual_price translate="label comment" module="summa_andreani">
+                            <label>Include Virtual Products in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>18</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Include price, qty of Virtual Products in calculation of shipping rates</comment>
+                        </include_virtual_price>
+                        <source_rates translate="label comment" module="summa_andreani">
+                            <label>Source of rates</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>summa_andreani/system_config_source_shipping_service</source_model>
+                            <sort_order>19</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </source_rates>
+                        <!-- MATRIX RATES SETTINGS -->
+                        <heading_matrixrates translate="label" module="summa_andreani">
+                            <label>Matrixrates settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <source_rates>2</source_rates>
+                            </depends>
+                        </heading_matrixrates>
+                        <condition_name translate="label comment" module="summa_andreani">
+                            <label>Condition to match on Matrix Rates</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>summa_andreani/system_config_source_shipping_condition</source_model>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <source_rates>2</source_rates>
+                            </depends>
+                            <comment>Filter prices based on destination AND weight, price or quantity</comment>
+                        </condition_name>
+                        <conditionable_filters translate="label comment" module="summa_andreani">
+                            <label>Fields that will be used to filter scope of results on matrixrates</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>summa_andreani/system_config_source_shipping_matrixratesFilter</source_model>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <source_rates>2</source_rates>
+                            </depends>
+                            <comment>Filter prices based on country AND/OR region AND/OR city AND/OR postal code</comment>
+                        </conditionable_filters>
+                        <add_iva_to_rates translate="label comment" module="summa_andreani">
+                            <label>Add IVA to rates</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <source_rates>2</source_rates>
+                            </depends>
+                        </add_iva_to_rates>
+                        <iva_percentage translate="label comment" module="summa_andreani">
+                            <label>IVA Percentage</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <source_rates>2</source_rates>
+                                <add_iva_to_rates>1</add_iva_to_rates>
+                            </depends>
+                        </iva_percentage>
 
-                    <heading_gateway translate="label" module="summa_andreani">
-                        <label>Gateways settings</label>
-                        <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                    </heading_gateway>
-                    <gateway_url translate="label comment" module="summa_andreani">
-                        <label>Gateway URL</label>
-                        <frontend_type>text</frontend_type>
-                        <validate>validate-url</validate>
-                        <sort_order>21</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/ImposicionRemota.svc]]></comment>
-                    </gateway_url>
-                    <gateway_tracking_url translate="label comment" module="summa_andreani">
-                        <label>Gateway Tracking URL</label>
-                        <frontend_type>text</frontend_type>
-                        <validate>validate-url</validate>
-                        <sort_order>22</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl]]></comment>
-                    </gateway_tracking_url>
-                    <gateway_storepickup_url translate="label comment" module="summa_andreani">
-                        <label>Gateway Storepickup URL</label>
-                        <frontend_type>text</frontend_type>
-                        <validate>validate-url</validate>
-                        <sort_order>23</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/ConsultaSucursales.svc]]></comment>
-                    </gateway_storepickup_url>
-                    <gateway_rates_url translate="label comment" module="summa_andreani">
-                        <label>Gateway Rates URL</label>
-                        <frontend_type>text</frontend_type>
-                        <validate>validate-url</validate>
-                        <sort_order>24</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/CotizacionEnvio.svc]]></comment>
-                    </gateway_rates_url>
+                        <heading_gateway translate="label" module="summa_andreani">
+                            <label>Gateways settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                        </heading_gateway>
+                        <gateway_url translate="label comment" module="summa_andreani">
+                            <label>Gateway URL</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-url</validate>
+                            <sort_order>26</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/ImposicionRemota.svc?wsdl]]></comment>
+                        </gateway_url>
+                        <gateway_tracking_url translate="label comment" module="summa_andreani">
+                            <label>Gateway Tracking URL</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-url</validate>
+                            <sort_order>27</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl]]></comment>
+                        </gateway_tracking_url>
+                        <gateway_storepickup_url translate="label comment" module="summa_andreani">
+                            <label>Gateway Storepickup URL</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-url</validate>
+                            <sort_order>28</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/ConsultaSucursales.svc?wsdl]]></comment>
+                        </gateway_storepickup_url>
+                        <gateway_rates_url translate="label comment" module="summa_andreani">
+                            <label>Gateway Rates URL</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-url</validate>
+                            <sort_order>29</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/CotizacionEnvio.svc?wsdl]]></comment>
+                        </gateway_rates_url>
 
-                    <heading_insurance translate="label" module="summa_andreani">
-                        <label>Insurance settings</label>
-                        <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                        <sort_order>30</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                    </heading_insurance>
-                    <insurance translate="label comment" module="summa_andreani">
-                        <label>Insurance</label>
-                        <frontend_type>text</frontend_type>
-                        <validate>validate-number</validate>
-                        <sort_order>31</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                    </insurance>
-                    <apply_insurance_on_shipping_price translate="label comment" module="summa_andreani">
-                        <label>Apply Insurance over shipping Price</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>32</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[If it's not, then Insurance will be showed like subtotal]]></comment>
-                    </apply_insurance_on_shipping_price>
-                    <insurance_subtotal_title translate="label comment" module="summa_andreani">
-                        <label>Title for Subtotal of Insurance</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>33</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <depends>
-                            <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
-                        </depends>
-                    </insurance_subtotal_title>
-                    <apply_insurance_when_free_shipping translate="label comment" module="summa_andreani">
-                        <label>Apply insurance when free-shipping</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>34</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </apply_insurance_when_free_shipping>
-                </fields>
-            </andreani_global>
-            <andreani_standard translate="label" module="summa_andreani">
-                <label>Andreani Standard</label>
-                <sort_order>13</sort_order>
-                <show_in_default>1</show_in_default>
-                <show_in_website>1</show_in_website>
-                <show_in_store>1</show_in_store>
-                <fields>
-                    <active translate="label comment" module="summa_andreani">
-                        <label>Enabled</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>10</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </active>
-                    <name translate="label comment" module="summa_andreani">
-                        <label>Method Name</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </name>
-                    <title translate="label comment" module="summa_andreani">
-                        <label>Method Title</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>30</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </title>
-                    <contract translate="label comment" module="summa_andreani">
-                        <label>Contract</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>40</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
-                    </contract>
-                    <specificerrmsg translate="label">
-                        <label>Displayed Error Message</label>
-                        <frontend_type>textarea</frontend_type>
-                        <sort_order>50</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </specificerrmsg>
-                    <sallowspecific translate="label">
-                        <label>Ship to Applicable Countries</label>
-                        <frontend_type>select</frontend_type>
-                        <sort_order>51</sort_order>
-                        <frontend_class>shipping-applicable-country</frontend_class>
-                        <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </sallowspecific>
-                    <specificcountry translate="label">
-                        <label>Ship to Specific Countries</label>
-                        <frontend_type>multiselect</frontend_type>
-                        <sort_order>52</sort_order>
-                        <source_model>adminhtml/system_config_source_country</source_model>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <can_be_empty>1</can_be_empty>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </specificcountry>
-                    <debug_mode translate="label">
-                        <label>Debugging Enabled</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>60</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
-                    </debug_mode>
-                    <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
-                        <label>Shipping Type for Matrix Rates</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>41</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
-                    </shipping_type_for_matrixrates>
-                    <free_method_text translate="label comment" module="summa_andreani">
-                        <label>Free Method Text</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>42</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </free_method_text>
-                </fields>
-            </andreani_standard>
-            <andreani_storepickup translate="label" module="summa_andreani">
-                <label>Andreani Storepickup</label>
-                <sort_order>14</sort_order>
-                <show_in_default>1</show_in_default>
-                <show_in_website>1</show_in_website>
-                <show_in_store>1</show_in_store>
-                <fields>
-                    <active translate="label comment" module="summa_andreani">
-                        <label>Enabled</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>10</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </active>
-                    <name translate="label comment" module="summa_andreani">
-                        <label>Method Name</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </name>
-                    <title translate="label comment" module="summa_andreani">
-                        <label>Method Title</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>30</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </title>
-                    <contract translate="label comment" module="summa_andreani">
-                        <label>Contract</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>40</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
-                    </contract>
-                    <specificerrmsg translate="label">
-                        <label>Displayed Error Message</label>
-                        <frontend_type>textarea</frontend_type>
-                        <sort_order>50</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </specificerrmsg>
-                    <sallowspecific translate="label">
-                        <label>Ship to Applicable Countries</label>
-                        <frontend_type>select</frontend_type>
-                        <sort_order>51</sort_order>
-                        <frontend_class>shipping-applicable-country</frontend_class>
-                        <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </sallowspecific>
-                    <specificcountry translate="label">
-                        <label>Ship to Specific Countries</label>
-                        <frontend_type>multiselect</frontend_type>
-                        <sort_order>52</sort_order>
-                        <source_model>adminhtml/system_config_source_country</source_model>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <can_be_empty>1</can_be_empty>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </specificcountry>
-                    <debug_mode translate="label">
-                        <label>Debugging Enabled</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>60</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
-                    </debug_mode>
-                    <postal_codes_disabled>
-                        <label>Postal Codes Disabled</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>60</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[Fill this input with postal codes to disable new branches by default. To use more than one postal code connect them with a comma. Ex. 5870,7000,7005]]></comment>
-                    </postal_codes_disabled>
-                    <storepickup_cron>
-                        <label>Time to update Andreani stores</label>
-                        <comment>Ex. (All day at 12AM): 0 0 * * *</comment>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>70</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </storepickup_cron>
-                    <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
-                        <label>Shipping Type for Matrix Rates</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>41</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
-                    </shipping_type_for_matrixrates>
-                    <free_method_text translate="label comment" module="summa_andreani">
-                        <label>Free Method Text</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>42</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </free_method_text>
-                </fields>
-            </andreani_storepickup>
-            <andreani_urgent translate="label" module="summa_andreani">
-                <label>Andreani Urgent</label>
-                <sort_order>15</sort_order>
-                <show_in_default>1</show_in_default>
-                <show_in_website>1</show_in_website>
-                <show_in_store>1</show_in_store>
-                <fields>
-                    <active translate="label comment" module="summa_andreani">
-                        <label>Enabled</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>10</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </active>
-                    <name translate="label comment" module="summa_andreani">
-                        <label>Method Name</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </name>
-                    <title translate="label comment" module="summa_andreani">
-                        <label>Method Title</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>30</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </title>
-                    <contract translate="label comment" module="summa_andreani">
-                        <label>Contract</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>40</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
-                    </contract>
-                    <specificerrmsg translate="label">
-                        <label>Displayed Error Message</label>
-                        <frontend_type>textarea</frontend_type>
-                        <sort_order>50</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </specificerrmsg>
-                    <sallowspecific translate="label">
-                        <label>Ship to Applicable Countries</label>
-                        <frontend_type>select</frontend_type>
-                        <sort_order>51</sort_order>
-                        <frontend_class>shipping-applicable-country</frontend_class>
-                        <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </sallowspecific>
-                    <specificcountry translate="label">
-                        <label>Ship to Specific Countries</label>
-                        <frontend_type>multiselect</frontend_type>
-                        <sort_order>52</sort_order>
-                        <source_model>adminhtml/system_config_source_country</source_model>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <can_be_empty>1</can_be_empty>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </specificcountry>
-                    <debug_mode translate="label">
-                        <label>Debugging Enabled</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>60</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
-                    </debug_mode>
-                    <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
-                        <label>Shipping Type for Matrix Rates</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>41</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                        <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
-                    </shipping_type_for_matrixrates>
-                    <free_method_text translate="label comment" module="summa_andreani">
-                        <label>Free Method Text</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>42</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <depends>
-                            <active>1</active>
-                        </depends>
-                    </free_method_text>
-                </fields>
-            </andreani_urgent>
-        </groups>
-    </carriers>
-    <!--<andreani_config translate="label">
-        <label>Andreani</label>
-        <tab>sales</tab>
-        <frontend_type>text</frontend_type>
-        <sort_order>320</sort_order>
-        <show_in_default>1</show_in_default>
-        <show_in_website>1</show_in_website>
-        <show_in_store>1</show_in_store>
-        <groups>
-            <global_tab module="summa_andreani" translate="label">
-                <label>Configuracion Global</label>
-                <frontend_type>text</frontend_type>
-                <sort_order>199</sort_order>
-                <show_in_default>1</show_in_default>
-                <show_in_website>1</show_in_website>
-                <show_in_store>1</show_in_store>
-                <fields>
-                    <client_number translate="label">
-                        <label>Client Number</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>30</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default client number is only for test purposes, for production purposes use your credentials]]></comment>
-                    </client_number>
-                    <autocreate_shipping translate="label">
-                        <label>Auto create Shipping after invoice place</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>31</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                    </autocreate_shipping>
-                </fields>
-            </global_tab>
-            <sucursal_tab module="summa_andreani" translate="label">
-                <label>Configuracion Sucursales</label>
-                <frontend_type>text</frontend_type>
-                <sort_order>201</sort_order>
-                <show_in_default>1</show_in_default>
-                <show_in_website>1</show_in_website>
-                <show_in_store>1</show_in_store>
-                <fields>
-                    <enable translate="label">
-                        <label>Activado</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>1</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </enable>
-                    <gateway_url translate="label">
-                        <label>Gateway URL</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/ImposicionRemota.svc]]></comment>
-                    </gateway_url>
-                    <gateway_tracking_url translate="label">
-                        <label>Gateway Tracking URL</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl]]></comment>
-                    </gateway_tracking_url>
-                    <title translate="label">
-                        <label>Title</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </title>
-                    <account_number translate="label">
-                        <label>Account Number</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>30</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
-                    </account_number>
-                    <username translate="label">
-                        <label>Username</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>40</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default username is only for test purposes, for production purposes use your credentials]]></comment>
-                    </username>
-                    <password translate="label">
-                        <label>Password</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>50</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default password is only for test purposes, for production purposes use your credentials]]></comment>
-                    </password>
-                    <debug_mode translate="label">
-                        <label>Debugging Habilitado</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>60</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <comment><![CDATA[This debugging mode should be enabled only for test purposes]]></comment>
-                    </debug_mode>
-                    <sucursal_cron>
-                        <label>horario de actualizacion de sucursales</label>
-                        <comment>Ejemplo (todos los dias a las 12AM): 0 0 * * *</comment>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>70</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </sucursal_cron>
-                </fields>
-            </sucursal_tab>
-            <andreani_tab translate="label" module="summa_andreani">
-                <label>Configuracion Andreani Estandar</label>
-                <frontend_type>text</frontend_type>
-                <sort_order>200</sort_order>
-                <show_in_default>1</show_in_default>
-                <show_in_website>1</show_in_website>
-                <show_in_store>1</show_in_store>
-                <fields>
-                    <enable translate="label">
-                        <label>Activado</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>1</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </enable>
-                    <gateway_url translate="label">
-                        <label>Gateway URL</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/ImposicionRemota.svc]]></comment>
-                    </gateway_url>
-                    <gateway_tracking_url translate="label">
-                        <label>Gateway Tracking URL</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/eAndreaniWS/Service.svc?wsdl]]></comment>
-                    </gateway_tracking_url>
-                    <title translate="label">
-                        <label>Title</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>20</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                    </title>
-                    <account_number translate="label">
-                        <label>Account Number</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>30</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default account is only for test purposes, for production purposes use your credentials]]></comment>
-                    </account_number>
-                    <username translate="label">
-                        <label>Username</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>40</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default username is only for test purposes, for production purposes use your credentials]]></comment>
-                    </username>
-                    <password translate="label">
-                        <label>Password</label>
-                        <frontend_type>text</frontend_type>
-                        <sort_order>50</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>0</show_in_store>
-                        <comment><![CDATA[The default password is only for test purposes, for production purposes use your credentials]]></comment>
-                    </password>
-                    <debug_mode translate="label">
-                        <label>Debugging Habilitado</label>
-                        <frontend_type>select</frontend_type>
-                        <source_model>adminhtml/system_config_source_yesno</source_model>
-                        <sort_order>60</sort_order>
-                        <show_in_default>1</show_in_default>
-                        <show_in_website>1</show_in_website>
-                        <show_in_store>1</show_in_store>
-                        <comment><![CDATA[This debugging mode should be enabled only for test purposes]]></comment>
-                    </debug_mode>
-                </fields>
-            </andreani_tab>
-        </groups>
-    </andreani_config>-->
-</sections>
+                        <heading_insurance translate="label" module="summa_andreani">
+                            <label>Insurance settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                        </heading_insurance>
+                        <insurance translate="label comment" module="summa_andreani">
+                            <label>Insurance</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </insurance>
+                        <apply_insurance_on_shipping_price translate="label comment" module="summa_andreani">
+                            <label>Apply Insurance over shipping Price</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>32</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[If it's not, then Insurance will be showed like subtotal]]></comment>
+                        </apply_insurance_on_shipping_price>
+                        <insurance_subtotal_title translate="label comment" module="summa_andreani">
+                            <label>Title for Subtotal of Insurance</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>33</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
+                            </depends>
+                        </insurance_subtotal_title>
+                        <apply_insurance_when_free_shipping translate="label comment" module="summa_andreani">
+                            <label>Apply insurance when free-shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>34</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </apply_insurance_when_free_shipping>
+
+
+                        <heading_attributes translate="label" module="summa_andreani">
+                            <label>Attributes settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                        </heading_attributes>
+                        <attribute_weight translate="label comment" module="summa_andreani">
+                            <label>Product Attribute Weight for Andreani</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>summa_andreani/system_config_source_shipping_productAttributes</source_model>
+                            <sort_order>51</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-select</validate>
+                            <comment>This setting is used to get weight of products when Magento generate request to andreani</comment>
+                        </attribute_weight>
+                        <attribute_height translate="label comment" module="summa_andreani">
+                            <label>Product Attribute Height for Andreani</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>summa_andreani/system_config_source_shipping_productAttributes</source_model>
+                            <sort_order>52</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-select</validate>
+                            <comment>This setting is used to get Height of products when Magento generate request to andreani</comment>
+                        </attribute_height>
+                        <attribute_width translate="label comment" module="summa_andreani">
+                            <label>Product Attribute Width for Andreani</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>summa_andreani/system_config_source_shipping_productAttributes</source_model>
+                            <sort_order>53</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-select</validate>
+                            <comment>This setting is used to get Width of products when Magento generate request to andreani</comment>
+                        </attribute_width>
+                        <attribute_length translate="label comment" module="summa_andreani">
+                            <label>Product Attribute Length for Andreani</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>summa_andreani/system_config_source_shipping_productAttributes</source_model>
+                            <sort_order>54</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-select</validate>
+                            <comment>This setting is used to get Length of products when Magento generate request to andreani</comment>
+                        </attribute_length>
+                    </fields>
+                </andreaniGlobal>
+                <andreaniStandard translate="label" module="summa_andreani">
+                    <label>Andreani Standard</label>
+                    <sort_order>13</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label comment" module="summa_andreani">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <is_custom_client_number translate="label comment" module="summa_andreani">
+                            <label>Custom Client Number</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_client_number>
+                        <client_number translate="label comment" module="summa_andreani">
+                            <label>Client Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default client number is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_client_number>1</is_custom_client_number>
+                            </depends>
+                        </client_number>
+                        <is_custom_username translate="label comment" module="summa_andreani">
+                            <label>Custom Username</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_username>
+                        <username translate="label comment" module="summa_andreani">
+                            <label>Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default username is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_username>1</is_custom_username>
+                            </depends>
+                        </username>
+                        <is_custom_password translate="label comment" module="summa_andreani">
+                            <label>Custom Password</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_password>
+                        <password translate="label comment" module="summa_andreani">
+                            <label>Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default password is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_password>1</is_custom_password>
+                            </depends>
+                        </password>
+                        <name translate="label comment" module="summa_andreani">
+                            <label>Method Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </name>
+                        <title translate="label comment" module="summa_andreani">
+                            <label>Method Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </title>
+                        <contract translate="label comment" module="summa_andreani">
+                            <label>Contract</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
+                        </contract>
+                        <specificerrmsg translate="label">
+                            <label>Displayed Error Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </specificerrmsg>
+                        <sallowspecific translate="label">
+                            <label>Ship to Applicable Countries</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>51</sort_order>
+                            <frontend_class>shipping-applicable-country</frontend_class>
+                            <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </sallowspecific>
+                        <specificcountry translate="label">
+                            <label>Ship to Specific Countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>52</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </specificcountry>
+                        <debug_mode translate="label">
+                            <label>Debugging Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
+                        </debug_mode>
+                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
+                            <label>Shipping Type for Matrix Rates</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
+                        </shipping_type_for_matrixrates>
+                        <free_method_text translate="label comment" module="summa_andreani">
+                            <label>Free Method Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_method_text>
+                    </fields>
+                </andreaniStandard>
+                <andreaniStorepickup translate="label" module="summa_andreani">
+                    <label>Andreani Storepickup</label>
+                    <sort_order>14</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label comment" module="summa_andreani">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <is_custom_client_number translate="label comment" module="summa_andreani">
+                            <label>Custom Client Number</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_client_number>
+                        <client_number translate="label comment" module="summa_andreani">
+                            <label>Client Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default client number is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_client_number>1</is_custom_client_number>
+                            </depends>
+                        </client_number>
+                        <is_custom_username translate="label comment" module="summa_andreani">
+                            <label>Custom Username</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_username>
+                        <username translate="label comment" module="summa_andreani">
+                            <label>Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default username is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_username>1</is_custom_username>
+                            </depends>
+                        </username>
+                        <is_custom_password translate="label comment" module="summa_andreani">
+                            <label>Custom Password</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_password>
+                        <password translate="label comment" module="summa_andreani">
+                            <label>Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default password is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_password>1</is_custom_password>
+                            </depends>
+                        </password>
+                        <name translate="label comment" module="summa_andreani">
+                            <label>Method Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </name>
+                        <title translate="label comment" module="summa_andreani">
+                            <label>Method Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </title>
+                        <contract translate="label comment" module="summa_andreani">
+                            <label>Contract</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
+                        </contract>
+                        <specificerrmsg translate="label">
+                            <label>Displayed Error Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </specificerrmsg>
+                        <sallowspecific translate="label">
+                            <label>Ship to Applicable Countries</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>51</sort_order>
+                            <frontend_class>shipping-applicable-country</frontend_class>
+                            <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </sallowspecific>
+                        <specificcountry translate="label">
+                            <label>Ship to Specific Countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>52</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </specificcountry>
+                        <debug_mode translate="label">
+                            <label>Debugging Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
+                        </debug_mode>
+                        <postal_codes_disabled>
+                            <label>Postal Codes Disabled</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[Fill this input with postal codes to disable new branches by default. To use more than one postal code connect them with a comma. Ex. 5870,7000,7005]]></comment>
+                        </postal_codes_disabled>
+                        <storepickup_cron>
+                            <label>Time to update Andreani stores</label>
+                            <comment>Ex. (All day at 12AM): 0 0 * * *</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </storepickup_cron>
+                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
+                            <label>Shipping Type for Matrix Rates</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
+                        </shipping_type_for_matrixrates>
+                        <free_method_text translate="label comment" module="summa_andreani">
+                            <label>Free Method Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_method_text>
+                    </fields>
+                </andreaniStorepickup>
+                <andreaniUrgent translate="label" module="summa_andreani">
+                    <label>Andreani Urgent</label>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label comment" module="summa_andreani">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <is_custom_client_number translate="label comment" module="summa_andreani">
+                            <label>Custom Client Number</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_client_number>
+                        <client_number translate="label comment" module="summa_andreani">
+                            <label>Client Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default client number is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_client_number>1</is_custom_client_number>
+                            </depends>
+                        </client_number>
+                        <is_custom_username translate="label comment" module="summa_andreani">
+                            <label>Custom Username</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_username>
+                        <username translate="label comment" module="summa_andreani">
+                            <label>Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default username is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_username>1</is_custom_username>
+                            </depends>
+                        </username>
+                        <is_custom_password translate="label comment" module="summa_andreani">
+                            <label>Custom Password</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_custom_password>
+                        <password translate="label comment" module="summa_andreani">
+                            <label>Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The default password is only for test purposes, for production purposes use your credentials]]></comment>
+                            <depends>
+                                <is_custom_password>1</is_custom_password>
+                            </depends>
+                        </password>
+                        <name translate="label comment" module="summa_andreani">
+                            <label>Method Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </name>
+                        <title translate="label comment" module="summa_andreani">
+                            <label>Method Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </title>
+                        <contract translate="label comment" module="summa_andreani">
+                            <label>Contract</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
+                        </contract>
+                        <specificerrmsg translate="label">
+                            <label>Displayed Error Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </specificerrmsg>
+                        <sallowspecific translate="label">
+                            <label>Ship to Applicable Countries</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>51</sort_order>
+                            <frontend_class>shipping-applicable-country</frontend_class>
+                            <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </sallowspecific>
+                        <specificcountry translate="label">
+                            <label>Ship to Specific Countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>52</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </specificcountry>
+                        <debug_mode translate="label">
+                            <label>Debugging Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
+                        </debug_mode>
+                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
+                            <label>Shipping Type for Matrix Rates</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
+                        </shipping_type_for_matrixrates>
+                        <free_method_text translate="label comment" module="summa_andreani">
+                            <label>Free Method Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_method_text>
+                    </fields>
+                </andreaniUrgent>
+            </groups>
+        </carriers>
+    </sections>
 </config>

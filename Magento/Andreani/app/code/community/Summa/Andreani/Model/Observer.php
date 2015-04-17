@@ -113,4 +113,65 @@ class Summa_Andreani_Model_Observer
         }
         return $this;*/
     }
+
+    /**
+     * Observer on before product save to calculate product weight
+     * @param Varien_Event_Observer $observer
+     */
+    public function beforeProductSave(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Catalog_Model_Product $product */
+        $product = $observer->getProduct();
+        $attrCode = $this->_getHelper()->getConfigData('attribute_weight');
+        $product->setData($attrCode,$this->_getHelper()->calculateWeight($product));
+    }
+
+    /**
+     * Observer on before track delete to call andreani and cancel shipment request
+     * @param Varien_Event_Observer $observer
+     */
+    public function beforeTrackDelete(Varien_Event_Observer $observer)
+    {
+        /** @var $track Mage_Sales_Model_Order_Shipment_Track */
+        $track = $observer->getTrack();
+        $carrier = Mage::getSingleton('shipping/config')->getCarrierInstance($track->getCarrierCode());
+
+        if ($carrier instanceof Summa_Andreani_Model_Shipping_Carrier_Abstract)
+        {
+            try {
+                $carrier->cancelShipmentRequest($track->getNumber());
+            }catch(Exception $e){
+                Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()->__('Could not delete shipment in Andreani'));
+            }
+        }
+    }
+
+// RELATEDS TO INSURANCE
+    public function invoiceSaveAfter(Varien_Event_Observer $observer)
+    {
+        $invoice = $observer->getEvent()->getInvoice();
+        if ($invoice->getBaseSummaAndreaniInsuranceAmount()) {
+            $order = $invoice->getOrder();
+            $order->setSummaAndreaniInsuranceAmountInvoiced($order->getSummaAndreaniInsuranceAmountInvoiced() + $invoice->getSummaAndreaniInsuranceAmount());
+            $order->setBaseSummaAndreaniInsuranceAmountInvoiced($order->getBaseSummaAndreaniInsuranceAmountInvoiced() + $invoice->getBaseSummaAndreaniInsuranceAmount());
+        }
+        return $this;
+    }
+
+    public function creditmemoSaveAfter(Varien_Event_Observer $observer)
+    {
+        /* @var $creditmemo Mage_Sales_Model_Order_Creditmemo */
+        $creditmemo = $observer->getEvent()->getCreditmemo();
+        if ($creditmemo->getSummaAndreaniInsuranceAmount()) {
+            $order = $creditmemo->getOrder();
+            $order->setSummaAndreaniInsuranceAmountRefunded($order->getSummaAndreaniInsuranceAmountRefunded() + $creditmemo->getSummaAndreaniInsuranceAmount());
+            $order->setBaseSummaAndreaniInsuranceAmountRefunded($order->getBaseSummaAndreaniInsuranceAmountRefunded() + $creditmemo->getBaseSummaAndreaniInsuranceAmount());
+        }
+        return $this;
+    }
+
+    public function updatePaypalTotal($evt){
+        $cart = $evt->getPaypalCart();
+        $cart->updateTotal(Mage_Paypal_Model_Cart::TOTAL_SUBTOTAL,$cart->getSalesEntity()->getSummaAndreaniInsuranceAmount());
+    }
 }

@@ -12,7 +12,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     implements Mage_Shipping_Model_Carrier_Interface
 {
 
-    protected $_code = 'andreani_abstract';
+    protected $_code = 'andreaniAbstract';
+    protected $_freeShipping_method = 'free';
     protected $_default_condition_name = 'package_weight';
     protected $_service = null;
     protected $_serviceType = 'global';
@@ -37,7 +38,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      */
     public function isShippingLabelsAvailable()
     {
-        return $this->_getHelper()->getConfigData('autocreate_shipping_on_shipment_create');
+        return false;
     }
 
     /**
@@ -77,7 +78,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             return false;
         }
 
-        if ($this->_getHelper()->getConfigData('source_rates') === Summa_Andreani_Model_System_Config_Source_Shipping_Service::ANDREANI_WEBSERVICE_VALUE) {
+        if ((int)$this->_getHelper()->getConfigData('source_rates') === Summa_Andreani_Model_System_Config_Source_Shipping_Service::ANDREANI_WEBSERVICE_VALUE) {
             return $this->_collectRatesByWebService($request);
         } else {
             return $this->_collectRatesByMatrixRates($request);
@@ -86,11 +87,12 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
     /**
      * Do request to shipment
-     *
+     * @deprecated because Andreani don't support shipping label generation
      * @param Mage_Shipping_Model_Shipment_Request $request
      *
      * @return Varien_Object
      */
+    /*
     public function requestToShipment(Mage_Shipping_Model_Shipment_Request $request)
     {
         $this->_getHelper()->debugging('requestToShipment:', $this->getServiceType());
@@ -107,7 +109,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging($request->getOrderShipment()->getOrder(), $this->getServiceType());
             $this->_getHelper()->debugging($package['items'], $this->getServiceType());
 
-            $result = $this->doShipmentRequest($request->getOrderShipment()->getOrder(), $package['items']);
+            $result = $this->doShipmentRequest($request->getOrderShipment()->getOrder(), $package['items'],$package['params']);
 
             $this->_getHelper()->debugging('requestToShipmentDoShipmentRequestResult:', $this->getServiceType());
             $this->_getHelper()->debugging($result, $this->getServiceType());
@@ -127,14 +129,17 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
         return $response;
     }
+    */
 
     /**
      * Do return of shipment
+     * @deprecated because Andreani don't support shipping label generation for a return
      *
      * @param $request
      *
      * @return Varien_Object
      */
+    /*
     public function returnOfShipment($request)
     {
         $this->_getHelper()->debugging('returnOfShipment:', $this->getServiceType());
@@ -145,8 +150,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             Mage::throwException(Mage::helper('summa_andreani')->__('No packages for request'));
         }
         $data = array();
-        // TODO: This functionality is unsupported by Andreani.
-        /*
+
         foreach ($packages as $packageId => $package) {
             $this->_getHelper()->debugging('returnOfShipmentCancelShipmentRequestParams:',$this->getServiceType());
             //$this->_getHelper()->debugging(,$this->getServiceType());
@@ -165,23 +169,25 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 );
             }
         }
-        */
+
         $response = new Varien_Object(array(
             'info' => $data
         ));
 
         return $response;
     }
+    */
 
     /**
      * Function to call Andreani
      *
      * @param Mage_Sales_Model_Order $order
      * @param null                   $itemsToShip
+     * @param null|array             $params
      *
      * @return Varien_Object
      */
-    public function doShipmentRequest($order = NULL, $itemsToShip = NULL)
+    public function doShipmentRequest($order = NULL, $itemsToShip = NULL, $params = NULL)
     {
         $result = new Varien_Object();
         if ($this->isShipmentAvailable()) {
@@ -203,7 +209,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                         'options'    => $options
                     ), $this->getServiceType());
 
-                    $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
+                    $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
 
                     $client = new SoapClient($gatewayUrl, $options);
                     $client->__setSoapHeaders(array($wsse_header));
@@ -214,26 +220,14 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 }
 
                 $detailsProductsSend = $this->_getHelper()->__('Order #') . $order->getIncrementId();
-
-                $totalWeight = 0;
-                $totalVolume = 0;
                 $items = ($itemsToShip === NULL) ? $order->getAllItems() : $itemsToShip;
-                foreach ($items as $item) {
-                    $product = Mage::getModel('catalog/product')->load($item->getProductId());
-                    if ($product->getTypeId() == "simple") {
-                        $totalWeight += $item->getWeight();
-                        $totalVolume += ($product->getHeight() * $product->getWidth() * $product->getLength());
-                    }
-                } // TODO: Refactor this foreach
-
-                $totalWeight = $this->_validateWeight($totalWeight);
-                $totalVolume = $this->_validateVolume($totalVolume);
+                $totals = $this->getTotalsWV($items);
 
                 $address = $order->getShippingAddress();
 
                 $number = '-';
                 $street = $address->getStreet();
-                $DNI_number = $address->getDni(); //TODO: Remove this
+                $DNI_number = 'xxxxxxxx'; //TODO: Remove this
                 $DNI_type = 'DNI';
 
                 $shipmentInfo = array(
@@ -260,8 +254,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 , 'NumeroTransaccion'         => $order->getIncrementId()
                 , 'DetalleProductosEntrega'   => $detailsProductsSend
                 , 'DetalleProductosRetiro'    => NULL
-                , 'Peso'                      => $totalWeight
-                , 'Volumen'                   => $totalVolume /* Required = Condicional;  */
+                , 'Peso'                      => $totals->getTotalWeight()
+                , 'Volumen'                   => $totals->getTotalVolume() /* Required = Condicional;  */
                 , 'ValorACobrar'              => NULL /* Required = Condicional; */
                 , 'ValorDeclarado'            => NULL /* Required = Condicional; */
 
@@ -290,7 +284,12 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                     $result->setErrors($this->_getHelper()->__('Service unavailable. The service %s with code %s returns unexpected data.', $this->_getHelper()->getConfigData('title', $this->getServiceType()), $this->getCode()));
                 } else {
                     $result->setTrackingNumber($andreaniResponse->ConfirmarCompraResult->NumeroAndreani);
-                    $result->setShippingLabelContent($this->_getHelper()->__('Receive') . ' ' . $andreaniResponse->ConfirmarCompraResult->Recibo);
+                    $linkConstancy = $this->getLinkConstancy($result->getTrackingNumber());
+                    if (isset($linkConstancy->ImprimirConstanciaResult)) {
+                        $result->setShippingLabelContent($linkConstancy->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile);
+                    } else {
+                        $result->setShippingLabelContent($this->_getHelper()->__('Receive') . ' ' . $andreaniResponse->ConfirmarCompraResult->Recibo);
+                    }
                 }
 
                 return $result;
@@ -335,7 +334,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 'options'    => $options
             ), $this->getServiceType());
 
-            $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
+            $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
 
@@ -367,6 +366,24 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
             return $error;
         }
+    }
+
+    public function getTrackingInfo($tracking)
+    {
+        $info = array();
+
+        $result = $this->getTracking($tracking);
+
+        if($result instanceof Mage_Shipping_Model_Tracking_Result){
+            if ($trackings = $result->getAllTrackings()) {
+                return $trackings[0];
+            }
+        }
+        elseif (is_string($result) && !empty($result)) {
+            return $result;
+        }
+
+        return false;
     }
 
     /**
@@ -429,23 +446,41 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         $resultArr = array();
         $errorArr = array();
         if (is_object($response)) {
-            if (isset($response->faultstring)) {
-                ($response->faultstring != "Pieza inexistente") ?: $errorArr[$trackings] = $errorTitle;
+            if($response instanceof SoapFault)
+            {
+                $errorArr[$trackings] = $errorTitle. ". " . $response->getMessage();
             } else {
                 foreach ($response as $pieza) {
                     $envios = is_array($pieza->Envios->Envio) ? $pieza->Envios->Envio : $pieza->Envios;
                     foreach ($envios as $envio) {
+                        /** @var Mage_Sales_Model_Order_Shipment_Track $track */
+                        $track = Mage::getModel('sales/order_shipment_track')->load($envio->NroAndreani,'track_number');
                         $tmpArr = array();
                         $eventos = $envio->Eventos;
                         foreach ($eventos as $evento) {
-                            list($date, $time) = $this->_getHelper()->splitDate($evento->Fecha);
-                            $tmpArr[] = array(
-                                'deliverydate'     => $date,
-                                'deliverytime'     => $time,
-                                'status'           => $evento->Estado,
-                                'deliverylocation' => $evento->Sucursal,
-                                'activity'         => $evento->Estado
-                            );
+                            if (is_array($evento)) {
+                                foreach ($evento as $status) {
+                                    list($date, $time) = $this->_getHelper()->splitDate($status->Fecha);
+                                    $tmpArr[] = array(
+                                        'deliverydate'     => $date,
+                                        'deliverytime'     => $time,
+                                        'status'           => $status->Estado,
+                                        'deliverylocation' => $status->Sucursal,
+                                        'activity'           => $status->Estado
+                                    );
+                                    $this->_getHelper()->getStatusSingleton()->checkStatus($track,$status->Estado);
+                                }
+                            } else {
+                                list($date, $time) = $this->_getHelper()->splitDate($evento->Fecha);
+                                $tmpArr[] = array(
+                                    'deliverydate'     => $date,
+                                    'deliverytime'     => $time,
+                                    'status'           => $evento->Estado,
+                                    'deliverylocation' => $evento->Sucursal,
+                                    'activity'           => $evento->Estado
+                                );
+                                $this->_getHelper()->getStatusSingleton()->checkStatus($track,$evento->Estado);
+                            }
                         }
 
                         list($date, $time) = $this->_getHelper()->splitDate($envio->FechaAlta);
@@ -519,7 +554,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 'options'    => $options
             ), $this->getServiceType());
 
-            $wsse_header = Mage::getModel('grandmarche_andreani/api_soap_header', array('username' => $username, 'password' => $password));
+            $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
 
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
@@ -566,29 +601,18 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         /** @var Mage_Shipping_Model_Rate_Result $result */
         $result = Mage::getModel('shipping/rate_result');
 
-        $this->_processRequestForFreeShipping($request);
+        $request = $this->_processRequestForFreeShipping($request);
 
-        $freeShipping=false;
+        $freeShipping = $request->getIsFreeShipping();
 
-        if (is_numeric($this->getConfigData('free_shipping_threshold')) &&
-            $this->getConfigData('free_shipping_threshold')>0 &&
-            $request->getPackageValue()>$this->getConfigData('free_shipping_threshold')) {
-            $freeShipping=true;
-        }
-        if ($this->getConfigData('allow_free_shipping_promotions') &&
-            ($request->getFreeShipping() === true ||
-                $request->getPackageQty() == $this->getFreeBoxes()))
-        {
-            $freeShipping=true;
-        }
         if ($freeShipping)
         {
             /** @var $method Mage_Shipping_Model_Rate_Result_Method */
             $method = Mage::getModel('shipping/rate_result_method');
             $method->setCarrier($this->_code);
             $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
-            $method->setMethod('free');
-            $method->setMethodTitle($this->_getHelper()->getConfigData('free_method_text', $this->getServiceType()));
+            $method->setMethod($this->_freeShipping_method);
+            $method->setMethodTitle($this->_getHelper()->getFreeMethodText($this->getServiceType()));
             $method->setPrice('0.00');
             $result->append($method);
 
@@ -614,7 +638,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             'options'         => $options
         ), $this->getServiceType());
 
-        $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
+        $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
 
         $client = new SoapClient($gatewayUrl, $options);
         $client->__setSoapHeaders(array($wsse_header));
@@ -623,55 +647,26 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         if ($this->_getHelper()->getConfigData('apply_insurance_on_shipping_price')) {
             $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
         }
-
+        $totals = $this->getTotalsWV($request->getAllItems());
         $responseWS = array();
-        $collection = Mage::getModel('summa_andreani/branch')->getCollection()
-            ->addFieldToFilter('postal_code', $request->getDestPostcode());
-        if ($this->getServiceType() !== Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->getServiceType()) {
-            $collectRatesInfo = array(
-                'cotizacionEnvio' => array(
-                    'CPDestino'      => $request->getDestPostcode(),
-                    'Cliente'        => $clientNumber,
-                    'Contrato'       => $contract,
-                    'Peso'           => $this->_validateWeight($request->getPackageWeight()),
-                    'SucursalRetiro' => '', //Required if it's storepickup
-                    'ValorDeclarado' => '', // Optional
-                    'Volumen'        => $this->_validateVolume(1), // TODO: RESOLVE this
-                )
-            );
-            $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
-            $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
+        $collectRatesInfo = array(
+            'cotizacionEnvio' => array(
+                'CPDestino'      => $request->getDestPostcode(),
+                'Cliente'        => $clientNumber,
+                'Contrato'       => $contract,
+                'Peso'           => $totals->getTotalWeight(),
+                //'SucursalRetiro' => '', //Required if it's storepickup
+                'ValorDeclarado' => '', // Optional
+                'Volumen'        => $totals->getTotalVolume()
+            )
+        );
+        $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
+        $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
 
-            $responseWS[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance);
+        $responseWS[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance);
 
-            $this->_getHelper()->debugging('collectRatesByWebServiceResponse:', $this->getServiceType());
-            $this->_getHelper()->debugging($responseWS, $this->getServiceType());
-        } else {
-            /** @var $branch Summa_Andreani_Model_Branch */
-            foreach ($collection as $branch) {
-
-                $collectRatesInfo = array(
-                    'cotizacionEnvio' => array(
-                        'CPDestino'      => $request->getDestPostcode(),
-                        'Cliente'        => $clientNumber,
-                        'Contrato'       => $contract,
-                        'Peso'           => $this->_validateWeight($request->getPackageWeight()),
-                        'SucursalRetiro' => $branch->getBranchId(), //Required if it's storepickup
-                        'ValorDeclarado' => '', // Optional
-                        'Volumen'        => $this->_validateVolume(1), // TODO: RESOLVE this
-                    )
-                );
-
-                $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
-                $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
-
-                $responseWS[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance, $branch->getBranchId());
-
-                $this->_getHelper()->debugging('collectRatesByWebServiceResponse:', $this->getServiceType());
-                $this->_getHelper()->debugging($responseWS, $this->getServiceType());
-            }
-
-        }
+        $this->_getHelper()->debugging('collectRatesByWebServiceResponse:', $this->getServiceType());
+        $this->_getHelper()->debugging($responseWS, $this->getServiceType());
 
         /** @var $rate Varien_Object */
         foreach ($responseWS as $rate) {
@@ -682,16 +677,10 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $method->setCarrier($this->_code);
                 $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
 
-                $methodCode = $this->_code;
-                if (!is_null($rate->getBranch())) {
-                    $methodCode .= '_' . $rate->getBranch();
-                }
-                $method->setMethod($methodCode);
+                $method->setMethod($this->_code);
 
                 $methodTitle = $this->_getHelper()->getConfigData('name', $this->getServiceType());
-                if (!is_null($rate->getBranch())) {
-                    $methodTitle .= ' ' . $collection->getItemById($rate->getBranch())->getDescription();
-                }
+
                 $method->setMethodTitle($methodTitle);
 
                 $method->setCost(0);
@@ -705,23 +694,41 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         return $result;
     }
 
-
+    /**
+     * Function to parse object information responses from web service with
+     * rates to Magento Varien Object Rate.
+     * @param      $ratesFromWS
+     * @param int  $insurance
+     * @param null $branchId
+     *
+     * @return Varien_Object
+     */
     protected function _parseRatesFromWebService($ratesFromWS, $insurance = 0, $branchId = null)
     {
+        $this->_getHelper()->debugging('ParseRatesFromWebServiceDataReceived:', $this->getServiceType());
+        $this->_getHelper()->debugging(array(
+            'ratesFromWS'        => $ratesFromWS,
+            'insurance'        => $insurance,
+            'branchId' => $branchId
+        ), $this->getServiceType());
         $response = new Varien_Object();
-
-        if (!$ratesFromWS->cotizarEnvioResult) {
+        try{
+            if (!isset($ratesFromWS->CotizarEnvioResult)) {
+                $response->setErrors($this->_getHelper()->__('Web Service did not return rates.'));
+            } else {
+                $response->setDistanceCategory($ratesFromWS->CotizarEnvioResult->CategoriaDistancia);
+                $response->setDistanceCategoryId($ratesFromWS->CotizarEnvioResult->CategoriaDistanciaId);
+                $response->setWeightCategory($ratesFromWS->CotizarEnvioResult->CategoriaPeso);
+                $response->setWeightCategoryId($ratesFromWS->CotizarEnvioResult->CategoriaPesoId);
+                $response->setCalculatedWeight($ratesFromWS->CotizarEnvioResult->PesoAforado);
+                $response->setPrice($ratesFromWS->CotizarEnvioResult->Tarifa + $insurance);
+                $response->setBranch($branchId);
+            }
+        } catch (Exception $e) {
             $response->setErrors($this->_getHelper()->__('Web Service did not return rates.'));
-        } else {
-            $response->setDistanceCategory($ratesFromWS->cotizarEnvioResult->CategoriaDistancia);
-            $response->setDistanceCategoryId($ratesFromWS->cotizarEnvioResult->CategoriaDistanciaId);
-            $response->setWeightCategory($ratesFromWS->cotizarEnvioResult->CategoriaPeso);
-            $response->setWeightCategoryId($ratesFromWS->cotizarEnvioResult->CategoriaPesoId);
-            $response->setCalculatedWeight($ratesFromWS->cotizarEnvioResult->PesoAforado);
-            $response->setPrice($ratesFromWS->cotizarEnvioResult->Tarifa + $insurance);
-            $response->setBranch($branchId);
         }
-
+        $this->_getHelper()->debugging('ParseRatesFromWebServiceResponse:', $this->getServiceType());
+        $this->_getHelper()->debugging($response, $this->getServiceType());
         return $response;
     }
 
@@ -739,6 +746,24 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
         $request = $this->_processRequestForMatrixRates($request);
 
+        $freeShipping = $request->getIsFreeShipping();
+
+        if ($freeShipping)
+        {
+            /** @var $method Mage_Shipping_Model_Rate_Result_Method */
+            $method = Mage::getModel('shipping/rate_result_method');
+            $method->setCarrier($this->_code);
+            $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+            $method->setMethod($this->_freeShipping_method);
+            $method->setMethodTitle($this->_getHelper()->getFreeMethodText($this->getServiceType()));
+            $method->setPrice('0.00');
+            $result->append($method);
+
+            if ($this->getConfigData('show_only_free')) {
+                return $result;
+            }
+        }
+
         $request->setShippingType($this->_shippingTypeForMatrixrates);
 
         $rateArray = $this->_getRateArrayFromMatrixrates($request);
@@ -750,7 +775,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
         $iva = 0;
         if ($this->_getHelper()->getConfigData('add_iva_to_rates')) {
-            $insurance = $this->_getHelper()->calculateIVA($request->getPackageValue());
+            $iva = $this->_getHelper()->calculateIVA($request->getPackageValue());
         }
 
         foreach ($rateArray as $rate) {
@@ -809,21 +834,117 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      *
      * @return Mage_Shipping_Model_Rate_Request
      */
+    protected function _preprocessRequestForMatrixRates(Mage_Shipping_Model_Rate_Request $request)
+    {
+        $totals = $this->getTotalsWV($request->getAllItems());
+        $request->setPackageWeight($totals->getTotalWeight());
+        $request->setPackageHeight($totals->getTotalHeight());
+        $request->setPackageWidth($totals->getTotalWidth());
+        $request->setPackageDepth($totals->getTotalLength());
+    }
+
+    /**
+     *
+     * @param Mage_Shipping_Model_Rate_Request $request
+     *
+     * @return Mage_Shipping_Model_Rate_Request
+     */
     protected function _processRequestForMatrixRates(Mage_Shipping_Model_Rate_Request $request)
     {
-        $this->_processRequestForFreeShipping($request);
+        $request = $this->_preprocessRequestForMatrixRates($request);
+        $request = $this->_processRequestForFreeShipping($request);
 
         if (!$request->getMRConditionName()) {
             $request->setMRConditionName($this->_getHelper()->getConfigData('condition_name') ? $this->_getHelper()->getConfigData('condition_name') : $this->_default_condition_name);
         }
-        // clean city and postcode
-        $request->setDestCity('');
-        $request->setDestPostcode('');
+
+        $conditionsToClean = explode(',',$this->_getHelper()->getConfigData('conditionable_filters'));
+
+        if (!in_array(Summa_Andreani_Model_System_Config_Source_Shipping_MatrixratesFilter::COUNTRY_VALUE,$conditionsToClean)) {
+            $request->setDestCountryId('');
+        }
+        if (!in_array(Summa_Andreani_Model_System_Config_Source_Shipping_MatrixratesFilter::REGION_VALUE,$conditionsToClean)) {
+            $request->setDestRegionId('');
+            $request->setDestRegionCode('');
+        }
+        if (!in_array(Summa_Andreani_Model_System_Config_Source_Shipping_MatrixratesFilter::CITY_VALUE,$conditionsToClean)) {
+            $request->setDestCity('');
+        }
+        if (!in_array(Summa_Andreani_Model_System_Config_Source_Shipping_MatrixratesFilter::ZIP_VALUE,$conditionsToClean)) {
+            $request->setDestPostcode('');
+        }
 
         return $request;
     }
 
-    protected function _processRequestForFreeShipping(Mage_Shipping_Model_Rate_Request $request)
+    /**
+     * Is state province required
+     *
+     * @return bool
+     */
+    public function isStateProvinceRequired()
+    {
+        $result = true;
+        if (
+            (int)$this->_getHelper()->getConfigData('source_rates') !== Summa_Andreani_Model_System_Config_Source_Shipping_Service::ANDREANI_WEBSERVICE_VALUE &&
+            !in_array(
+                Summa_Andreani_Model_System_Config_Source_Shipping_MatrixratesFilter::REGION_VALUE,
+                explode(',',$this->_getHelper()->getConfigData('conditionable_filters'))
+            ))
+        {
+            $result = false;
+        }
+        return $result;
+    }
+
+    /**
+     * Check if city option required
+     *
+     * @return boolean
+     */
+    public function isCityRequired()
+    {
+        $result = true;
+        if (
+            (int)$this->_getHelper()->getConfigData('source_rates') !== Summa_Andreani_Model_System_Config_Source_Shipping_Service::ANDREANI_WEBSERVICE_VALUE &&
+            !in_array(
+                Summa_Andreani_Model_System_Config_Source_Shipping_MatrixratesFilter::CITY_VALUE,
+                explode(',',$this->_getHelper()->getConfigData('conditionable_filters'))
+            ))
+        {
+            $result = false;
+        }
+        return $result;
+    }
+
+    /**
+     * Determine whether zip-code is required for the country of destination
+     *
+     * @param string|null $countryId
+     * @return bool
+     */
+    public function isZipCodeRequired($countryId = null)
+    {
+        $result = true;
+        if (
+            (int)$this->_getHelper()->getConfigData('source_rates') !== Summa_Andreani_Model_System_Config_Source_Shipping_Service::ANDREANI_WEBSERVICE_VALUE &&
+            !in_array(
+                Summa_Andreani_Model_System_Config_Source_Shipping_MatrixratesFilter::ZIP_VALUE,
+                explode(',',$this->_getHelper()->getConfigData('conditionable_filters'))
+            ))
+        {
+            $result = false;
+        }
+        return $result;
+    }
+    /**
+     * Function to process $request lookin for free shipping
+     * and returns true or false based-on state free ship.
+     * @param Mage_Shipping_Model_Rate_Request $request
+     *
+     * @return Mage_Shipping_Model_Rate_Request
+     */
+    protected function _processRequestForFreeShipping(Mage_Shipping_Model_Rate_Request &$request)
     {
         // exclude Virtual products price from Package value if pre-configured
         if (!$this->_getHelper()->getConfigData('include_virtual_price') && $request->getAllItems()) {
@@ -871,6 +992,22 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $request->setPackageWeight($request->getFreeMethodWeight());
             $request->setPackageQty($oldQty - $freeQty);
         }
+
+        $freeShipping=false;
+
+        if (is_numeric($this->getConfigData('free_shipping_threshold')) &&
+            $this->getConfigData('free_shipping_threshold')>0 &&
+            $request->getPackageValue()>$this->getConfigData('free_shipping_threshold')) {
+            $freeShipping=true;
+        }
+        if ($this->getConfigData('allow_free_shipping_promotions') &&
+            ($request->getFreeShipping() === true ||
+                $request->getPackageQty() == $this->getFreeBoxes()))
+        {
+            $freeShipping=true;
+        }
+        $request->setIsFreeShipping($freeShipping);
+        return $request;
     }
 
     /**
@@ -884,36 +1021,42 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
     /**
      * Function to Validate Package Weight
-     * @param $weight
+     * @param $totals
      *
      * @return int
      */
-    protected function _validateWeight($weight)
+    protected function _validateWeight($totals)
     {
         if (is_null($this->_limitWeight)) {
             $this->_limitWeight = $this->_getHelper()->getConfigData('limit_weight');
         }
+        $weight = $totals->getTotalWeight();
         if ($weight > $this->_limitWeight) {
+            $totals->setErrors($this->_getHelper()->__('Weight limit overflow.'));
             $this->_getHelper()->throwException('Weight limit overflow.',$this->getServiceType());
         }
         if (!$weight || $weight < 0 || is_null($weight)) {
-            $weight = 1;
+            $totals->setErrors($this->_getHelper()->__('Weight lower than 0.'));
+            $totals->setTotalWeight(1);
         }
-        return $weight;
+        return $totals;
     }
 
     /**
      * Function to validate Package Volume
-     * @param $volume
+     * @param $totals
      *
      * @return int
      */
-    protected function _validateVolume($volume)
+    protected function _validateVolume($totals)
     {
+        $volume = $totals->getTotalVolume();
         if (!$volume || $volume < 0 || is_null($volume)) {
-            $volume = 1;
+            $totals->setErrors($this->_getHelper()->__('Volume lower than 0.'));
+            $totals->setTotalVolume(1);
         }
-        return intval($volume);
+        $totals->setTotalVolume(intval($volume));
+        return $totals;
     }
 
     /**
@@ -932,5 +1075,65 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     public function getCode()
     {
         return $this->_code;
+    }
+
+    public function getTotalsWV($items)
+    {
+        $response = new Varien_Object();
+        $response->setTotalWeight(0);
+        $response->setTotalVolume(0);
+
+        $response->setTotalHeight(0);
+        $response->setTotalWidth(0);
+        $response->setTotalLength(0);
+        foreach ($items as $item) {
+
+            if ($item->getProductType() === "simple") {
+                $height =
+                    Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
+                        $item->getProductId(),
+                        $this->_getHelper()->getConfigData('attribute_height'),
+                        Mage::app()->getStore()
+                    );
+                $height = ($height)?$height:0;
+
+                $width =
+                    Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
+                        $item->getProductId(),
+                        $this->_getHelper()->getConfigData('attribute_width'),
+                        Mage::app()->getStore()
+                    );
+                $width = ($width)?$width:0;
+
+                $length =
+                    Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
+                        $item->getProductId(),
+                        $this->_getHelper()->getConfigData('attribute_length'),
+                        Mage::app()->getStore()
+                    );
+                $length = ($length)?$length:0;
+
+                $weight =
+                    Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
+                        $item->getProductId(),
+                        $this->_getHelper()->getConfigData('attribute_weight'),
+                        Mage::app()->getStore()
+                    );
+                $weight = ($weight)? $weight : $this->_getHelper()->calculateWeight($item->getProduct());
+
+                $response->setTotalWeight($response->getTotalWeight() + $weight);
+                $response->setTotalVolume($response->getTotalVolume() + ($height * $width * $length));
+
+                $response->setTotalHeight($response->getTotalHeight() + $height);
+                $response->setTotalWidth($response->getTotalWidth() + $width);
+                $response->setTotalLength($response->getTotalLength() + $length);
+            }
+
+        }
+
+        $response = $this->_validateWeight($response);
+        $response = $this->_validateVolume($response);
+
+        return $response;
     }
 }

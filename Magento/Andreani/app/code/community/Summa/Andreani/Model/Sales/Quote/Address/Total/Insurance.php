@@ -29,13 +29,11 @@ class Summa_Andreani_Model_Sales_Quote_Address_Total_Insurance
      *
      * @return Summa_Andreani_Model_Sales_Quote_Address_Total_Insurance
      */
-    protected function _resetFields(Mage_Sales_Model_Quote_Address $address)
+    protected function _resetFields()
     {
         // Reset insurance Amount
         $this->_setAmount(0);
         $this->_setBaseAmount(0);
-        $address->unsetData('summa_andreani_insurance_amount');
-        $address->unsetData('base_summa_andreani_insurance_amount');
 
         return $this;
     }
@@ -80,15 +78,13 @@ class Summa_Andreani_Model_Sales_Quote_Address_Total_Insurance
      */
     protected function _getInsuranceAmount(Mage_Sales_Model_Quote_Address $address)
     {
-        
+        /** @var $helper Summa_Andreani_Helper_Data */
         $helper = Mage::helper('summa_andreani');
         $amount = 0;
 
         if(!(!$helper->getConfigData('apply_insurance_when_free_shipping') && !(int) $address->getBaseShippingAmount())
             || $helper->getConfigData('apply_insurance_when_free_shipping')){
-            
-            $percentage = Mage::helper('summa_andreani')->getConfigData('insurance');
-            $amount = $address->getSubtotal() * $percentage / 100;
+            $amount = $helper->calculateInsurance($address->getSubtotal());
         }
         
         return $amount;
@@ -109,7 +105,6 @@ class Summa_Andreani_Model_Sales_Quote_Address_Total_Insurance
         if(!$this->_canCollect($address)){
             return $this;
         }
-        
         $this->_resetFields($address);
         $amount = $this->_getInsuranceAmount($address);
         

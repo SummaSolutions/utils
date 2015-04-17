@@ -6,7 +6,7 @@ class Summa_Andreani_Model_System_Config_Source_Shipping_Condition
     {
         $arr = array();
 
-        if (Mage::helper('summa_andreani')->getConfigDataFromMatrixRates('active')) {
+        if (Mage::getSingleton('matrixrate_shipping/carrier_matrixrate')) {
             foreach (Mage::getSingleton('matrixrate_shipping/carrier_matrixrate')->getCode('condition_name') as $k=>$v) {
                 $arr[] = array('value'=>$k, 'label'=>$v);
             }
