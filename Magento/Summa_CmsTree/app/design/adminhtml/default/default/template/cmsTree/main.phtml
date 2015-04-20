@@ -1,0 +1,15 @@
+<div class="content-header">
+    <table cellspacing="0" width="100%">
+        <tr>
+            <td style="width:50%; border-right:1px solid #ddd; padding:0 23px 23px 0;">
+                <?php echo $this->getChildHtml('cms_tree.tree') ?>
+            </td>
+            <td style="width:50%; padding:0 0 23px 23px;">
+                <div id="edit_form_container">
+                    <?php echo $this->getChildHtml('cms_tree.form') ?>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <?php echo $this->getChildHtml('cms_tree.grid') ?>
+</div>

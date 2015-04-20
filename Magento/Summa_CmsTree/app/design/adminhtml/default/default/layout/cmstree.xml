@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_cmstree_index>
+        <reference name="head">
+            <action method="addItem"><type>js_css</type><name>extjs/resources/css/ext-all.css</name></action>
+            <action method="addItem"><type>js_css</type><name>extjs/resources/css/ytheme-magento.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>css/cmstree.css</name></action>
+
+            <action method="addItem"><type>js</type><name>extjs/ext-tree.js</name></action>
+            <action method="addItem"><type>js</type><name>extjs/ext-tree-checkbox.js</name></action>
+
+        </reference>
+        <reference name="content">
+            <block type="adminhtml/store_switcher" name="store_switcher" before="-"></block>
+            <block type="adminhtml/template" name="cms_tree.main" template="cmsTree/main.phtml">
+                <block type="summa_cmstree/adminhtml_tree" name="cms_tree.tree" template="cmsTree/tree.phtml"/>
+                <block type="summa_cmstree/adminhtml_edit" name="cms_tree.form" />
+                <block type="summa_cmstree/adminhtml_grid" name="cms_tree.grid"/>
+            </block>
+        </reference>
+    </adminhtml_cmstree_index>
+    <adminhtml_cmstree_grid>
+        <block type="summa_cmstree/adminhtml_grid" name="root"/>
+    </adminhtml_cmstree_grid>
+</layout>
