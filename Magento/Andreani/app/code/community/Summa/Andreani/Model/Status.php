@@ -10,7 +10,6 @@
 class Summa_Andreani_Model_Status
     extends Mage_Core_Model_Abstract
 {
-    CONST SHIPMENT_NO_ANDREANI = 0;
     CONST SHIPMENT_NEW = 1;
     CONST SHIPMENT_PROCESSING = 2;
     CONST SHIPMENT_COMPLETED = 3;
@@ -19,6 +18,12 @@ class Summa_Andreani_Model_Status
     CONST ANDREANI_STATUS_NEW = 'Envío no ingresado';
     CONST ANDREANI_STATUS_PROCESSING = 'Envío ingresado al circuito operativo';
     CONST ANDREANI_STATUS_COMPLETED = 'Envío entregado';
+
+    CONST ORDER_STATUS_NEW = 'andreani_shipping_new';
+    CONST ORDER_STATUS_PROCESSING = 'andreani_shipping_processing';
+    CONST ORDER_STATUS_COMPLETED = 'andreani_shipping_completed';
+    CONST ORDER_STATUS_PENDING = 'andreani_shipping_pending';
+    CONST ORDER_STATUS_FAILED = 'andreani_shipping_failed';
 
     protected $_checkedStatuses = array();
 
@@ -48,9 +53,16 @@ class Summa_Andreani_Model_Status
                 /** @var Mage_Sales_Model_Order_Shipment_Track $track */
                 foreach ($shipment->getAllTracks() as $track) {
                     $track->getNumberDetail();
-                    $results = Mage::helper('summa_andreani')->getStatusSingleton()->getCheckedStatuses();
+                }
 
-                    $results[$shipment->getId()];
+                $results = Mage::helper('summa_andreani')->getStatusSingleton()->getCheckedStatuses();
+
+                $status = $results[$shipment->getId()];
+
+                if ($status->getIsStatusUpdateRequired())
+                {
+                    $shipment->setSummaAndreaniShipmentStatus($status->getStatusToUpdate())
+                        ->save();
                 }
             }
         }
@@ -102,8 +114,9 @@ class Summa_Andreani_Model_Status
     {
         $result = new Varien_Object();
         $result->setIsStatusUpdateRequired(0);
+        $result->setStatusToUpdate(-1);
         $shipmentStatus = $tracking->getShipment()->getSummaAndreaniShipmentStatus();
-        if ($shipmentStatus != self::SHIPMENT_NEW) {
+        if ($shipmentStatus != self::SHIPMENT_NEW || $shipmentStatus == self::SHIPMENT_PENDING) {
             $result->setIsStatusUpdateRequired(1);
             $result->setStatusToUpdate(self::SHIPMENT_NEW);
         }
@@ -114,8 +127,9 @@ class Summa_Andreani_Model_Status
     {
         $result = new Varien_Object();
         $result->setIsStatusUpdateRequired(0);
+        $result->setStatusToUpdate(-1);
         $shipmentStatus = $tracking->getShipment()->getSummaAndreaniShipmentStatus();
-        if ($shipmentStatus != self::SHIPMENT_PROCESSING) {
+        if ($shipmentStatus != self::SHIPMENT_PROCESSING || $shipmentStatus == self::SHIPMENT_PENDING) {
             $result->setIsStatusUpdateRequired(1);
             $result->setStatusToUpdate(self::SHIPMENT_PROCESSING);
         }
@@ -126,8 +140,9 @@ class Summa_Andreani_Model_Status
     {
         $result = new Varien_Object();
         $result->setIsStatusUpdateRequired(0);
+        $result->setStatusToUpdate(-1);
         $shipmentStatus = $tracking->getShipment()->getSummaAndreaniShipmentStatus();
-        if ($shipmentStatus != self::SHIPMENT_COMPLETED) {
+        if ($shipmentStatus != self::SHIPMENT_COMPLETED || $shipmentStatus == self::SHIPMENT_PENDING) {
             $result->setIsStatusUpdateRequired(1);
             $result->setStatusToUpdate(self::SHIPMENT_COMPLETED);
         }

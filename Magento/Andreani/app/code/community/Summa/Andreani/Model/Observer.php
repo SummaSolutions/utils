@@ -4,15 +4,16 @@ class Summa_Andreani_Model_Observer
 {
     public function saveShippingMethod(Varien_Event_Observer $observer)
     {
-        $request = $observer->getEvent()->getRequest();
+        /** @var Mage_Sales_Model_Quote $quote */
         $quote = $observer->getEvent()->getQuote();
-
+        /** @var Mage_Sales_Model_Quote_Address $shippingAddress */
         $shippingAddress = $quote->getShippingAddress();
-        
+
         $code = Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getCode();
-        
-        if ($shippingAddress->getShippingMethod() == ($code . '_' . $code)) {            
-            $branchId = $request->getPost('andreani_branch_id');
+
+        $quoteCarrierCode = explode('_',$shippingAddress->getShippingMethod());
+        if (current($quoteCarrierCode) === $code) {
+            $branchId = end($quoteCarrierCode);
             
             // Set branch ID to the address
             $shippingAddress->setAndreaniBranchId($branchId);
@@ -35,9 +36,6 @@ class Summa_Andreani_Model_Observer
                     $phone = 'N/A';
                 }
                 $shippingAddress->setTelephone($phone);
-                
-                $storeName = ucwords(strtolower($branch->getDescription()));
-                $shippingAddress->setCompany(Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getConfigData('title') . ' - ' . $storeName );
             }
         }        
     }
@@ -48,16 +46,16 @@ class Summa_Andreani_Model_Observer
      */
     public function afterInvoiceSave(Varien_Event_Observer $observer)
     {
-        /*$order = $observer->getData('data_object')->getOrder();
-        $shippingMethod = $order->getShippingMethod();
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $observer->getData('data_object')->getOrder();
+        $shippingCarrier = $order->getShippingCarrier();
         if(
-            $this->_getHelper()->isAndreaniShippingMethod($shippingMethod) &&
+            $this->_getHelper()->isAndreaniShippingCarrier($shippingCarrier) &&
             $this->_getHelper()->isAutoCreateShipmentOnInvoiceEnabled()
         ){
             $this->_getHelper()->generateAndreaniShipment($order);
-        }*/
+        }
     }
-
 
     /**
      * @return Summa_Andreani_Helper_Data
@@ -65,6 +63,14 @@ class Summa_Andreani_Model_Observer
     protected function _getHelper()
     {
         return Mage::helper('summa_andreani');
+    }
+
+    /**
+     * @return Summa_Andreani_Helper_Shipments
+     */
+    protected function _getShipmentHelper()
+    {
+        return Mage::helper('summa_andreani/shipments');
     }
 
     /**
@@ -76,42 +82,29 @@ class Summa_Andreani_Model_Observer
      */
     public function shipmentSaveBefore(Varien_Event_Observer $observer)
     {
-        /*$shipment = $observer->getShipment();
+        /** @var Mage_Sales_Model_Order_Shipment $shipment */
+        $shipment = $observer->getShipment();
         if ((bool)$shipment->getAllTracks()) {
             return $this;
         }
         $order = $shipment->getOrder();
-        $shippingMethod = $order->getShippingMethod();
-        if (Mage::app()->getRequest()->getControllerName() === 'sales_order_shipment' &&
+        $carrier = $order->getShippingCarrier();
+        if (
+            Mage::app()->getRequest()->getControllerName() === 'sales_order_shipment' &&
             Mage::app()->getRequest()->getActionName() === "save" &&
-            $this->_getHelper()->isAndreaniShippingMethod($shippingMethod)
+            $this->_getHelper()->isAndreaniShippingCarrier($carrier) &&
+            $this->_getHelper()->isAutoCreateShippingOnShipmentEnabled()
             )
         {
-
-            // Get Andreani model
-            $andreani = Mage::getModel('summa_andreani/shipping_carrier_andreani');
-
             // Do Shipment Request to Andreani
-            $response = $andreani->doShipmentRequest($order, $shipment->getAllItems());
-            if($response === false || !$response->ConfirmarCompraResult || !$response->ConfirmarCompraResult->NumeroAndreani){
-                throw new Mage_Adminhtml_Exception('Could not create shipment in Andreani');
+            $response = $carrier->doShipmentRequest($order, $shipment->getAllItems());
+            if($response->hasErrors()){
+                $this->_getHelper()->throwException($response->getErrors(),$carrier->getServiceType());
             }
-
-            $this->_getHelper()->addTrackingComment($order,$shipment,$response->ConfirmarCompraResult->NumeroAndreani);
-
-            if($shippingMethod == 'storepickup_andreani_storepickup_andreani'){ // TODO: research what must be here
-                $carrierCode = 'storepickup_andreani';
-            } else {
-                $carrierCode = 'matrixrate';
-            }
-
-            $track = Mage::getModel('sales/order_shipment_track');
-            $track->setCarrierCode($carrierCode)
-                ->setTitle("Recibo " . $response->ConfirmarCompraResult->Recibo)
-                ->setNumber($response->ConfirmarCompraResult->NumeroAndreani);
-            $shipment->addTrack($track);
+            $this->_getShipmentHelper()->addTrackingCode($shipment,$response,$carrier);
+            $this->_getShipmentHelper()->addShippingLabel($shipment,$response);
         }
-        return $this;*/
+        return $this;
     }
 
     /**
@@ -143,6 +136,51 @@ class Summa_Andreani_Model_Observer
             }catch(Exception $e){
                 Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()->__('Could not delete shipment in Andreani'));
             }
+        }
+    }
+
+    /**
+     * Observer on Shipment save after GLOBAL
+     * At this moment, this observer set Order status based-on Shipment Andreani Status
+     * @param Varien_Event_Observer $observer
+     *
+     * @throws Exception
+     */
+    public function shipmentGlobalSaveAfter(Varien_Event_Observer $observer)
+    {
+        $shipment = $observer->getShipment();
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $shipment->getOrder();
+        $saveOrder = false;
+        switch ($shipment->getSummaAndreaniShipmentStatus()) {
+            case Summa_Andreani_Model_Status::SHIPMENT_NEW:
+                if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_NEW) {
+                    $order->setStatus(Summa_Andreani_Model_Status::ORDER_STATUS_NEW);
+                    $saveOrder = true;
+                }
+                break;
+            case Summa_Andreani_Model_Status::SHIPMENT_PROCESSING:
+                if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_PROCESSING) {
+                    $order->setStatus(Mage::getStoreConfig('andreani_config/global_tab/andreani_shipping_others'));
+                    $saveOrder = true;
+                }
+                break;
+            case Summa_Andreani_Model_Status::SHIPMENT_COMPLETED:
+                if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_COMPLETED) {
+                    $order->setStatus(Mage::getStoreConfig('andreani_config/global_tab/andreani_shipping_completed'));
+                    $saveOrder = true;
+                }
+                break;
+            case Summa_Andreani_Model_Status::SHIPMENT_PENDING:
+                if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_PENDING) {
+                    $order->setStatus(Mage::getStoreConfig('andreani_config/global_tab/andreani_shipping_failed'));
+                    $saveOrder = true;
+                }
+                break;
+        }
+
+        if ($saveOrder) {
+            $order->save();
         }
     }
 

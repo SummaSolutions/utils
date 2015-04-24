@@ -121,7 +121,7 @@ class Summa_Andreani_Model_Branch
         $postalCodesDisabled = explode(',',Mage::helper('summa_andreani')->getConfigData('postal_codes_disabled',$this->getServiceType()));
         // Only branches with postal code that not in list of disabled postal codes let enabled.
         // In most cases disabled postal codes is used to avoid show stores in order to branches.
-        if (in_array($resultArr['postal_code'],$postalCodesDisabled)){
+        if (!in_array($resultArr['postal_code'],$postalCodesDisabled)){
             $resultArr['enabled'] = true;
         }
         $resultArr['region_id'] = $this->getRegionId(trim($addressExploded[3]), trim($addressExploded[1]));
@@ -162,6 +162,11 @@ class Summa_Andreani_Model_Branch
         }
     }
 
+    /**
+     * @param null $regionId
+     *
+     * @return Summa_Andreani_Model_Resource_Branch_Collection
+     */
     public function getBranches($regionId = null)
     {
         $collection = Mage::getModel('summa_andreani/branch')->getCollection()

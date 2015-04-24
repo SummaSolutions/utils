@@ -28,7 +28,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      */
     public function isTrackingAvailable()
     {
-        return true;
+        return $this->_getHelper()->getConfigData('is_tracking_enabled',$this->getServiceType());
     }
 
     /**
@@ -38,7 +38,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      */
     public function isShippingLabelsAvailable()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -92,7 +92,6 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      *
      * @return Varien_Object
      */
-    /*
     public function requestToShipment(Mage_Shipping_Model_Shipment_Request $request)
     {
         $this->_getHelper()->debugging('requestToShipment:', $this->getServiceType());
@@ -103,6 +102,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             Mage::throwException(Mage::helper('summa_andreani')->__('No packages for request'));
         }
         $data = array();
+        $helper = $this->_getShipmentsHelper();
         foreach ($packages as $packageId => $package) {
 
             $this->_getHelper()->debugging('requestToShipmentDoShipmentRequestParams:', $this->getServiceType());
@@ -119,7 +119,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             } else {
                 $data[] = array(
                     'tracking_number' => $result->getTrackingNumber(),
-                    'label_content'   => $result->getShippingLabelContent()
+                    'label_content'   => $helper->preparePdf($result->getShippingLabelContent())
                 );
             }
         }
@@ -129,7 +129,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
         return $response;
     }
-    */
+
 
     /**
      * Do return of shipment
@@ -221,52 +221,52 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
                 $detailsProductsSend = $this->_getHelper()->__('Order #') . $order->getIncrementId();
                 $items = ($itemsToShip === NULL) ? $order->getAllItems() : $itemsToShip;
-                $totals = $this->getTotalsWV($items);
+                if (is_null($params)) {
+                    $totals = $this->getTotalsWVFromItems($items);
+                } else {
+                    $totals = $this->getTotalsWVFromParams($params);
+                }
 
                 $address = $order->getShippingAddress();
 
-                $number = '-';
-                $street = $address->getStreet();
-                $DNI_number = 'xxxxxxxx'; //TODO: Remove this
-                $DNI_type = 'DNI';
+                $streets = $address->getStreet();
 
                 $shipmentInfo = array(
                     /* Shipping Data */
                     'SucursalRetiro'          => $address->getAndreaniBranchId() /* Required = Condicional; */
-                , 'Provincia'                 => $address->getRegion()
-                , 'Localidad'                 => $address->getCity()
-                , 'CodigoPostalDestino'       => $address->getPostcode() /* Required = true; */
-                , 'Calle'                     => $street[0] /* Required = true; */
-                , 'Numero'                    => $number /* Required = true; */
-                , 'Departamento'              => NULL
-                , 'Piso'                      => NULL
+                    , 'Provincia'                 => $address->getRegion()
+                    , 'Localidad'                 => $address->getCity()
+                    , 'CodigoPostalDestino'       => $address->getPostcode() /* Required = true; */
+                    , 'Calle'                     => $streets[0] /* Required = true; */
+                    , 'Numero'                    => '-' /* Required = true; */
+                    , 'Departamento'              => NULL
+                    , 'Piso'                      => NULL
 
-                    /* Recipient Data */
-                , 'NombreApellido'            => $address->getFirstname() . ' ' . $address->getLastname() /* Required = true; */
-                , 'TipoDocumento'             => $DNI_type /* Required = true; */
-                , 'NumeroDocumento'           => $DNI_number /* Required = true; */
-                , 'NumeroCelular'             => NULL
-                , 'NumeroTelefono'            => $address->getTelephone()
-                , 'Email'                     => $order->getCustomerEmail()
-                , 'NombreApellidoAlternativo' => NULL
+                        /* Recipient Data */
+                    , 'NombreApellido'            => $address->getFirstname() . ' ' . $address->getLastname() /* Required = true; */
+                    , 'TipoDocumento'             => 'DNI' /* Required = true; */
+                    , 'NumeroDocumento'           => 'xxxxxxxx' /* Required = true; */
+                    , 'NumeroCelular'             => NULL
+                    , 'NumeroTelefono'            => $address->getTelephone()
+                    , 'Email'                     => $order->getCustomerEmail()
+                    , 'NombreApellidoAlternativo' => NULL
 
-                    /* Delivery Data  */
-                , 'NumeroTransaccion'         => $order->getIncrementId()
-                , 'DetalleProductosEntrega'   => $detailsProductsSend
-                , 'DetalleProductosRetiro'    => NULL
-                , 'Peso'                      => $totals->getTotalWeight()
-                , 'Volumen'                   => $totals->getTotalVolume() /* Required = Condicional;  */
-                , 'ValorACobrar'              => NULL /* Required = Condicional; */
-                , 'ValorDeclarado'            => NULL /* Required = Condicional; */
+                        /* Delivery Data  */
+                    , 'NumeroTransaccion'         => $order->getIncrementId()
+                    , 'DetalleProductosEntrega'   => $detailsProductsSend
+                    , 'DetalleProductosRetiro'    => NULL
+                    , 'Peso'                      => $totals->getTotalWeight()
+                    , 'Volumen'                   => $totals->getTotalVolume() /* Required = Condicional;  */
+                    , 'ValorACobrar'              => NULL /* Required = Condicional; */
+                    , 'ValorDeclarado'            => NULL /* Required = Condicional; */
 
-                    /* Billing Data */
-                , 'Contrato'                  => $contract /* Required = true; */
-                , 'SucursalCliente'           => NULL/* Required = Condicional; */
-                , 'CategoriaDistancia'        => $order->getRegionId() /* Required = Condicional; */
-                , 'CategoriaFacturacion'      => NULL /* Required = Condicional; */
-                , 'CategoriaPeso'             => NULL /* Required = Condicional; */
-                , 'Tarifa'                    => NULL /* Required = Condicional; */
-
+                        /* Billing Data */
+                    , 'Contrato'                  => $contract /* Required = true; */
+                    , 'SucursalCliente'           => NULL/* Required = Condicional; */
+                    , 'CategoriaDistancia'        => $order->getRegionId() /* Required = Condicional; */
+                    , 'CategoriaFacturacion'      => NULL /* Required = Condicional; */
+                    , 'CategoriaPeso'             => NULL /* Required = Condicional; */
+                    , 'Tarifa'                    => NULL /* Required = Condicional; */
                 );
 
                 $this->_getHelper()->debugging('doShipmentRequestDataSent:', $this->getServiceType());
@@ -338,18 +338,17 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
 
-            $this->_getHelper()->debugging('getLinkConstancyDataSent:', $this->getServiceType());
-            $this->_getHelper()->debugging(array(
-                'ParamImprimirConstancia' => array(
-                    'NumeroAndreani' => $tracking
-                )
-            ), $this->getServiceType());
-
-            $phpresponse = $client->ImprimirConstancia(array(
+            $dataSent = array(
                 'entities' => array(
                     'ParamImprimirConstancia' => array(
                         'NumeroAndreani' => $tracking
-                    ))));
+                    )
+                )
+            );
+            $this->_getHelper()->debugging('getLinkConstancyDataSent:', $this->getServiceType());
+            $this->_getHelper()->debugging($dataSent, $this->getServiceType());
+
+            $phpresponse = $client->ImprimirConstancia($dataSent);
 
             $this->_getHelper()->debugging('getLinkConstancyResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($phpresponse, $this->getServiceType());
@@ -370,13 +369,11 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
     public function getTrackingInfo($tracking)
     {
-        $info = array();
-
         $result = $this->getTracking($tracking);
 
         if($result instanceof Mage_Shipping_Model_Tracking_Result){
-            if ($trackings = $result->getAllTrackings()) {
-                return $trackings[0];
+            if ($tracks = $result->getAllTrackings()) {
+                return $tracks[0];
             }
         }
         elseif (is_string($result) && !empty($result)) {
@@ -393,7 +390,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      *
      * @return mixed
      */
-    public function getTracking($trackings)
+    public function getTracking($tracks)
     {
         $clientNro = $this->_getHelper()->getClientNumber($this->getServiceType());
         $gatewayUrl = $this->_getHelper()->getConfigData('gateway_tracking_url');
@@ -414,7 +411,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging(array(
                 'Pieza' => array(
                     'NroPieza'      => '',
-                    'NroAndreani'   => $trackings,
+                    'NroAndreani'   => $tracks,
                     'CodigoCliente' => $clientNro
                 )
             ), $this->getServiceType());
@@ -422,7 +419,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $response = $client->ObtenerTrazabilidad(array(
                 'Pieza' => array(
                     'NroPieza'      => '',
-                    'NroAndreani'   => $trackings,
+                    'NroAndreani'   => $tracks,
                     'CodigoCliente' => $clientNro
                 )
             ));
@@ -435,12 +432,18 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
         }
 
-        $this->_parseXmlTrackingResponse($trackings, $response);
+        $this->_parseXmlTrackingResponse($tracks, $response);
 
         return $this->_result;
     }
 
-    protected function _parseXmlTrackingResponse($trackings, $response)
+    /**
+     * Function to parse XML response from Andreani Web Services
+     * And Update status of shipment if it's needed
+     * @param $tracks
+     * @param $response
+     */
+    protected function _parseXmlTrackingResponse($tracks, $response)
     {
         $errorTitle = $this->_getHelper()->__('Unable to retrieve tracking');
         $resultArr = array();
@@ -448,14 +451,18 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         if (is_object($response)) {
             if($response instanceof SoapFault)
             {
-                $errorArr[$trackings] = $errorTitle. ". " . $response->getMessage();
+                $errorArr[$tracks] = $errorTitle. ". " . $response->getMessage();
             } else {
                 foreach ($response as $pieza) {
                     $envios = is_array($pieza->Envios->Envio) ? $pieza->Envios->Envio : $pieza->Envios;
                     foreach ($envios as $envio) {
                         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
                         $track = Mage::getModel('sales/order_shipment_track')->load($envio->NroAndreani,'track_number');
-                        $tmpArr = array();
+                        $checkStatus = true;
+                        if ($track->getShipment()->getSummaAndreaniShipmentStatus() == Summa_Andreani_Model_Status::SHIPMENT_COMPLETED){
+                            $checkStatus = false; // if Shipment Status is Completed this flag avoid check status
+                        }
+                        $tmpArr  = array();
                         $eventos = $envio->Eventos;
                         foreach ($eventos as $evento) {
                             if (is_array($evento)) {
@@ -468,7 +475,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                                         'deliverylocation' => $status->Sucursal,
                                         'activity'           => $status->Estado
                                     );
-                                    $this->_getHelper()->getStatusSingleton()->checkStatus($track,$status->Estado);
+                                    if ($checkStatus) {
+                                        $this->_getHelper()->getStatusSingleton()->checkStatus($track,$status->Estado);
+                                    }
                                 }
                             } else {
                                 list($date, $time) = $this->_getHelper()->splitDate($evento->Fecha);
@@ -479,7 +488,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                                     'deliverylocation' => $evento->Sucursal,
                                     'activity'           => $evento->Estado
                                 );
-                                $this->_getHelper()->getStatusSingleton()->checkStatus($track,$evento->Estado);
+                                if ($checkStatus) {
+                                    $this->_getHelper()->getStatusSingleton()->checkStatus($track,$evento->Estado);
+                                }
                             }
                         }
 
@@ -490,16 +501,29 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                             //'service'        => $envio->NombreEnvio,
                             'progressdetail' => $tmpArr
                         );
+                        if (count($tmpArr) && $checkStatus) { // Check status and update status of shipment if it's needing it
+                            $results = $this->_getHelper()->getStatusSingleton()->getCheckedStatuses();
+
+                            $status = $results[$track->getShipment()->getId()];
+
+                            if ($status->getIsStatusUpdateRequired())
+                            {
+                                $track->getShipment()
+                                    ->setSummaAndreaniShipmentStatus($status->getStatusToUpdate())
+                                    ->save();
+                            }
+                        }
                     }
                 }
             }
         } else {
-            $errorArr[$trackings] = $errorTitle;
+            $errorArr[$tracks] = $errorTitle;
         }
 
         $result = Mage::getModel('shipping/tracking_result');
         if ($errorArr || $resultArr) {
             foreach ($errorArr as $t => $r) {
+                /** @var Mage_Shipping_Model_Tracking_Result_Error $error */
                 $error = Mage::getModel('shipping/tracking_result_error');
                 $error->setCarrier($this->_code);
                 $error->setCarrierTitle($this->getConfigData('title', $this->getServiceType()));
@@ -509,6 +533,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             }
 
             foreach ($resultArr as $t => $data) {
+                /** @var Mage_Shipping_Model_Tracking_Result_Status $tracking */
                 $tracking = Mage::getModel('shipping/tracking_result_status');
                 $tracking->setCarrier($this->_code);
                 $tracking->setCarrierTitle($this->getConfigData('title', $this->getServiceType()));
@@ -518,7 +543,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $result->append($tracking);
             }
         } else {
-            foreach ($trackings as $t) {
+            foreach ($tracks as $t) {
+                /** @var Mage_Shipping_Model_Tracking_Result_Error $error */
                 $error = Mage::getModel('shipping/tracking_result_error');
                 $error->setCarrier($this->_code);
                 $error->setCarrierTitle($this->getConfigData('title', $this->getServiceType()));
@@ -647,7 +673,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         if ($this->_getHelper()->getConfigData('apply_insurance_on_shipping_price')) {
             $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
         }
-        $totals = $this->getTotalsWV($request->getAllItems());
+        $totals = $this->getTotalsWVFromItems($request->getAllItems());
         $responseWS = array();
         $collectRatesInfo = array(
             'cotizacionEnvio' => array(
@@ -655,7 +681,6 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 'Cliente'        => $clientNumber,
                 'Contrato'       => $contract,
                 'Peso'           => $totals->getTotalWeight(),
-                //'SucursalRetiro' => '', //Required if it's storepickup
                 'ValorDeclarado' => '', // Optional
                 'Volumen'        => $totals->getTotalVolume()
             )
@@ -764,7 +789,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             }
         }
 
-        $request->setShippingType($this->_shippingTypeForMatrixrates);
+        $request->setShippingType($this->_getHelper()->getConfigData('shipping_type_for_matrixrates',$this->getServiceType()));
 
         $rateArray = $this->_getRateArrayFromMatrixrates($request);
 
@@ -836,7 +861,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      */
     protected function _preprocessRequestForMatrixRates(Mage_Shipping_Model_Rate_Request $request)
     {
-        $totals = $this->getTotalsWV($request->getAllItems());
+        $totals = $this->getTotalsWVFromItems($request->getAllItems());
         $request->setPackageWeight($totals->getTotalWeight());
         $request->setPackageHeight($totals->getTotalHeight());
         $request->setPackageWidth($totals->getTotalWidth());
@@ -1020,6 +1045,24 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     }
 
     /**
+     * Function to get Shipment Helper Instance
+     * @return Summa_Andreani_Helper_Shipments
+     */
+    protected function _getShipmentsHelper()
+    {
+        return Mage::helper('summa_andreani/shipments');
+    }
+
+    /**
+     * Function to get Branch Helper Instance
+     * @return Summa_Andreani_Helper_Branch
+     */
+    protected function _getBranchHelper()
+    {
+        return Mage::helper('summa_andreani/branch');
+    }
+
+    /**
      * Function to Validate Package Weight
      * @param $totals
      *
@@ -1077,7 +1120,13 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         return $this->_code;
     }
 
-    public function getTotalsWV($items)
+    /**
+     * Function to returns an varien object with totals Weight and Volume from $items
+     * @param $items
+     *
+     * @return int|Varien_Object
+     */
+    public function getTotalsWVFromItems($items)
     {
         $response = new Varien_Object();
         $response->setTotalWeight(0);
@@ -1130,6 +1179,47 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             }
 
         }
+
+        $response = $this->_validateWeight($response);
+        $response = $this->_validateVolume($response);
+
+        return $response;
+    }
+
+    /**
+     * Function to returns an varien object with totals Weight and Volume from $params
+     * @param $params
+     *
+     * @return int|Varien_Object
+     */
+    public function getTotalsWVFromParams($params)
+    {
+        $response = new Varien_Object();
+
+        $weightUnits = $params['weight_units'];
+        $dimensionUnits = $params['dimension_units'];
+
+        $weightMultiplicator = ($weightUnits == 'KILOGRAM')?1000:453.59237;
+        $dimensionMultiplicator = ($dimensionUnits == 'CENTIMETER')?1:0.393700787;
+
+        $height = $params['height'];
+        $height = $height * $dimensionMultiplicator;
+
+        $width = $params['width'];
+        $width = $width * $dimensionMultiplicator;
+
+        $length = $params['length'];
+        $length = $length * $dimensionMultiplicator;
+
+        $weight = $params['weight'];
+        $weight = $weight * $weightMultiplicator;
+
+        $response->setTotalWeight($weight);
+        $response->setTotalVolume($height * $width * $length);
+
+        $response->setTotalHeight($height);
+        $response->setTotalWidth($width);
+        $response->setTotalLength($length);
 
         $response = $this->_validateWeight($response);
         $response = $this->_validateVolume($response);

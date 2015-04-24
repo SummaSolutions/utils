@@ -7,12 +7,13 @@
  * @copyright   Copyright (c) 2015 Summa Solutions (http://www.summasolutions.net)
  */
 ?>
+<?php $insuranceAmount = ((float)$this->getSource()->getSummaAndreaniInsuranceAmount())?$this->getSource()->getSummaAndreaniInsuranceAmount():$this->getSource()->getOrder()->getSummaAndreaniInsuranceAmount() ?>
 <?php $this->setPriceDataObject($this->getSource()) ?>
-<?php if ((float) $this->getSource()->getSummaAndreaniInsuranceAmount()): ?>
+<?php if ((float) $insuranceAmount): ?>
     <tr>
         <td class="label"><?php echo Mage::helper('summa_andreani')->getConfigData('insurance_subtotal_title')?></td>
         <td>
-            <?php echo $this->displayPrices($this->getSource()->getBaseSummaAndreaniInsuranceAmount(), $this->getSource()->getSummaAndreaniInsuranceAmount()); ?>
+            <?php echo $this->displayPrices($insuranceAmount, $insuranceAmount); ?>
         </td>
     </tr>
 <?php endif; ?>

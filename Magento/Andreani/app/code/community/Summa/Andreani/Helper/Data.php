@@ -4,41 +4,6 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
 {
     protected $_debuggingEnabled = null;
 
-    public function formatBranchInfo(Summa_Andreani_Model_Sucursal $branch)
-    {
-        return ucwords(strtolower($branch->getDescription() . ' - ' . $branch->getAddress()));
-    }
-
-    public function getBranchesJson()
-    {
-        $branches = Mage::getModel('summa_andreani/branch')->getBranches();
-
-        $stores = array();
-
-        foreach ($branches as $branch) {
-            $stores[$branch->getRegionId()][$branch->getBranchId()] = array(
-                'code' => $branch->getBranchId(),
-                'name' => $this->formatBranchInfo($branch)
-            );
-        }
-        $json = Mage::helper('core')->jsonEncode($stores);
-
-        return $json;
-    }
-
-    public function getRegionIds()
-    {
-        $branches = Mage::getModel('summa_andreani/branch')->getBranches();
-        
-        $ids = array();
-
-        foreach ($branches as $branch) {
-            $ids[] = $branch->getRegionId();
-        }
-
-        return $ids;
-    }
-
     /**
      * Function to split date from web service Andreani on TrackingCodes.
      * @param $dateTime
@@ -63,52 +28,48 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Function to show button on admin shipment view to call Andreani Web service and get Constancy Link
-     * @param $shipment Mage_Sales_Model_Order_Shipment
+     * Function to know if the shipping carrier instance is one of Andreani Shipping Carriers
+     * @param $shippingCarrier
+     *
      * @return bool
      */
-    public function canGenerateConstancy($shipment)
+    public function isAndreaniShippingCarrier($shippingCarrier)
     {
-        $shippingMethod = $shipment->getOrder()->getShippingMethod();
-        if ($this->isAndreaniShippingMethod($shippingMethod)) {
-            return false;
-        }
-
-        $tracks = $shipment->getAllTracks();
-        if(empty($tracks)){
-            return false;
-        }
-        $found = false;
-        $comments = $shipment->getCommentsCollection();
-        /** @var $comment Mage_Sales_Model_Resource_Order_Shipment_Comment */
-        foreach ($comments as $comment)
-        {
-            if (strpos($comment->getComment(),'Constancia PDF: |SEPARATOR| <a href') !== false) {
-                $found = true;
-                break;
-            }
-        }
-        return !$found;
+        return $shippingCarrier instanceof Summa_Andreani_Model_Shipping_Carrier_Abstract;
     }
 
     /**
-     * Function to show button on admin shipment view to call Andreani Web service and get Constancy Link
-     * @param $shipment Mage_Sales_Model_Order_Shipment
+     * Function to know if the carrier code is one of enabled andreani carriers code
+     * @param $carrierCode
+     *
      * @return bool
      */
-    public function canCancelShipment($shipment)
+    public function isAndreaniCarrierCode($carrierCode)
     {
-        $shippingMethod = $shipment->getOrder()->getShippingMethod();
-        if ($this->isAndreaniShippingMethod($shippingMethod)) {
-            return false;
+        return in_array($carrierCode,$this->getEnabledAndreaniCarrierCodes());
+    }
+
+    /**
+     * Function to get array with enabled Andreani Methods
+     * @return array
+     */
+    public function getEnabledAndreaniCarrierCodes()
+    {
+        $carrierCodes = array();
+
+        if (Mage::getSingleton('summa_andreani/shipping_carrier_standard')->isShipmentAvailable()) {
+            $carrierCodes[] = Mage::getSingleton('summa_andreani/shipping_carrier_standard')->getCode();
         }
-        if ($shipment->getOrder()->canShip()) {
-            return false;
+
+        if (Mage::getSingleton('summa_andreani/shipping_carrier_urgent')->isShipmentAvailable()) {
+            $carrierCodes[] = Mage::getSingleton('summa_andreani/shipping_carrier_urgent')->getCode();
         }
-        if ($shipment->getShipmentStatus() == "Shipped") { // TODO: Change to status Shipped
-            return true;
+
+        if (Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->isShipmentAvailable()) {
+            $carrierCodes[] = Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->getCode();
         }
-        return false;
+
+        return $carrierCodes;
     }
 
     /**
@@ -154,110 +115,56 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Sales_Model_Order $order
      * @param bool $generateMagentoShipment
-     * @param null $shipmentToAddTracks
+     * @param Mage_Sales_Model_Order_Shipment $shipmentToAddTracks
      */
     public function generateAndreaniShipment(Mage_Sales_Model_Order $order, $generateMagentoShipment=true, $shipmentToAddTracks = null)
     {
-        /* Get Andreani model */
-        /** @var  $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
-        $andreani = $order->getShippingCarrier();
+        /** @var $carrier Summa_Andreani_Model_Shipping_Carrier_Abstract */
+        $carrier = $order->getShippingCarrier();
 
-        /* Get Helper of Shipments */
+        if (!$this->isAndreaniShippingCarrier($carrier)) {
+            return false;
+        }
         /** @var $helper Summa_Andreani_Helper_Shipments */
         $helper = Mage::helper('summa_andreani/shipments');
 
-        /* Collect data for save Shipment */
+        // Collect data for save Shipment
         $data = array();
         /** @var $item Mage_Sales_Model_Order_Item */
         foreach ($order->getAllItems() as $item) {
             if ($item->getQtyToShip()>0 && !$item->getIsVirtual()
                 && !$item->getLockedDoShip())
             {
-                $data['items_info'][$item->getId()] = $item->getQtyInvoiced();
+                $data['items_info'][$item->getId()] = $item->getQtyToShip();
             }
         }
 
-        /* Save Shipment after call Andreani */
         try {
-            $response = $andreani->doShipmentRequest($order);
+            $response = $carrier->doShipmentRequest($order);
 
-            if($response === false || !$response->ConfirmarCompraResult || !$response->ConfirmarCompraResult->NumeroAndreani){
-                $this->throwException();
+            if($response->hasErrors()){
+                $this->throwException($response->getErrors(),$carrier->getServiceType());
             }
             if ($generateMagentoShipment === true) {
 
                 $data['order_info']['order'] = $order;
-                $data['order_info']['carrier'] = $andreani->getCode();
-                $data['order_info']['date'] = $this->__('Receive') . ' '  . $response->ConfirmarCompraResult->Recibo;
-                $data['order_info']['tracking_number'] = $response->ConfirmarCompraResult->NumeroAndreani;
+                $data['order_info']['carrier'] = $carrier->getCode();
+                $data['order_info']['title'] = $this->getConfigData('title',$carrier->getServiceType());
+                $data['order_info']['tracking_number'] = $response->getTrackingNumber();
 
                 $shipment_id = $helper->saveShipment($data);
-                $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipment_id);
-                $this->addTrackingComment($order, $shipment, $response->ConfirmarCompraResult->NumeroAndreani);
+                $helper->addShippingLabel($shipment_id,$response);
 
             } elseif ($shipmentToAddTracks !== null) { // support for generation of shipments from Magento Admin
-
-                $track = Mage::getModel('sales/order_shipment_track');
-                $track->setCarrierCode($andreani->getCode())
-                    ->setTitle($this->__('Receive') . ' ' . $response->ConfirmarCompraResult->Recibo)
-                    ->setNumber($response->ConfirmarCompraResult->NumeroAndreani);
-                $shipmentToAddTracks->addTrack($track);
-
+                $helper->addShippingLabel($shipmentToAddTracks,$response);
+                $helper->addTrackingCode($shipmentToAddTracks,$response,$carrier);
             }
+            return true;
         } catch (Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
             $this->debugging($e->getMessage());
+            return false;
         }
-    }
-
-    /**
-     * Function to add tracking comment with constancy link
-     * @param Mage_Sales_Model_Order $order
-     * @param Mage_Sales_Model_Order_Shipment $shipment
-     * @param string $trackingNumber
-     *
-     * @return bool
-     */
-    public function addTrackingComment($order, $shipment, $trackingNumber)
-    {
-        /* Get Andreani model */
-        /** @var $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
-        $andreani = $order->getShippingCarrier();
-
-        /* Get Link to Andreani PDF */
-        $linkConstancia = $andreani->getLinkConstancy($trackingNumber);
-        if (isset($linkConstancia->ImprimirConstanciaResult)) {
-            /* Create Comment with Link to PDF */ // TODO FOUND SOMETHING BETTER
-            $comment = 'Constancia PDF: |SEPARATOR| <a href="' . $linkConstancia->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile . '" target="_blank"> Click Aqui </a>';
-
-            /* Save Link in History */
-            if ($shipment->getId()) {
-                Mage::getModel('sales/order_shipment_api')->addComment($shipment->getIncrementId(), $comment);
-            }
-            // TODO CONFIGURATION FOR ALL
-            //Send Email
-            /*
-            $sender = array(
-                'name'  => Mage::getStoreConfig('trans_email/ident_general/name'),
-                'email' => Mage::getStoreConfig('trans_email/ident_general/email')
-            );
-
-            $templateId = 5; // ¿?
-
-            $vars = array(
-                'link_pdf' => $linkConstancia->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile,
-                'order'    => $order,
-                'payment'  => $order->getPayment()->getMethodInstance()->getTitle(),
-                'shipment' => $shipment
-            );
-
-            $email = Mage::getModel('core/email_template');
-            $email->emulateDesign(1);
-            $email->sendTransactional($templateId, $sender, Mage::getStoreConfig('trans_email/ident_sales/email'), Mage::getStoreConfig('trans_email/ident_sales/name'), $vars, Mage::app()->getStore()->getStoreId());
-            */
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -268,6 +175,16 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     public function isAutoCreateShipmentOnInvoiceEnabled()
     {
         return $this->getConfigData('autocreate_shipping_on_invoice_create');
+    }
+
+    /**
+     * Return Auto Create Shipment On Invoice creation Enabled true or false
+     *
+     * @return bool
+     */
+    public function isAutoCreateShippingOnShipmentEnabled()
+    {
+        return $this->getConfigData('autocreate_shipping_on_shipment_create');
     }
 
     /**
@@ -307,7 +224,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     public function debugging($toLog,$service = 'global')
     {
         if ($service != 'global') {
-            $this->_debuggingEnabled = $this->getConfigData('debug_mode',$service);
+            $this->_debuggingEnabled = $this->getConfigData('debug',$service);
         } else {
             $this->_debuggingEnabled = true;
         }
@@ -409,7 +326,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Function to get Client Number
+     * Function to get Free method text
      * @param string $service
      *
      * @return mixed
@@ -513,5 +430,49 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     public function getStatusSingleton()
     {
         return Mage::getSingleton('summa_andreani/status');
+    }
+
+    /**
+     * Function to add comment with constancy link
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Shipment $shipment
+     * @param string $trackingNumber
+     *
+     * @return bool
+     * @deprecated
+     */
+    public function addConstancyComment($order, $shipment, $trackingNumber)
+    {
+        /* Get Andreani model */
+        /** @var $andreani Summa_Andreani_Model_Shipping_Carrier_Abstract */
+        $andreani = $order->getShippingCarrier();
+
+        /* Get Link to Andreani PDF */
+        $constancyResponse = $andreani->getLinkConstancy($trackingNumber);
+        if (isset($constancyResponse->ImprimirConstanciaResult)) {
+
+            $comment = $this->getCommentStringForConstancy($constancyResponse->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile);
+
+            /* Save Link in History */
+            if ($shipment->getId()) {
+                Mage::getModel('sales/order_shipment_api')->addComment($shipment->getIncrementId(), $comment);
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Function to generate comment string for constancy
+     * @param $constancyURL
+     *
+     * @return string
+     *
+     * @deprecated
+     */
+    public function getCommentStringForConstancy($constancyURL)
+    {
+        return $this->__('PDF Constancy: <a href="%s" target="_blank"> Click here </a>',$constancyURL);
     }
 }

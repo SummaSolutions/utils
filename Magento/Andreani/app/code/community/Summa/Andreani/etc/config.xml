@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Summa_Andreani>
-            <version>0.1.4</version>
+            <version>0.1.6</version>
         </Summa_Andreani>
     </modules>
     <global>
@@ -37,6 +37,12 @@
             <summa_andreani>
                 <class>Summa_Andreani_Block</class>
             </summa_andreani>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_shipment_view>Summa_Andreani_Block_Adminhtml_Sales_Order_Shipment_View</sales_order_shipment_view>
+                    <sales_order_view>Summa_Andreani_Block_Adminhtml_Sales_Order_View</sales_order_view>
+                </rewrite>
+            </adminhtml>
         </blocks>
         <events>
             <checkout_controller_onepage_save_shipping_method>
@@ -90,6 +96,15 @@
                     </summa_andreani_track_delete_before>
                 </observers>
             </sales_order_shipment_track_delete_before>
+            <sales_order_shipment_save_commit_after>
+                <observers>
+                    <andreani_sales_order_shipment_save_commit_after>
+                        <type>model</type>
+                        <class>summa_andreani/observer</class>
+                        <method>shipmentGlobalSaveAfter</method>
+                    </andreani_sales_order_shipment_save_commit_after>
+                </observers>
+            </sales_order_shipment_save_commit_after>
             <catalog_product_save_before>
                 <observers>
                     <summa_andreani_product_save_before>
@@ -136,9 +151,9 @@
                     <to_order>*</to_order>
                     <to_order_address>*</to_order_address>
                 </base_summa_andreani_insurance_amount>
-                <summa_andreani_branch_id>
+                <andreani_branch_id>
                     <to_order_address>*</to_order_address>
-                </summa_andreani_branch_id>
+                </andreani_branch_id>
                 <!--<dni>
                     <to_order_address>*</to_order_address>
                     <to_customer_address>*</to_customer_address>
@@ -153,9 +168,9 @@
                     <to_order>*</to_order>
                     <to_quote_address>*</to_quote_address>
                 </base_summa_andreani_insurance_amount>
-                <summa_andreani_branch_id>
+                <andreani_branch_id>
                     <to_quote_address>*</to_quote_address>
-                </summa_andreani_branch_id>
+                </andreani_branch_id>
                 <!--<dni>
                     <to_quote_address>*</to_quote_address>
                 </dni>-->
@@ -257,6 +272,9 @@
                 <autocreate_shipping_on_invoice_create>1</autocreate_shipping_on_invoice_create>
                 <autocreate_shipping_on_shipment_create>1</autocreate_shipping_on_shipment_create>
                 <statuses_update_cron>0 0 * * *</statuses_update_cron>
+                <andreani_shipping_completed>andreani_shipping_completed</andreani_shipping_completed>
+                <andreani_shipping_failed>andreani_shipping_failed</andreani_shipping_failed>
+                <andreani_shipping_others>andreani_shipping_processing</andreani_shipping_others>
                 <limit_weight>30000</limit_weight>
                 <source_rates>1</source_rates>
                 <include_virtual_price>1</include_virtual_price>
@@ -286,6 +304,7 @@
             </andreaniGlobal>
             <andreaniStandard>
                 <active>0</active>
+                <is_tracking_enabled>1</is_tracking_enabled>
                 <is_custom_client_number>0</is_custom_client_number>
                 <client_number>ANDCORREO</client_number>
                 <is_custom_username>0</is_custom_username>
@@ -302,6 +321,7 @@
             </andreaniStandard>
             <andreaniStorepickup>
                 <active>0</active>
+                <is_tracking_enabled>1</is_tracking_enabled>
                 <is_custom_client_number>0</is_custom_client_number>
                 <client_number>ANDCORREO</client_number>
                 <is_custom_username>0</is_custom_username>
@@ -322,6 +342,7 @@
             </andreaniStorepickup>
             <andreaniUrgent>
                 <active>0</active>
+                <is_tracking_enabled>1</is_tracking_enabled>
                 <is_custom_client_number>0</is_custom_client_number>
                 <client_number>ANDCORREO</client_number>
                 <is_custom_username>0</is_custom_username>

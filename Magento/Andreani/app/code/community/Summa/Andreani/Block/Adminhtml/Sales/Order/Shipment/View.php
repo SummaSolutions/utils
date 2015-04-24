@@ -18,28 +18,41 @@ class Summa_Andreani_Block_Adminhtml_Sales_Order_Shipment_View
 
         $shipment = $this->getShipment();
         $id = $shipment->getId();
-
-        if (Mage::helper('summa_andreani')->canCancelShipment($shipment))
+        /** @var Summa_Andreani_Helper_Adminhtml $helper */
+        $helper = Mage::helper('summa_andreani/adminhtml');
+        if ($helper->canCancelShipment($shipment))
         {
             $cancelShipmentUrl = $this->getUrl('adminhtml/andreani/cancelShipment', array(
                 'id'=>$id
             ));
             $this->_addButton('cancelShipment', array(
-                'label' => Mage::helper('sales')->__('Cancel Shipment'),
+                'label' => $helper->__('Cancel Andreani Shipment'),
                 'class' => 'save',
                 'onclick'   => "setLocation('$cancelShipmentUrl')"
             ));
         }
 
-        if (Mage::helper('summa_andreani')->canGenerateConstancy($shipment))
+        if ($helper->canGenerateConstancy($shipment))
         {
-            $generateLinkConstanciaUrl = $this->getUrl('adminhtml/andreani/generateLinkConstancy', array(
+            $generateLinkConstancyUrl = $this->getUrl('adminhtml/andreani/generateLinkConstancy', array(
                 'id'=>$id
             ));
             $this->_addButton('generateLinkConstancy', array(
-                'label' => Mage::helper('summa_andreani')->__('Generate Link to Constancy'),
+                'label' => $helper->__('Generate Shipping Label with Constancy'),
                 'class' => 'save',
-                'onclick'   => "setLocation('$generateLinkConstanciaUrl')"
+                'onclick'   => "setLocation('$generateLinkConstancyUrl')"
+            ));
+        }
+
+        if ($helper->canGenerateAndreaniRequest($shipment))
+        {
+            $generateAndreaniRequestUrl = $this->getUrl('adminhtml/andreani/generateAndreaniRequest', array(
+                'id'=>$id
+            ));
+            $this->_addButton('generateAndreaniRequest', array(
+                'label' => $helper->__('Generate Andreani Request'),
+                'class' => 'save',
+                'onclick'   => "setLocation('$generateAndreaniRequestUrl')"
             ));
         }
     }

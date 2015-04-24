@@ -1,25 +1,26 @@
 Andreani Summa Module
-=================
+======
 
- * Shipping method for Magento using carrier Andreani with MatrixRates.
+ * Shipping method for Magento using argentinean carrier **Andreani**.
+ * 100% Working with Andreani Web Service and, at the same time, Integrated with MatrixRates to get instant rates if it's needed
 
-Instrucciones:
+Settuping:
 =================
 
 Se instala igual que cualquier módulo de Magento.
 
-Funcionamiento:
+How to:
 =================
 TODO
 
-Datos de test:
+Test data:
 =================
-Cliente: ANDCORREO
-Usuario: eCommerce_Integra
-Contraseña: passw0rd
-Contrato ESTANDAR: AND00EST
-Contrato URGENTE: AND00URG
-Contrato SUCURSAL: AND00SUC
+ * Client Number: ANDCORREO
+ * User: eCommerce_Integra
+ * Password: passw0rd
+ * Contract ESTANDAR: AND00EST
+ * Contract URGENTE: AND00URG
+ * Contract SUCURSAL: AND00SUC
 
 READY:
 =================
@@ -48,18 +49,19 @@ READY:
 - Añadir configuraciones para usar un nro de cliente, username y password específico en cada servicio. 
 - Añadir el calculo del weight de los productos en el evento before save y dejarlo dentro del modulo de andreani.
 - Añadir funcionalidad de que al eliminar un tracking code de andreani se intente cancelar el envio de andreani. 
+- Implementar funcion que llame al webservice de andreani cuando se elimina el tracking code.
+- Implementar estados de andreani para el shipment y para la orden de forma que sea visible el status de andreani.
+- Actualizar el estado de andreani a traves del tracking.
+- Añadir cron para actualizar el estado de los shipments de andreani.
+- Refactorizar/cambiar desarrollo de la generacion del link de la constancia. Se cambio por la implementacion de Shipping Labels de Magento.
+- Añadir configuraciones para habilitar/deshabilitar tracking en cada servicio. -
 
 TODO:
 =================
 - Añadir eventos previos y posteriores a los llamados de los servicios de andreani para permitir customizaciones sin edicion/override de codigo. -
 
-- Implementar funcion que llame al webservice de andreani cuando se cancela/devuelve la orden. + o -
-
-- Refactorizar/cambiar desarrollo de la generacion del link de la constancia. -
-
-- Añadir configuraciones para habilitar/deshabilitar tracking en cada servicio. -
-- Añadir configuracion para enviar mail despues de generar el shipment. -
 - Añadir configuracion para decidir que hacer cuando el peso de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception. -
+- Añadir configuracion para decidir que hacer cuando el volumen de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception. -
 
 - Traducciones al español completas, validar que el codigo este todo en ingles. -
 
@@ -67,5 +69,4 @@ TODO:
 
 - Pasar el seteo de DNI y tipo de DNI a un observer de forma que sirva de referencia. -
 
-- Añadir estado al shipment para mostrar en el backend ultimo estado conocido de Andreani, mostrar boton de cancelar envio de andreani.
-- Añadir cron para actualizar status de andreani en los shipments donde el status no sea completo basandose en el tracking.
+- Todos los llamados a andreani deben ser parseados a un Varien_Object

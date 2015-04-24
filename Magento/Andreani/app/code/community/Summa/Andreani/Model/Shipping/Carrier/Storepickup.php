@@ -103,16 +103,27 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
 
         $freeShipping = $request->getIsFreeShipping();
 
+        $collection = $this->_getBranchHelper()->getBranchesByRegionId($request->getDestRegionId());
+
         if ($freeShipping)
         {
-            /** @var $method Mage_Shipping_Model_Rate_Result_Method */
-            $method = Mage::getModel('shipping/rate_result_method');
-            $method->setCarrier($this->_code);
-            $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
-            $method->setMethod($this->_freeShipping_method);
-            $method->setMethodTitle($this->_getHelper()->getFreeMethodText($this->getServiceType()));
-            $method->setPrice('0.00');
-            $result->append($method);
+            foreach ($collection as $branch) {
+                /** @var $method Mage_Shipping_Model_Rate_Result_Method */
+                $method = Mage::getModel('shipping/rate_result_method');
+                $method->setCarrier($this->_code);
+                $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+
+                $methodCode = $this->_freeShipping_method;
+                $methodTitle = $this->_getHelper()->getFreeMethodText($this->getServiceType());
+                $methodCode .= '_' . $branch->getBranchId();
+                $methodTitle .= ' ' . ucfirst(strtolower($branch->getDescription()));
+
+                $method->setMethod($methodCode);
+                $method->setMethodTitle($methodTitle);
+
+                $method->setPrice('0.00');
+                $result->append($method);
+            }
 
             if ($this->getConfigData('show_only_free')) {
                 return $result;
@@ -146,10 +157,8 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
         }
 
-        $totals = $this->getTotalsWV($request->getAllItems());
+        $totals = $this->getTotalsWVFromItems($request->getAllItems());
         $responseWS = array();
-        $collection = Mage::getModel('summa_andreani/branch')->getCollection()
-            ->addFieldToFilter('postal_code', $request->getDestPostcode());
         /** @var $branch Summa_Andreani_Model_Branch */
         foreach ($collection as $branch) {
 
@@ -199,6 +208,106 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
                 $method->setPrice($this->getFinalPriceWithHandlingFee($rate->getPrice()));
 
                 $result->append($method);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Function to return Rates availables for the request
+     *
+     * @param Mage_Shipping_Model_Rate_Request $request
+     *
+     * @return bool|Mage_Shipping_Model_Rate_Result|null
+     */
+    protected function _collectRatesByMatrixRates(Mage_Shipping_Model_Rate_Request $request)
+    {
+        /** @var Mage_Shipping_Model_Rate_Result $result */
+        $result = Mage::getModel('shipping/rate_result');
+
+        $request = $this->_processRequestForMatrixRates($request);
+
+        $freeShipping = $request->getIsFreeShipping();
+
+        $collection = $this->_getBranchHelper()->getBranchesByRegionId($request->getDestRegionId());
+
+        if ($freeShipping)
+        {
+            foreach ($collection as $branch) {
+                /** @var $method Mage_Shipping_Model_Rate_Result_Method */
+                $method = Mage::getModel('shipping/rate_result_method');
+                $method->setCarrier($this->_code);
+                $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+
+                $methodCode = $this->_freeShipping_method;
+                $methodTitle = $this->_getHelper()->getFreeMethodText($this->getServiceType());
+                $methodCode .= '_' . $branch->getBranchId();
+                $methodTitle .= ' ' . ucfirst(strtolower($branch->getDescription()));
+
+                $method->setMethod($methodCode);
+                $method->setMethodTitle($methodTitle);
+
+                $method->setPrice('0.00');
+                $result->append($method);
+            }
+
+            if ($this->getConfigData('show_only_free')) {
+                return $result;
+            }
+        }
+
+        $request->setShippingType($this->_getHelper()->getConfigData('shipping_type_for_matrixrates',$this->getServiceType()));
+
+        $rateArray = $this->_getRateArrayFromMatrixrates($request);
+
+        $insurance = 0;
+        if ($this->_getHelper()->getConfigData('apply_insurance_on_shipping_price')) {
+            $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
+        }
+
+        $iva = 0;
+        if ($this->_getHelper()->getConfigData('add_iva_to_rates')) {
+            $iva = $this->_getHelper()->calculateIVA($request->getPackageValue());
+        }
+
+        foreach ($rateArray as $rate) {
+            foreach ($collection as $branch) {
+                if (!empty($rate) &&
+                    $rate['delivery_type'] == $this->_getHelper()->getConfigData('shipping_type_for_matrixrates',$this->getServiceType()) &&
+                    $rate['price'] >= 0) {
+                    /** @var $method Mage_Shipping_Model_Rate_Result_Method */
+                    $method = Mage::getModel('shipping/rate_result_method');
+
+                    $method->setCarrier($this->_code);
+                    $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+
+
+                    $methodCode = $this->_code;
+                    $methodTitle = $this->_getHelper()->getConfigData('name', $this->getServiceType());
+                    $methodCode .= '_' . $branch->getBranchId();
+                    $methodTitle .= ' ' . ucfirst(strtolower($branch->getDescription()));
+
+                    $method->setMethod($methodCode);
+                    $method->setMethodTitle($methodTitle);
+
+                    $method->setCost($rate['cost']);
+                    $method->setDeliveryType($rate['delivery_type']);
+
+                    $price = $rate['price'];
+
+                    if ($insurance) {
+                        $price += $insurance;
+                    }
+
+                    if ($iva) {
+                        $price += $iva;
+                    }
+
+                    $method->setPrice($this->getFinalPriceWithHandlingFee($price));
+
+                    $result->append($method);
+                }
             }
         }
 
