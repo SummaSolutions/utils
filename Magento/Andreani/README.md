@@ -54,7 +54,8 @@ READY:
 - Actualizar el estado de andreani a traves del tracking.
 - Añadir cron para actualizar el estado de los shipments de andreani.
 - Refactorizar/cambiar desarrollo de la generacion del link de la constancia. Se cambio por la implementacion de Shipping Labels de Magento.
-- Añadir configuraciones para habilitar/deshabilitar tracking en cada servicio. -
+- Añadir configuraciones para habilitar/deshabilitar tracking en cada servicio.
+- Todos los llamados a andreani deben ser parseados a un Varien_Object
 
 TODO:
 =================
@@ -68,5 +69,3 @@ TODO:
 - Chequear informacion recibida de web service sucursales cuando hace el fetch. -
 
 - Pasar el seteo de DNI y tipo de DNI a un observer de forma que sirva de referencia. -
-
-- Todos los llamados a andreani deben ser parseados a un Varien_Object

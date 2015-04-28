@@ -37,8 +37,8 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
                 'trace' => 1,
                 'wdsl_local_copy' => true
             );
-            $username   = $this->_getHelper()->getConfigData('username');
-            $password   = $this->_getHelper()->getConfigData('password');
+            $username   = $this->_getHelper()->getUsername($this->getServiceType());
+            $password   = $this->_getHelper()->getPassword($this->getServiceType());
 
             $gatewayUrl = $this->_getHelper()->getConfigData('gateway_storepickup_url');
 

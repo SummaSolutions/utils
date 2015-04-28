@@ -116,6 +116,8 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      * @param Mage_Sales_Model_Order $order
      * @param bool $generateMagentoShipment
      * @param Mage_Sales_Model_Order_Shipment $shipmentToAddTracks
+     *
+     * @return bool
      */
     public function generateAndreaniShipment(Mage_Sales_Model_Order $order, $generateMagentoShipment=true, $shipmentToAddTracks = null)
     {
@@ -247,7 +249,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     public function throwException($reason = '',$service = 'global')
     {
         $info = '';
-        if ($service !== 'global' && $this->getConfigData('debug_mode',$service)) {
+        if ($service !== 'global' && $this->getConfigData('debug',$service)) {
             $info = $reason;
         }
         throw new Mage_Adminhtml_Exception(

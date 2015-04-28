@@ -275,7 +275,6 @@
                 <andreani_shipping_completed>andreani_shipping_completed</andreani_shipping_completed>
                 <andreani_shipping_failed>andreani_shipping_failed</andreani_shipping_failed>
                 <andreani_shipping_others>andreani_shipping_processing</andreani_shipping_others>
-                <limit_weight>30000</limit_weight>
                 <source_rates>1</source_rates>
                 <include_virtual_price>1</include_virtual_price>
                 <allow_free_shipping_promotions>1</allow_free_shipping_promotions>
@@ -301,6 +300,12 @@
                 <attribute_height>height_andreani</attribute_height>
                 <attribute_width>width_andreani</attribute_width>
                 <attribute_length>length_andreani</attribute_length>
+                <!-- LIMITS SETTINGS -->
+                <maximum_limit_weight>30000</maximum_limit_weight>
+                <maximum_limit_action>0</maximum_limit_action>
+                <minimum_limit_weight>1</minimum_limit_weight>
+                <minimum_limit_action>0</minimum_limit_action>
+                <minimum_limit_volume>1</minimum_limit_volume>
             </andreaniGlobal>
             <andreaniStandard>
                 <active>0</active>

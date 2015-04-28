@@ -81,18 +81,20 @@ class Summa_Andreani_Adminhtml_AndreaniController
             $this->_redirectReferer();
         }
 
-        $cancelShipmentResponse = null;
+        $cancelShipmentResponse = array();
         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
         foreach ($tracks as $track) {
             if (Mage::helper('summa_andreani')->isAndreaniCarrierCode($track->getCarrierCode())) {
-                $cancelShipmentResponse = Mage::getSingleton('shipping/config')->getCarrierInstance($this->getCarrierCode())->cancelShipmentRequest($track->getNumber());
+                $cancelShipmentResponse[$track->getNumber()] = Mage::getSingleton('shipping/config')->getCarrierInstance($this->getCarrierCode())->cancelShipmentRequest($track->getNumber());
             }
         }
 
-        if (!is_null($cancelShipmentResponse) && isset($cancelShipmentResponse->AnularEnviosResult)) {
-            Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Shipment was cancelled successfully'));
-        } else {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('Could not cancel shipping'));
+        foreach ($cancelShipmentResponse as $trackId => $response) {
+            if (!$response->hasErrors() && $response->getCanceledShipment()) {
+                Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Shipment with tracking number %s was cancelled successfully',$trackId));
+            } else {
+                Mage::getSingleton('adminhtml/session')->addError($this->__('Could not cancel Shipment with tracking number %s',$trackId));
+            }
         }
 
         $this->_redirectReferer();

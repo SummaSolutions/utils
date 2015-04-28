@@ -2,6 +2,11 @@
 
 class Summa_Andreani_Model_Observer
 {
+    /**
+     * Function to set Shipping Address of Andreani Branch when
+     * customer select Andreani Storepickup shipment
+     * @param Varien_Event_Observer $observer
+     */
     public function saveShippingMethod(Varien_Event_Observer $observer)
     {
         /** @var Mage_Sales_Model_Quote $quote */
@@ -39,7 +44,6 @@ class Summa_Andreani_Model_Observer
             }
         }        
     }
-
 
     /**
      * @param Varien_Event_Observer $observer
@@ -132,9 +136,15 @@ class Summa_Andreani_Model_Observer
         if ($carrier instanceof Summa_Andreani_Model_Shipping_Carrier_Abstract)
         {
             try {
-                $carrier->cancelShipmentRequest($track->getNumber());
+                $response = $carrier->cancelShipmentRequest($track->getNumber());
+                if (!$response->hasErrors() && $response->getCanceledShipment()) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Shipment with tracking number %s was cancelled successfully',$track->getNumber()));
+                } else {
+                    Mage::getSingleton('adminhtml/session')->addError($this->__('Could not cancel Shipment with tracking number %s',$track->getNumber()));
+                }
             }catch(Exception $e){
-                Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()->__('Could not delete shipment in Andreani'));
+                Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()->__('Could not cancel shipment in Andreani'));
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             }
         }
     }
@@ -161,19 +171,19 @@ class Summa_Andreani_Model_Observer
                 break;
             case Summa_Andreani_Model_Status::SHIPMENT_PROCESSING:
                 if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_PROCESSING) {
-                    $order->setStatus(Mage::getStoreConfig('andreani_config/global_tab/andreani_shipping_others'));
+                    $order->setStatus($this->_getHelper()->getConfigData('andreani_shipping_others'));
                     $saveOrder = true;
                 }
                 break;
             case Summa_Andreani_Model_Status::SHIPMENT_COMPLETED:
                 if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_COMPLETED) {
-                    $order->setStatus(Mage::getStoreConfig('andreani_config/global_tab/andreani_shipping_completed'));
+                    $order->setStatus($this->_getHelper()->getConfigData('andreani_shipping_completed'));
                     $saveOrder = true;
                 }
                 break;
             case Summa_Andreani_Model_Status::SHIPMENT_PENDING:
                 if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_PENDING) {
-                    $order->setStatus(Mage::getStoreConfig('andreani_config/global_tab/andreani_shipping_failed'));
+                    $order->setStatus($this->_getHelper()->getConfigData('andreani_shipping_failed'));
                     $saveOrder = true;
                 }
                 break;

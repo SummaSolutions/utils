@@ -87,7 +87,6 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
     /**
      * Do request to shipment
-     * @deprecated because Andreani don't support shipping label generation
      * @param Mage_Shipping_Model_Shipment_Request $request
      *
      * @return Varien_Object
@@ -232,8 +231,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $streets = $address->getStreet();
 
                 $shipmentInfo = array(
-                    /* Shipping Data */
-                    'SucursalRetiro'          => $address->getAndreaniBranchId() /* Required = Condicional; */
+                    'compra' => array(
+                        /* Shipping Data */
+                        'SucursalRetiro'          => $address->getAndreaniBranchId() /* Required = Condicional; */
                     , 'Provincia'                 => $address->getRegion()
                     , 'Localidad'                 => $address->getCity()
                     , 'CodigoPostalDestino'       => $address->getPostcode() /* Required = true; */
@@ -267,15 +267,13 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                     , 'CategoriaFacturacion'      => NULL /* Required = Condicional; */
                     , 'CategoriaPeso'             => NULL /* Required = Condicional; */
                     , 'Tarifa'                    => NULL /* Required = Condicional; */
+                    )
                 );
 
                 $this->_getHelper()->debugging('doShipmentRequestDataSent:', $this->getServiceType());
                 $this->_getHelper()->debugging($shipmentInfo, $this->getServiceType());
 
-                $andreaniResponse = $client->ConfirmarCompra(array(
-                        'compra' => $shipmentInfo
-                    )
-                );
+                $andreaniResponse = $client->ConfirmarCompra($shipmentInfo);
 
                 $this->_getHelper()->debugging('doShipmentRequestResponse:', $this->getServiceType());
                 $this->_getHelper()->debugging($andreaniResponse, $this->getServiceType());
@@ -284,15 +282,14 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                     $result->setErrors($this->_getHelper()->__('Service unavailable. The service %s with code %s returns unexpected data.', $this->_getHelper()->getConfigData('title', $this->getServiceType()), $this->getCode()));
                 } else {
                     $result->setTrackingNumber($andreaniResponse->ConfirmarCompraResult->NumeroAndreani);
-                    $linkConstancy = $this->getLinkConstancy($result->getTrackingNumber());
-                    if (isset($linkConstancy->ImprimirConstanciaResult)) {
-                        $result->setShippingLabelContent($linkConstancy->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile);
+                    $constancyResult = $this->getLinkConstancy($result->getTrackingNumber());
+                    if ($constancyResult->getConstancyUrl()) {
+                        $result->setShippingLabelContent($constancyResult->getConstancyUrl());
                     } else {
                         $result->setShippingLabelContent($this->_getHelper()->__('Receive') . ' ' . $andreaniResponse->ConfirmarCompraResult->Recibo);
                     }
                 }
-
-                return $result;
+                $result->setObjectResponse($andreaniResponse);
             } catch (SoapFault $e) {
                 $error = libxml_get_last_error();
                 $error .= "<BR><BR>";
@@ -303,23 +300,25 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $this->_getHelper()->debugging('doShipmentRequestError:', $this->getServiceType());
                 $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
                 $this->_getHelper()->debugging($error, $this->getServiceType());
-
-                return $result;
             }
         } else {
             $result->setErrors($this->_getHelper()->__('Service unavailable. You mus\'t set enabled the service %s with code %s', $this->_getHelper()->getConfigData('title', $this->getServiceType()), $this->getCode()));
 
-            return $result;
+
         }
+        return $result;
     }
 
     /**
+     * Function to get Link to PDF with constancy needed for e-commerce
+     *
      * @param      $tracking
      *
-     * @return LibXMLError|string
+     * @return Varien_Object
      */
     public function getLinkConstancy($tracking)
     {
+        $result = new Varien_Object();
         try {
             $options = $this->_getHelper()->getSoapOptions();
             $username = $this->_getHelper()->getUsername($this->getServiceType());
@@ -353,7 +352,10 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('getLinkConstancyResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($phpresponse, $this->getServiceType());
 
-            return $phpresponse;
+            if (isset($phpresponse->ImprimirConstanciaResult)) {
+                $result->setConstancyUrl($phpresponse->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile);
+            }
+            $result->setObjectResponse($phpresponse);
         } catch (SoapFault $e) {
             $error = (libxml_get_last_error());
             $error .= "<BR><BR>";
@@ -363,10 +365,17 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
             $this->_getHelper()->debugging($error, $this->getServiceType());
 
-            return $error;
+            $result->setErrors($e->getMessage());
         }
+        return $result;
     }
 
+    /**
+     * Function native of Magento on that tracking status return calls to get info
+     * @param $tracking
+     *
+     * @return bool|mixed
+     */
     public function getTrackingInfo($tracking)
     {
         $result = $this->getTracking($tracking);
@@ -566,6 +575,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      */
     public function cancelShipmentRequest($nroAndreani)
     {
+        $result = new Varien_Object();
         try {
             $options = $this->_getHelper()->getSoapOptions();
             $username = $this->_getHelper()->getUsername($this->getServiceType());
@@ -600,7 +610,13 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('cancelShipmentRequestResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($response, $this->getServiceType());
 
-            return ($response);
+            if (isset($response->AnularEnviosResult)) {
+                $result->setCanceledShipment(true);
+            } else {
+                $result->setCanceledShipment(false);
+            }
+
+            $result->setObjectResponse($response);
 
         } catch (SoapFault $e) {
             $error = libxml_get_last_error();
@@ -611,8 +627,10 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
             $this->_getHelper()->debugging($error, $this->getServiceType());
 
-            return false;
+            $result->setErrors($e->getMessage());
         }
+
+        return $result;
     }
 
     /**
@@ -962,6 +980,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         }
         return $result;
     }
+
     /**
      * Function to process $request lookin for free shipping
      * and returns true or false based-on state free ship.

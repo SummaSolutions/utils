@@ -78,7 +78,7 @@ class Summa_Andreani_Model_Branch
             }
             return true;
         } else {
-            Mage::helper('summa_andreani')->debugging('Unable to retrieve tracking',$this->getServiceType());
+            Mage::helper('summa_andreani')->debugging('Unable to retrieve branches',$this->getServiceType());
             return false;
         }
     }
