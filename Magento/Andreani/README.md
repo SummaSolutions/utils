@@ -55,17 +55,15 @@ READY:
 - Añadir cron para actualizar el estado de los shipments de andreani.
 - Refactorizar/cambiar desarrollo de la generacion del link de la constancia. Se cambio por la implementacion de Shipping Labels de Magento.
 - Añadir configuraciones para habilitar/deshabilitar tracking en cada servicio.
-- Todos los llamados a andreani deben ser parseados a un Varien_Object
+- Todos los llamados a andreani deben ser parseados a un Varien_Object.
+- Chequear informacion recibida de web service sucursales cuando hace el fetch.
+- Añadir configuracion para decidir que hacer cuando el peso de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception.
+- Añadir configuracion para decidir que hacer cuando el volumen de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception.
+- Configuraciones de freeshipping para cada carrier de andreani.
+- Añadir eventos previos y posteriores a los llamados de los servicios de andreani para permitir customizaciones sin edicion/override de codigo.
+- Pasar el seteo de DNI y tipo de DNI a un observer de forma que sirva de referencia.
+- Traducciones al español completas, validar que el codigo este todo en ingles.
 
 TODO:
 =================
-- Añadir eventos previos y posteriores a los llamados de los servicios de andreani para permitir customizaciones sin edicion/override de codigo. -
-
-- Añadir configuracion para decidir que hacer cuando el peso de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception. -
-- Añadir configuracion para decidir que hacer cuando el volumen de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception. -
-
-- Traducciones al español completas, validar que el codigo este todo en ingles. -
-
-- Chequear informacion recibida de web service sucursales cuando hace el fetch. -
-
-- Pasar el seteo de DNI y tipo de DNI a un observer de forma que sirva de referencia. -
+- Code Review, Test general

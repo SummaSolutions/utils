@@ -14,7 +14,12 @@ $salesSetup = Mage::getResourceModel('sales/setup', 'core_setup');
 $installer->startSetup();
 $entities = array('quote_address', 'order_address');
 
-$fields  = array('dni');
+$fields  = array(
+    'dni',
+    'number',
+    'floor',
+    'apartment'
+);
 $options = array('type' => Varien_Db_Ddl_Table::TYPE_VARCHAR);
 
 foreach ($entities as $entity) {

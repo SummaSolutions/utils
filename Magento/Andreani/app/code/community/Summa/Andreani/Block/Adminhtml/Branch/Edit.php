@@ -19,8 +19,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit
 
         parent::__construct();
 
-        $this->_updateButton('save', 'label', $this->__('Save Branch'));
-        $this->_updateButton('delete', 'label', $this->__('Delete Branch'));
+        $this->_updateButton('save', 'label', Mage::helper('summa_andreani')->__('Save Branch'));
+        $this->_updateButton('delete', 'label', Mage::helper('summa_andreani')->__('Delete Branch'));
         $this->_addButton('saveandcontinue', array(
             'label'     => Mage::helper('adminhtml')->__('Save And Continue Edit'),
             'onclick'   => 'saveAndContinueEdit()',
@@ -38,9 +38,9 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit
     public function getHeaderText()
     {
         if (Mage::registry('branches_branch')->getId()) {
-            return $this->__('Edit Branch');
+            return Mage::helper('summa_andreani')->__('Edit Branch');
         } else {
-            return $this->__('New Branch');
+            return Mage::helper('summa_andreani')->__('New Branch');
         }
     }
 }

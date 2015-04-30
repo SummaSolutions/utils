@@ -47,10 +47,10 @@ class Summa_Andreani_Adminhtml_AndreaniController
                     $response->setShippingLabelContent($helper->preparePdf($constancyResponse->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile));
                     $helper->addShippingLabel($shipment,$response);
 
-                    Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Successfully recovered constancy link from Andreani'));
+                    Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('summa_andreani')->__('Successfully recovered constancy link from Andreani for tracking %s',$track->getNumber()));
 
                 } else {
-                    Mage::getSingleton('adminhtml/session')->addError($this->__('There was an error calling Andreani WebService'));
+                    Mage::getSingleton('adminhtml/session')->addError(Mage::helper('summa_andreani')->__('There was an error calling Andreani WebService on tracking %s',$track->getNumber()));
                 }
             }
         }
@@ -129,7 +129,7 @@ class Summa_Andreani_Adminhtml_AndreaniController
                 Mage::log($e->getMessage(), null, 'andreani.log');
             }
         } else {
-            Mage::helper('summa_andreani')->throwException(Mage::helper('summa_andreani')->__('Can\'nt generate shipment, Order Shipping Carrier is\'nt an Andreani Carrier'));
+            Mage::helper('summa_andreani')->throwException(Mage::helper('summa_andreani')->__('The carrier is\'nt Andreani'));
         }
         $this->_redirectReferer();
     }

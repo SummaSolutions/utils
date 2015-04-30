@@ -14,8 +14,8 @@ class Summa_Andreani_Adminhtml_BranchController
     {
         $this->loadLayout()
             ->_setActiveMenu('andreani_branches/andreani_branches')
-            ->_title($this->__('Branch Management'))
-            ->_addBreadcrumb($this->__('Branch Management'), $this->__('Branch Management'));
+            ->_title(Mage::helper('summa_andreani')->__('Branch Management'))
+            ->_addBreadcrumb(Mage::helper('summa_andreani')->__('Branch Management'), Mage::helper('summa_andreani')->__('Branch Management'));
 
         return $this;
     }
@@ -23,7 +23,7 @@ class Summa_Andreani_Adminhtml_BranchController
     public function indexAction()
     {
         $Block = $this->getLayout()->createBlock('summa_andreani/adminhtml_branch');
-        $this->_title($this->__('Branches'));
+        $this->_title(Mage::helper('summa_andreani')->__('Branches'));
         $this->loadLayout()->_addContent($Block)->renderLayout();
     }
 
@@ -45,7 +45,7 @@ class Summa_Andreani_Adminhtml_BranchController
             $model->load($id);
 
             if (!$model->getId()) {
-                Mage::getSingleton('adminhtml/session')->addError(Mage::helper('summa_andreani')->__('That branch don\'t exist.'));
+                Mage::getSingleton('adminhtml/session')->addError(Mage::helper('summa_andreani')->__('That branch doesn\'t exist.'));
                 $this->_redirect('*/*/');
 
                 return;
@@ -103,7 +103,7 @@ class Summa_Andreani_Adminhtml_BranchController
         if ($id) {
             $model = Mage::getModel('summa_andreani/branch')->load($id);
             $model->delete();
-            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('summa_andreani')->__('The Branch has been deleted successfully'));
+            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('summa_andreani')->__('The Branch has been deleted successfully.'));
         }
         $this->_redirect('*/*');
     }
@@ -117,9 +117,9 @@ class Summa_Andreani_Adminhtml_BranchController
     public function fetchBranchesAction()
     {
         if (Mage::getSingleton('summa_andreani/branch')->fetchBranches()) {
-            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('summa_andreani')->__('Branches has been fetched from Andreani Web Service successfully'));
+            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('summa_andreani')->__('Branches has been fetched from Andreani Web Service successfully.'));
         } else {
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('summa_andreani')->__('Branches hasn\'t been fetched from Andreani Web Service successfully'));
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('summa_andreani')->__('Branches haven\'t been fetched from Andreani Web Service successfully.'));
         }
         $this->_redirect('*/*/index');
     }

@@ -18,7 +18,7 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
         parent::__construct();
 
         $this->setId('summa_andreani_branch_form');
-        $this->setTitle($this->__('Branch Information'));
+        $this->setTitle(Mage::helper('summa_andreani')->__('Branch Information'));
     }
 
     /**

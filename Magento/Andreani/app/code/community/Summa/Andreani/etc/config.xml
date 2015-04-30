@@ -114,6 +114,18 @@
                     </summa_andreani_product_save_before>
                 </observers>
             </catalog_product_save_before>
+            <!-- EXAMPLE OF OBSERVER -->
+            <!--
+            <summa_andreani_do_shipment_request_call_ws_before>
+                <observers>
+                    <summa_andreani_add_data_extra>
+                        <type>model</type>
+                        <class>summa_andreani/observer</class>
+                        <method>beforeDoShipmentRequestAddDataExtra</method>
+                    </summa_andreani_add_data_extra>
+                </observers>
+            </summa_andreani_do_shipment_request_call_ws_before>
+            -->
         </events>
         <sales>
             <quote>
@@ -276,10 +288,6 @@
                 <andreani_shipping_failed>andreani_shipping_failed</andreani_shipping_failed>
                 <andreani_shipping_others>andreani_shipping_processing</andreani_shipping_others>
                 <source_rates>1</source_rates>
-                <include_virtual_price>1</include_virtual_price>
-                <allow_free_shipping_promotions>1</allow_free_shipping_promotions>
-                <show_only_free>1</show_only_free>
-                <include_free_ship_items>0</include_free_ship_items>
                 <!-- MATRIX RATES SETTINGS -->
                 <condition_name>package_weight</condition_name>
                 <conditionable_filters>1,2</conditionable_filters>
@@ -302,9 +310,8 @@
                 <attribute_length>length_andreani</attribute_length>
                 <!-- LIMITS SETTINGS -->
                 <maximum_limit_weight>30000</maximum_limit_weight>
-                <maximum_limit_action>0</maximum_limit_action>
                 <minimum_limit_weight>1</minimum_limit_weight>
-                <minimum_limit_action>0</minimum_limit_action>
+                <minimum_limit_weight_action>0</minimum_limit_weight_action>
                 <minimum_limit_volume>1</minimum_limit_volume>
             </andreaniGlobal>
             <andreaniStandard>
@@ -323,6 +330,11 @@
                 <sort_order>10</sort_order>
                 <shipping_type_for_matrixrates>Standard</shipping_type_for_matrixrates>
                 <free_method_text>Free Shipping using Andreani Standard</free_method_text>
+                <include_virtual_price>1</include_virtual_price>
+                <allow_free_shipping_promotions>1</allow_free_shipping_promotions>
+                <show_only_free>1</show_only_free>
+                <include_free_ship_items>0</include_free_ship_items>
+                <showmethod>0</showmethod>
             </andreaniStandard>
             <andreaniStorepickup>
                 <active>0</active>
@@ -344,6 +356,11 @@
                 <postal_codes_disabled>5870</postal_codes_disabled>
                 <shipping_type_for_matrixrates>Storepickup</shipping_type_for_matrixrates>
                 <free_method_text>Free Shipping using Andreani StorePickup</free_method_text>
+                <include_virtual_price>1</include_virtual_price>
+                <allow_free_shipping_promotions>1</allow_free_shipping_promotions>
+                <show_only_free>1</show_only_free>
+                <include_free_ship_items>0</include_free_ship_items>
+                <showmethod>0</showmethod>
             </andreaniStorepickup>
             <andreaniUrgent>
                 <active>0</active>
@@ -361,6 +378,11 @@
                 <sort_order>11</sort_order>
                 <shipping_type_for_matrixrates>Urgent</shipping_type_for_matrixrates>
                 <free_method_text>Free Shipping using Andreani Urgent</free_method_text>
+                <include_virtual_price>1</include_virtual_price>
+                <allow_free_shipping_promotions>0</allow_free_shipping_promotions>
+                <show_only_free>1</show_only_free>
+                <include_free_ship_items>0</include_free_ship_items>
+                <showmethod>0</showmethod>
             </andreaniUrgent>
         </carriers>
         <sales>

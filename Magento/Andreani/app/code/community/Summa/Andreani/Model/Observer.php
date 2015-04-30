@@ -92,6 +92,7 @@ class Summa_Andreani_Model_Observer
             return $this;
         }
         $order = $shipment->getOrder();
+        /** @var Summa_Andreani_Model_Shipping_Carrier_Abstract $carrier */
         $carrier = $order->getShippingCarrier();
         if (
             Mage::app()->getRequest()->getControllerName() === 'sales_order_shipment' &&
@@ -138,9 +139,9 @@ class Summa_Andreani_Model_Observer
             try {
                 $response = $carrier->cancelShipmentRequest($track->getNumber());
                 if (!$response->hasErrors() && $response->getCanceledShipment()) {
-                    Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Shipment with tracking number %s was cancelled successfully',$track->getNumber()));
+                    Mage::getSingleton('adminhtml/session')->addSuccess($this->_getHelper()->__('Shipment with tracking number %s was cancelled successfully',$track->getNumber()));
                 } else {
-                    Mage::getSingleton('adminhtml/session')->addError($this->__('Could not cancel Shipment with tracking number %s',$track->getNumber()));
+                    Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()->__('Could not cancel Shipment with tracking number %s',$track->getNumber()));
                 }
             }catch(Exception $e){
                 Mage::getSingleton('adminhtml/session')->addError($this->_getHelper()->__('Could not cancel shipment in Andreani'));
@@ -221,5 +222,26 @@ class Summa_Andreani_Model_Observer
     public function updatePaypalTotal($evt){
         $cart = $evt->getPaypalCart();
         $cart->updateTotal(Mage_Paypal_Model_Cart::TOTAL_SUBTOTAL,$cart->getSalesEntity()->getSummaAndreaniInsuranceAmount());
+    }
+
+    // EXAMPLE OF OBSERVER
+    public function beforeDoShipmentRequestAddDataExtra(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $observer->getOrder();
+
+        $address = $order->getShippingAddress();
+
+        $number = $address->getNumber();
+        $floor = $address->getFloor();
+        $apartment = $address->getApartment();
+        $DNI_number = $address->getDni();
+
+        $shipmentInfo = $observer->getShipmentInfo();
+
+        $shipmentInfo['compra']['Numero'] = $number;
+        $shipmentInfo['compra']['Departamento'] = $apartment;
+        $shipmentInfo['compra']['Piso'] = $floor;
+        $shipmentInfo['compra']['NumeroDocumento'] = $DNI_number;
     }
 }

@@ -64,12 +64,12 @@
                         </autocreate_shipping_on_shipment_create>
                         <statuses_update_cron>
                             <label>Time to update Andreani Shipment Statuses</label>
-                            <comment>Ex. (All day at 12AM): 0 0 * * *</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>12</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <comment>Ex. (All day at 12AM): 0 0 * * *</comment>
                         </statuses_update_cron>
                         <andreani_shipping_completed translate="label comment" module="summa_andreani">
                             <label>Choose the status of orders for andreani status completed shipments</label>
@@ -98,46 +98,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </andreani_shipping_others>
-                        <allow_free_shipping_promotions translate="label comment" module="summa_andreani">
-                            <label>Free Shipping Promotions</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
-                            <sort_order>16</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <comment>Allow free shipping promotions to apply to matrixrate</comment>
-                        </allow_free_shipping_promotions>
-                        <show_only_free translate="label comment" module="summa_andreani">
-                            <label>Only Display Free Shipping</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <comment>If free shipping applies dont show other shipping rates</comment>
-                            <sort_order>17</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </show_only_free>
-                        <include_free_ship_items translate="label comment" module="summa_andreani">
-                            <label>Include Free Shipping Items in Rate Calculation</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>17</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <comment>Include weight, qty of Free Shipping Products in calculation of shipping rates</comment>
-                        </include_free_ship_items>
-                        <include_virtual_price translate="label comment" module="summa_andreani">
-                            <label>Include Virtual Products in Rate Calculation</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>18</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment>Include price, qty of Virtual Products in calculation of shipping rates</comment>
-                        </include_virtual_price>
                         <source_rates translate="label comment" module="summa_andreani">
                             <label>Source of rates</label>
                             <frontend_type>select</frontend_type>
@@ -209,7 +169,7 @@
                                 <add_iva_to_rates>1</add_iva_to_rates>
                             </depends>
                         </iva_percentage>
-
+                        <!-- GATEWAY SETTINGS -->
                         <heading_gateway translate="label" module="summa_andreani">
                             <label>Gateways settings</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -257,7 +217,7 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[The default gateway is only for test purposes, for production purposes use https://www.e-andreani.com/CASAWS/eCommerce/CotizacionEnvio.svc?wsdl]]></comment>
                         </gateway_rates_url>
-
+                        <!-- INSURANCE SETTINGS -->
                         <heading_insurance translate="label" module="summa_andreani">
                             <label>Insurance settings</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -266,7 +226,7 @@
                             <show_in_website>1</show_in_website>
                         </heading_insurance>
                         <insurance translate="label comment" module="summa_andreani">
-                            <label>Insurance</label>
+                            <label>Insurance Percentage</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-number</validate>
                             <sort_order>31</sort_order>
@@ -304,7 +264,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </apply_insurance_when_free_shipping>
-
+                        <!-- ATTRIBUTES SETTINGS -->
                         <heading_attributes translate="label" module="summa_andreani">
                             <label>Attributes settings</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -356,7 +316,7 @@
                             <validate>validate-select</validate>
                             <comment>This setting is used to get Length of products when Magento generate request to andreani</comment>
                         </attribute_length>
-
+                        <!-- LIMITS SETTINGS -->
                         <heading_limits translate="label" module="summa_andreani">
                             <label>Limits settings</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -373,16 +333,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </maximum_limit_weight>
-                        <maximum_limit_action translate="label comment" module="summa_andreani">
-                            <label>What must happened when maximum limit is overflow</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>summa_andreani/system_config_source_shipping_minimumSettings</source_model>
-                            <sort_order>62</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <validate>validate-select</validate>
-                        </maximum_limit_action>
                         <minimum_limit_weight translate="label comment" module="summa_andreani">
                             <label>Minimum Weight Limit</label>
                             <frontend_type>text</frontend_type>
@@ -392,8 +342,8 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </minimum_limit_weight>
-                        <minimum_limit_action translate="label comment" module="summa_andreani">
-                            <label>What must happened when minimum limit is overflow</label>
+                        <minimum_limit_weight_action translate="label comment" module="summa_andreani">
+                            <label>What must happened when minimum weight limit is overflow</label>
                             <frontend_type>select</frontend_type>
                             <source_model>summa_andreani/system_config_source_shipping_minimumSettings</source_model>
                             <sort_order>64</sort_order>
@@ -401,12 +351,24 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>validate-select</validate>
-                        </minimum_limit_action>
-                        <minimum_limit_volume translate="label comment" module="summa_andreani">
-                            <label>Minimum Weight Limit</label>
+                        </minimum_limit_weight_action>
+                        <minimum_weight_custom translate="label comment" module="summa_andreani">
+                            <label>Minimum Weight Custom</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-number</validate>
                             <sort_order>63</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <minimum_limit_weight_action>1</minimum_limit_weight_action>
+                            </depends>
+                        </minimum_weight_custom>
+                        <minimum_limit_volume translate="label comment" module="summa_andreani">
+                            <label>Minimum Volume Limit</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>65</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -527,7 +489,7 @@
                         <title translate="label comment" module="summa_andreani">
                             <label>Method Title</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>30</sort_order>
+                            <sort_order>21</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -538,7 +500,7 @@
                         <contract translate="label comment" module="summa_andreani">
                             <label>Contract</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>40</sort_order>
+                            <sort_order>22</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -547,6 +509,128 @@
                             </depends>
                             <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                         </contract>
+                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
+                            <label>Shipping Type for Matrix Rates</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This string must match with ''delivery_type'' column of Matrix Rates CSV]]></comment>
+                        </shipping_type_for_matrixrates>
+                        <!-- FREE SHIPPING SETTINGS -->
+                        <heading_free_shipping translate="label" module="summa_andreani">
+                            <label>Free Shipping settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </heading_free_shipping>
+                        <free_method_text translate="label comment" module="summa_andreani">
+                            <label>Free Method Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_method_text>
+                        <allow_free_shipping_promotions translate="label comment" module="summa_andreani">
+                            <label>Free Shipping Promotions</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Allow free shipping promotions</comment>
+                        </allow_free_shipping_promotions>
+                        <show_only_free translate="label comment" module="summa_andreani">
+                            <label>Only Display Free Shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>43</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>If free shipping applies don't show other shipping rates</comment>
+                        </show_only_free>
+                        <include_free_ship_items translate="label comment" module="summa_andreani">
+                            <label>Include Free Shipping Items in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>44</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Include weight, qty of Free Shipping Products in calculation of shipping rates</comment>
+                        </include_free_ship_items>
+                        <include_virtual_price translate="label comment" module="summa_andreani">
+                            <label>Include Virtual Products in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Include price, qty of Virtual Products in calculation of shipping rates</comment>
+                        </include_virtual_price>
+                        <free_shipping_threshold translate="label comment" module="summa_andreani">
+                            <label>Minimum Order Amount For Free Shipping</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>46</sort_order>
+                            <comment>Apply free shipping if this amount is exceeded</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_shipping_threshold>
+                        <!-- SHIPMENT SETTINGS -->
+                        <heading_shipment translate="label" module="summa_andreani">
+                            <label>Specific Magento Shipment settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>48</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </heading_shipment>
+                        <showmethod translate="label">
+                            <label>Show Method if Not Applicable</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>49</sort_order>
+                            <frontend_class>shipping-skip-hide</frontend_class>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </showmethod>
                         <specificerrmsg translate="label comment" module="summa_andreani">
                             <label>Displayed Error Message</label>
                             <frontend_type>textarea</frontend_type>
@@ -597,29 +681,6 @@
                             </depends>
                             <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
                         </debug>
-                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
-                            <label>Shipping Type for Matrix Rates</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>41</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <active>1</active>
-                            </depends>
-                            <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
-                        </shipping_type_for_matrixrates>
-                        <free_method_text translate="label comment" module="summa_andreani">
-                            <label>Free Method Text</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>42</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <active>1</active>
-                            </depends>
-                        </free_method_text>
                     </fields>
                 </andreaniStandard>
                 <andreaniStorepickup translate="label" module="summa_andreani">
@@ -736,7 +797,7 @@
                         <title translate="label comment" module="summa_andreani">
                             <label>Method Title</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>30</sort_order>
+                            <sort_order>21</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -747,7 +808,7 @@
                         <contract translate="label comment" module="summa_andreani">
                             <label>Contract</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>40</sort_order>
+                            <sort_order>22</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -756,6 +817,128 @@
                             </depends>
                             <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                         </contract>
+                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
+                            <label>Shipping Type for Matrix Rates</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This string must match with ''delivery_type'' column of Matrix Rates CSV]]></comment>
+                        </shipping_type_for_matrixrates>
+                        <!-- FREE SHIPPING SETTINGS -->
+                        <heading_free_shipping translate="label" module="summa_andreani">
+                            <label>Free Shipping settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </heading_free_shipping>
+                        <free_method_text translate="label comment" module="summa_andreani">
+                            <label>Free Method Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_method_text>
+                        <allow_free_shipping_promotions translate="label comment" module="summa_andreani">
+                            <label>Free Shipping Promotions</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Allow free shipping promotions to apply to matrixrate</comment>
+                        </allow_free_shipping_promotions>
+                        <show_only_free translate="label comment" module="summa_andreani">
+                            <label>Only Display Free Shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>If free shipping applies dont show other shipping rates</comment>
+                            <sort_order>43</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </show_only_free>
+                        <include_free_ship_items translate="label comment" module="summa_andreani">
+                            <label>Include Free Shipping Items in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>44</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Include weight, qty of Free Shipping Products in calculation of shipping rates</comment>
+                        </include_free_ship_items>
+                        <include_virtual_price translate="label comment" module="summa_andreani">
+                            <label>Include Virtual Products in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Include price, qty of Virtual Products in calculation of shipping rates</comment>
+                        </include_virtual_price>
+                        <free_shipping_threshold translate="label comment" module="summa_andreani">
+                            <label>Minimum Order Amount For Free Shipping</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>46</sort_order>
+                            <comment>Apply free shipping if this amount is exceeded</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_shipping_threshold>
+                        <!-- SHIPMENT SETTINGS -->
+                        <heading_shipment translate="label" module="summa_andreani">
+                            <label>Specific Magento Shipment settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>48</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </heading_shipment>
+                        <showmethod translate="label">
+                            <label>Show Method if Not Applicable</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>49</sort_order>
+                            <frontend_class>shipping-skip-hide</frontend_class>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </showmethod>
                         <specificerrmsg translate="label comment" module="summa_andreani">
                             <label>Displayed Error Message</label>
                             <frontend_type>textarea</frontend_type>
@@ -806,7 +989,7 @@
                             </depends>
                             <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
                         </debug>
-                        <postal_codes_disabled>
+                        <postal_codes_disabled translate="label comment" module="summa_andreani">
                             <label>Postal Codes Disabled</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>61</sort_order>
@@ -818,7 +1001,7 @@
                             </depends>
                             <comment><![CDATA[Fill this input with postal codes to disable new branches by default. To use more than one postal code connect them with a comma. Ex. 5870,7000,7005]]></comment>
                         </postal_codes_disabled>
-                        <storepickup_cron>
+                        <storepickup_cron translate="label comment" module="summa_andreani">
                             <label>Time to update Andreani stores</label>
                             <comment>Ex. (All day at 12AM): 0 0 * * *</comment>
                             <frontend_type>text</frontend_type>
@@ -830,29 +1013,6 @@
                                 <active>1</active>
                             </depends>
                         </storepickup_cron>
-                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
-                            <label>Shipping Type for Matrix Rates</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>41</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <active>1</active>
-                            </depends>
-                            <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
-                        </shipping_type_for_matrixrates>
-                        <free_method_text translate="label comment" module="summa_andreani">
-                            <label>Free Method Text</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>42</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <active>1</active>
-                            </depends>
-                        </free_method_text>
                     </fields>
                 </andreaniStorepickup>
                 <andreaniUrgent translate="label" module="summa_andreani">
@@ -969,7 +1129,7 @@
                         <title translate="label comment" module="summa_andreani">
                             <label>Method Title</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>30</sort_order>
+                            <sort_order>21</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -980,7 +1140,7 @@
                         <contract translate="label comment" module="summa_andreani">
                             <label>Contract</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>40</sort_order>
+                            <sort_order>22</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -989,6 +1149,128 @@
                             </depends>
                             <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                         </contract>
+                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
+                            <label>Shipping Type for Matrix Rates</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment><![CDATA[This string must match with ''delivery_type'' column of Matrix Rates CSV]]></comment>
+                        </shipping_type_for_matrixrates>
+                        <!-- FREE SHIPPING SETTINGS -->
+                        <heading_free_shipping translate="label" module="summa_andreani">
+                            <label>Free Shipping settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </heading_free_shipping>
+                        <free_method_text translate="label comment" module="summa_andreani">
+                            <label>Free Method Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_method_text>
+                        <allow_free_shipping_promotions translate="label comment" module="summa_andreani">
+                            <label>Free Shipping Promotions</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Allow free shipping promotions to apply to matrixrate</comment>
+                        </allow_free_shipping_promotions>
+                        <show_only_free translate="label comment" module="summa_andreani">
+                            <label>Only Display Free Shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>If free shipping applies dont show other shipping rates</comment>
+                            <sort_order>43</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </show_only_free>
+                        <include_free_ship_items translate="label comment" module="summa_andreani">
+                            <label>Include Free Shipping Items in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>44</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Include weight, qty of Free Shipping Products in calculation of shipping rates</comment>
+                        </include_free_ship_items>
+                        <include_virtual_price translate="label comment" module="summa_andreani">
+                            <label>Include Virtual Products in Rate Calculation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <comment>Include price, qty of Virtual Products in calculation of shipping rates</comment>
+                        </include_virtual_price>
+                        <free_shipping_threshold translate="label comment" module="summa_andreani">
+                            <label>Minimum Order Amount For Free Shipping</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>46</sort_order>
+                            <comment>Apply free shipping if this amount is exceeded</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </free_shipping_threshold>
+                        <!-- SHIPMENT SETTINGS -->
+                        <heading_shipment translate="label" module="summa_andreani">
+                            <label>Specific Magento Shipment settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>48</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </heading_shipment>
+                        <showmethod translate="label">
+                            <label>Show Method if Not Applicable</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>49</sort_order>
+                            <frontend_class>shipping-skip-hide</frontend_class>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </showmethod>
                         <specificerrmsg translate="label comment" module="summa_andreani">
                             <label>Displayed Error Message</label>
                             <frontend_type>textarea</frontend_type>
@@ -1039,29 +1321,6 @@
                             </depends>
                             <comment><![CDATA[This debugging mode should be enabled only for test environments]]></comment>
                         </debug>
-                        <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
-                            <label>Shipping Type for Matrix Rates</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>41</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <active>1</active>
-                            </depends>
-                            <comment><![CDATA[This string must match with "delivery_type" column of Matrix Rates CSV]]></comment>
-                        </shipping_type_for_matrixrates>
-                        <free_method_text translate="label comment" module="summa_andreani">
-                            <label>Free Method Text</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>42</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <active>1</active>
-                            </depends>
-                        </free_method_text>
                     </fields>
                 </andreaniUrgent>
             </groups>

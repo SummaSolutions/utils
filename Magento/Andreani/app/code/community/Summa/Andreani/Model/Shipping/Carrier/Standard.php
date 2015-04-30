@@ -14,7 +14,21 @@ class Summa_Andreani_Model_Shipping_Carrier_Standard
 
     protected $_code = 'andreaniStandard';
     protected $_serviceType = 'standard';
-    protected $_shippingTypeForMatrixrates = 'Standard';
+
+    /**
+     * Prefix of model events names
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'summa_andreani_standard';
+    /**
+     * Parameter name in event
+     *
+     * In observe method you can use $observer->getEvent()->getObject() in this case
+     *
+     * @var string
+     */
+    protected $_eventObject = 'andreani_standard';
 
     public function isTrackingAvailable()
     {

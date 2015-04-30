@@ -31,7 +31,7 @@ class Summa_Andreani_Block_Adminhtml_Branch_Grid
     {
         $this->addColumn('id',
             array(
-                'header'=> $this->__('ID'),
+                'header'=> Mage::helper('summa_andreani')->__('ID'),
                 'align' =>'right',
                 'width' => '50px',
                 'index' => 'id'
@@ -40,56 +40,56 @@ class Summa_Andreani_Block_Adminhtml_Branch_Grid
 
         $this->addColumn('description',
             array(
-                'header'=> $this->__('Description'),
+                'header'=> Mage::helper('summa_andreani')->__('Description'),
                 'index' => 'description'
             )
         );
 
         $this->addColumn('branch_id',
             array(
-                'header'=> $this->__('Branch ID'),
+                'header'=> Mage::helper('summa_andreani')->__('Branch ID'),
                 'index' => 'branch_id'
             )
         );
 
         $this->addColumn('address',
             array(
-                'header'=> $this->__('Address'),
+                'header'=> Mage::helper('summa_andreani')->__('Address'),
                 'index' => 'address'
             )
         );
 
         $this->addColumn('time_attendance',
             array(
-                'header'=> $this->__('Time Attendance'),
+                'header'=> Mage::helper('summa_andreani')->__('Time Attendance'),
                 'index' => 'time_attendance'
             )
         );
 
         $this->addColumn('email',
             array(
-                'header'=> $this->__('Email'),
+                'header'=> Mage::helper('summa_andreani')->__('Email'),
                 'index' => 'email'
             )
         );
 
         $this->addColumn('kind_phone_1',
             array(
-                'header'=> $this->__('Kind Phone 1'),
+                'header'=> Mage::helper('summa_andreani')->__('Kind Phone 1'),
                 'index' => 'kind_phone_1'
             )
         );
 
         $this->addColumn('phone_1',
             array(
-                'header'=> $this->__('Phone 1'),
+                'header'=> Mage::helper('summa_andreani')->__('Phone 1'),
                 'index' => 'phone_1'
             )
         );
 
         $this->addColumn('region',
             array(
-                'header'=> $this->__('Region'),
+                'header'=> Mage::helper('summa_andreani')->__('Region'),
                 'index' => 'region'
             )
         );

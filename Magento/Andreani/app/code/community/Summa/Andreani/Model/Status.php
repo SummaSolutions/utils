@@ -90,7 +90,10 @@ class Summa_Andreani_Model_Status
                 $result = $this->_processAndreaniStatusDefault($tracking);
                 break;
         }
-        $this->_checkedStatuses[$tracking->getShipment()->getId()] = (!isset($this->_checkedStatuses[$tracking->getShipment()->getId()]))?$result:$this->_mergeResult($this->_checkedStatuses[$tracking->getShipment()->getId()],$result);
+        $this->_checkedStatuses[$tracking->getShipment()->getId()] =
+            (!isset($this->_checkedStatuses[$tracking->getShipment()->getId()]))?
+                $result:
+                $this->_mergeResult($this->_checkedStatuses[$tracking->getShipment()->getId()],$result);
         return $result;
     }
 

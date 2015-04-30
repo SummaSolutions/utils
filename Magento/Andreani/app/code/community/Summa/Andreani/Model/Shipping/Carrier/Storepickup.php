@@ -14,7 +14,21 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
 
     protected $_code = 'andreaniStorepickup';
     protected $_serviceType = 'storepickup';
-    protected $_shippingTypeForMatrixrates = 'Storepickup';
+
+    /**
+     * Prefix of model events names
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'summa_andreani_storepickup';
+    /**
+     * Parameter name in event
+     *
+     * In observe method you can use $observer->getEvent()->getObject() in this case
+     *
+     * @var string
+     */
+    protected $_eventObject = 'andreani_storepickup';
 
     public function isTrackingAvailable()
     {
@@ -52,8 +66,10 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
 
             $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username'=> $username, 'password'=>$password));
 
+            $this->dispatchEvent('fetch_branches_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header));
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
+            $this->dispatchEvent('fetch_branches_init_soap_client_after',array('client' => $client));
 
             if (is_null($branches)) {
                 $branchesToGet = array(
@@ -68,7 +84,9 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             $this->_getHelper()->debugging('fetchBranchesDataSent:',$this->getServiceType());
             $this->_getHelper()->debugging($branchesToGet,$this->getServiceType());
 
+            $this->dispatchEvent('fetch_branches_call_ws_before',array('dataSent' => $branchesToGet));
             $andreaniResponse = $client->ConsultarSucursales($branchesToGet);
+            $this->dispatchEvent('fetch_branches_call_ws_after',array('client' => $client));
 
             $this->_getHelper()->debugging('fetchBranchesResponse:',$this->getServiceType());
             $this->_getHelper()->debugging($andreaniResponse,$this->getServiceType());
@@ -130,86 +148,117 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             }
         }
 
-        $contract = $this->_getHelper()->getContract($this->getServiceType());
-        $clientNumber = $this->_getHelper()->getClientNumber($this->getServiceType());
+        try {
+            $contract = $this->_getHelper()->getContract($this->getServiceType());
+            $clientNumber = $this->_getHelper()->getClientNumber($this->getServiceType());
 
-        $options = $this->_getHelper()->getSoapOptions();
-        $username = $this->_getHelper()->getUsername($this->getServiceType());
-        $password = $this->_getHelper()->getPassword($this->getServiceType());
+            $options = $this->_getHelper()->getSoapOptions();
+            $username = $this->_getHelper()->getUsername($this->getServiceType());
+            $password = $this->_getHelper()->getPassword($this->getServiceType());
 
-        $gatewayUrl = $this->_getHelper()->getConfigData('gateway_rates_url');
+            $gatewayUrl = $this->_getHelper()->getConfigData('gateway_rates_url');
 
-        $this->_getHelper()->debugging('collectRatesByWebServiceDataConnexion:', $this->getServiceType());
-        $this->_getHelper()->debugging(array(
-            'username'        => $username,
-            'password'        => $password,
-            'gatewayRatesUrl' => $gatewayUrl,
-            'options'         => $options
-        ), $this->getServiceType());
+            $this->_getHelper()->debugging('collectRatesByWebServiceDataConnexion:', $this->getServiceType());
+            $this->_getHelper()->debugging(array(
+                'username'        => $username,
+                'password'        => $password,
+                'gatewayRatesUrl' => $gatewayUrl,
+                'options'         => $options
+            ), $this->getServiceType());
 
-        $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
+            $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
+            $this->dispatchEvent('collect_rates_ws_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header));
+            $client = new SoapClient($gatewayUrl, $options);
+            $client->__setSoapHeaders(array($wsse_header));
+            $this->dispatchEvent('collect_rates_ws_init_soap_client_after',array('client' => $client));
 
-        $client = new SoapClient($gatewayUrl, $options);
-        $client->__setSoapHeaders(array($wsse_header));
+            $insurance = 0;
+            if ($this->_getHelper()->getConfigData('apply_insurance_on_shipping_price')) {
+                $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
+            }
 
-        $insurance = 0;
-        if ($this->_getHelper()->getConfigData('apply_insurance_on_shipping_price')) {
-            $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
-        }
+            $totals = $this->getTotalsWVFromItems($request->getAllItems());
+            $response = array();
+            /** @var $branch Summa_Andreani_Model_Branch */
+            foreach ($collection as $branch) {
 
-        $totals = $this->getTotalsWVFromItems($request->getAllItems());
-        $responseWS = array();
-        /** @var $branch Summa_Andreani_Model_Branch */
-        foreach ($collection as $branch) {
+                $collectRatesInfo = array(
+                    'cotizacionEnvio' => array(
+                        'CPDestino'      => $request->getDestPostcode(),
+                        'Cliente'        => $clientNumber,
+                        'Contrato'       => $contract,
+                        'Peso'           => $totals->getTotalWeight(),
+                        'SucursalRetiro' => $branch->getBranchId(), //Required if it's storepickup
+                        'ValorDeclarado' => '', // Optional
+                        'Volumen'        => $totals->getTotalVolume(),
+                    )
+                );
 
-            $collectRatesInfo = array(
-                'cotizacionEnvio' => array(
-                    'CPDestino'      => $request->getDestPostcode(),
-                    'Cliente'        => $clientNumber,
-                    'Contrato'       => $contract,
-                    'Peso'           => $totals->getTotalWeight(),
-                    'SucursalRetiro' => $branch->getBranchId(), //Required if it's storepickup
-                    'ValorDeclarado' => '', // Optional
-                    'Volumen'        => $totals->getTotalVolume(),
-                )
-            );
+                $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
+                $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
 
-            $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
-            $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
 
-            $responseWS[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance, $branch->getBranchId());
+                $this->dispatchEvent('collect_rates_ws_call_ws_before',array('dataSent' => $collectRatesInfo));
+                $response[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance, $branch->getBranchId());
+                $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $response));
 
-            $this->_getHelper()->debugging('collectRatesByWebServiceResponse:', $this->getServiceType());
-            $this->_getHelper()->debugging($responseWS, $this->getServiceType());
-        }
+                $this->_getHelper()->debugging('collectRatesByWebServiceResponse:', $this->getServiceType());
+                $this->_getHelper()->debugging($response, $this->getServiceType());
+            }
 
-        /** @var $rate Varien_Object */
-        foreach ($responseWS as $rate) {
-            if (!$rate->hasErrors()) {
-                /** @var $method Mage_Shipping_Model_Rate_Result_Method */
-                $method = Mage::getModel('shipping/rate_result_method');
+            /** @var $rate Varien_Object */
+            foreach ($response as $rate) {
+                if (!$rate->hasErrors()) {
+                    /** @var $method Mage_Shipping_Model_Rate_Result_Method */
+                    $method = Mage::getModel('shipping/rate_result_method');
 
-                $method->setCarrier($this->_code);
-                $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+                    $method->setCarrier($this->_code);
+                    $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
 
-                $methodCode = $this->_code;
-                $methodTitle = $this->_getHelper()->getConfigData('name', $this->getServiceType());
+                    $methodCode = $this->_code;
+                    $methodTitle = $this->_getHelper()->getConfigData('name', $this->getServiceType());
 
-                if (!is_null($rate->getBranch())) {
-                    $methodCode .= '_' . $rate->getBranch();
-                    $methodTitle .= ' ' . ucfirst(strtolower($collection->getItemByColumnValue('branch_id',$rate->getBranch())->getDescription()));
+                    if (!is_null($rate->getBranch())) {
+                        $methodCode .= '_' . $rate->getBranch();
+                        $methodTitle .= ' ' . ucfirst(strtolower($collection->getItemByColumnValue('branch_id',$rate->getBranch())->getDescription()));
+                    }
+
+                    $method->setMethod($methodCode);
+                    $method->setMethodTitle($methodTitle);
+
+                    $method->setCost(0);
+
+                    $method->setPrice($this->getFinalPriceWithHandlingFee($rate->getPrice()));
+
+                    $result->append($method);
+                } elseif($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
+                    $error = Mage::getModel('shipping/rate_result_error');
+                    $error->setCarrier($this->_code);
+                    $error->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+                    $error->setErrorMessage($this->_getHelper()->__('Andreani is not available. %s',$rate->getErrors()));
+                    $result = $error;
                 }
+            }
+        }catch(Exception $e) {
+            $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $e));
 
-                $method->setMethod($methodCode);
-                $method->setMethodTitle($methodTitle);
+            $error = libxml_get_last_error();
+            $error .= "<BR><BR>";
+            $error .= $e;
 
-                $method->setCost(0);
+            $this->_getHelper()->debugging('collectRatesByWebServiceError:', $this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+            $this->_getHelper()->debugging($error, $this->getServiceType());
 
-                $method->setPrice($this->getFinalPriceWithHandlingFee($rate->getPrice()));
-
-                $result->append($method);
+            if($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
+                $error = Mage::getModel('shipping/rate_result_error');
+                $error->setCarrier($this->_code);
+                $error->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+                $error->setErrorMessage($this->_getHelper()->__('Andreani is not available for this request.'));
+                $result = $error;
             }
         }
+
 
         return $result;
     }
@@ -309,6 +358,14 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
                     $result->append($method);
                 }
             }
+        }
+
+        if (!$result->getAllRates() && $this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
+            $error = Mage::getModel('shipping/rate_result_error');
+            $error->setCarrier($this->_code);
+            $error->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+            $error->setErrorMessage($this->_getHelper()->__('Andreani is not available for this request.'));
+            $result = $error;
         }
 
         return $result;

@@ -232,7 +232,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         if ($this->_debuggingEnabled) {
-            Mage::log($toLog, null, 'andreani.log',true);
+            Mage::log($this->__($toLog), null, 'andreani.log',true);
         }
 
         return $this->_debuggingEnabled;
@@ -254,7 +254,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         }
         throw new Mage_Adminhtml_Exception(
             $this->__(
-                'Could not create shipment in Andreani. %s',
+                'Exception throwed on Andreani. %s',
                 $this->__($info)
             )
         );
