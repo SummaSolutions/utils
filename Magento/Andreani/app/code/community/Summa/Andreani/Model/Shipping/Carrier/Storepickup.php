@@ -12,7 +12,17 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
     implements Mage_Shipping_Model_Carrier_Interface
 {
 
+    /**
+     * Carrier's code
+     *
+     * @var string
+     */
     protected $_code = 'andreaniStorepickup';
+
+    /**
+     * Short String with carriers service
+     * @var string
+     */
     protected $_serviceType = 'storepickup';
 
     /**
@@ -30,16 +40,26 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
      */
     protected $_eventObject = 'andreani_storepickup';
 
-    public function isTrackingAvailable()
-    {
-        return true;
-    }
-
+    /**
+     * Function to return array with allowed Methods
+     *
+     * This model will be used like abstract for the real carriers
+     * then this method will be used for get array of all andreani
+     * services enabled
+     *
+     * @return array
+     */
     public function getAllowedMethods()
     {
         return array($this->_code=>$this->getConfigData('name'));
     }
 
+    /**
+     * Function to fetch Branches
+     * @param null $branches
+     *
+     * @return bool
+     */
     public function fetchBranches($branches = null)
     {
         try

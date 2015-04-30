@@ -15,6 +15,7 @@ class Summa_Andreani_Model_Branch
      * @var string
      */
     protected $_eventPrefix = 'summa_andreani_branch';
+
     /**
      * Parameter name in event
      *
@@ -24,7 +25,15 @@ class Summa_Andreani_Model_Branch
      */
     protected $_eventObject = 'andreani_branch';
 
+    /**
+     * Short String with carriers service
+     * @var string
+     */
     protected $_serviceType = null;
+
+    /**
+     * Internal constructor not depended on params. Can be used for object initialization
+     */
     protected function _construct()
     {
         $this->_init('summa_andreani/branch');
@@ -53,6 +62,13 @@ class Summa_Andreani_Model_Branch
         return $this->_persistBranchesResponse(Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->fetchBranches());
     }
 
+    /**
+     * Function to persist Branches fetched from Andreani
+     * @param $response
+     *
+     * @return bool
+     * @throws Exception
+     */
     protected function _persistBranchesResponse($response)
     {
         if (
@@ -83,6 +99,12 @@ class Summa_Andreani_Model_Branch
         }
     }
 
+    /**
+     * Returns a collection on an indexed array
+     * @param $model
+     *
+     * @return array
+     */
     protected function _getIndexedCollectionArray($model)
     {
         $branches = $model->getCollection();
@@ -95,6 +117,12 @@ class Summa_Andreani_Model_Branch
         return $indexedArray;
     }
 
+    /**
+     * Function to parse branch data from Andreani
+     * @param $data
+     *
+     * @return array
+     */
     protected function _buildBranchData($data)
     {
 
@@ -129,6 +157,9 @@ class Summa_Andreani_Model_Branch
         return $resultArr;
     }
 
+    /**
+     * Function to get All branches and set these disabled
+     */
     protected function setBranchesDisabled()
     {
         $model = Mage::getSingleton('summa_andreani/branch');
@@ -139,6 +170,13 @@ class Summa_Andreani_Model_Branch
         $branches->save();
     }
 
+    /**
+     * Function to found Region based-on Postal code
+     * @param $regionToFound
+     * @param $postalCode
+     *
+     * @return mixed
+     */
     protected function getRegionId($regionToFound, $postalCode)
     {
         $model = Mage::getSingleton('directory/region');

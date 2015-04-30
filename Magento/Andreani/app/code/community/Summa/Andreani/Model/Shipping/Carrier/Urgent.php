@@ -12,7 +12,17 @@ class Summa_Andreani_Model_Shipping_Carrier_Urgent
     implements Mage_Shipping_Model_Carrier_Interface
 {
 
+    /**
+     * Carrier's code
+     *
+     * @var string
+     */
     protected $_code = 'andreaniUrgent';
+
+    /**
+     * Short String with carriers service
+     * @var string
+     */
     protected $_serviceType = 'urgent';
 
     /**
@@ -30,11 +40,15 @@ class Summa_Andreani_Model_Shipping_Carrier_Urgent
      */
     protected $_eventObject = 'andreani_urgent';
 
-    public function isTrackingAvailable()
-    {
-        return true;
-    }
-
+    /**
+     * Function to return array with allowed Methods
+     *
+     * This model will be used like abstract for the real carriers
+     * then this method will be used for get array of all andreani
+     * services enabled
+     *
+     * @return array
+     */
     public function getAllowedMethods()
     {
         return array($this->_code=>$this->getConfigData('name'));

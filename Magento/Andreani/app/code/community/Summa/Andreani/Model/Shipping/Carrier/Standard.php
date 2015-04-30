@@ -12,7 +12,17 @@ class Summa_Andreani_Model_Shipping_Carrier_Standard
     implements Mage_Shipping_Model_Carrier_Interface
 {
 
+    /**
+     * Carrier's code
+     *
+     * @var string
+     */
     protected $_code = 'andreaniStandard';
+
+    /**
+     * Short String with carriers service
+     * @var string
+     */
     protected $_serviceType = 'standard';
 
     /**
@@ -21,6 +31,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Standard
      * @var string
      */
     protected $_eventPrefix = 'summa_andreani_standard';
+
     /**
      * Parameter name in event
      *
@@ -30,11 +41,15 @@ class Summa_Andreani_Model_Shipping_Carrier_Standard
      */
     protected $_eventObject = 'andreani_standard';
 
-    public function isTrackingAvailable()
-    {
-        return true;
-    }
-
+    /**
+     * Function to return array with allowed Methods
+     *
+     * This model will be used like abstract for the real carriers
+     * then this method will be used for get array of all andreani
+     * services enabled
+     *
+     * @return array
+     */
     public function getAllowedMethods()
     {
         return array($this->_code=>$this->getConfigData('name'));

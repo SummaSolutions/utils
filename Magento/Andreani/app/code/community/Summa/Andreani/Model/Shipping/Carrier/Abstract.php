@@ -19,16 +19,24 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
      */
     protected $_code = 'andreaniAbstract';
 
-
     /**
      * Free Method config path
      *
      * @var string
      */
     protected $_freeShipping_method = 'free';
+
+    /**
+     * Condition name for Matrix Rates
+     * @var string
+     */
     protected $_default_condition_name = 'package_weight';
+
+    /**
+     * Short String with carriers service
+     * @var string
+     */
     protected $_serviceType = 'global';
-    protected $_result;
 
     /**
      * Prefix of model events names
