@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <cms>
+            <children>
+                <cmstree translate="title">
+                    <title>Cms Tree</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/cmstree/index</action>
+                </cmstree>
+            </children>
+        </cms>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <cmstree translate="title">
+                                        <title>CMS Tree Settings</title>
+                                        <sort_order>100</sort_order>
+                                    </cmstree>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
