@@ -257,10 +257,10 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
                 $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
 
-                $this->dispatchEvent('do_shipment_request_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header));
+                $this->dispatchEvent('do_shipment_request_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'order' => $order, 'itemsToShip' => $itemsToShip, 'params' => $params));
                 $client = new SoapClient($gatewayUrl, $options);
                 $client->__setSoapHeaders(array($wsse_header));
-                $this->dispatchEvent('do_shipment_request_init_soap_client_after',array('client' => $client));
+                $this->dispatchEvent('do_shipment_request_init_soap_client_after',array('client' => $client, 'order' => $order, 'itemsToShip' => $itemsToShip, 'params' => $params));
 
                 $detailsProductsSend = $this->_getHelper()->__('Order #') . $order->getIncrementId();
                 $items = ($itemsToShip === NULL) ? $order->getAllItems() : $itemsToShip;
@@ -317,9 +317,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $this->_getHelper()->debugging('doShipmentRequestDataSent:', $this->getServiceType());
                 $this->_getHelper()->debugging($shipmentInfo, $this->getServiceType());
 
-                $this->dispatchEvent('do_shipment_request_call_ws_before',array('shipmentInfo' => $shipmentInfo, 'order' => $order, 'items' => $items));
+                $this->dispatchEvent('do_shipment_request_call_ws_before',array('shipmentInfo' => $shipmentInfo, 'order' => $order, 'items' => $items, 'params' => $params));
                 $response = $client->ConfirmarCompra($shipmentInfo);
-                $this->dispatchEvent('do_shipment_request_call_ws_after',array('shipmentInfo' => $shipmentInfo, 'response' => $response));
+                $this->dispatchEvent('do_shipment_request_call_ws_after',array('shipmentInfo' => $shipmentInfo, 'response' => $response, 'order' => $order, 'items' => $items, 'params' => $params));
 
                 $this->_getHelper()->debugging('doShipmentRequestResponse:', $this->getServiceType());
                 $this->_getHelper()->debugging($response, $this->getServiceType());
@@ -342,6 +342,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $error .= $e;
 
                 $result->setErrors($e->getMessage());
+
+                $this->dispatchEvent('do_shipment_request_call_ws_after',array('shipmentInfo' => $shipmentInfo, 'response' => $e, 'order' => $order, 'items' => $items, 'params' => $params));
 
                 $this->_getHelper()->debugging('doShipmentRequestError:', $this->getServiceType());
                 $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
@@ -380,10 +382,10 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             ), $this->getServiceType());
 
             $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
-            $this->dispatchEvent('get_link_constancy_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header));
+            $this->dispatchEvent('get_link_constancy_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'tracking' => $tracking));
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
-            $this->dispatchEvent('get_link_constancy_init_soap_client_after',array('client' => $client));
+            $this->dispatchEvent('get_link_constancy_init_soap_client_after',array('client' => $client, 'tracking' => $tracking));
 
             $dataSent = array(
                 'entities' => array(
@@ -395,9 +397,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('getLinkConstancyDataSent:', $this->getServiceType());
             $this->_getHelper()->debugging($dataSent, $this->getServiceType());
 
-            $this->dispatchEvent('get_link_constancy_call_ws_before',array('dataSent' => $dataSent));
+            $this->dispatchEvent('get_link_constancy_call_ws_before',array('dataSent' => $dataSent, 'tracking' => $tracking));
             $response = $client->ImprimirConstancia($dataSent);
-            $this->dispatchEvent('get_link_constancy_call_ws_after',array('response' => $response));
+            $this->dispatchEvent('get_link_constancy_call_ws_after',array('response' => $response, 'tracking' => $tracking));
 
             $this->_getHelper()->debugging('getLinkConstancyResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($response, $this->getServiceType());
@@ -411,13 +413,15 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $error .= "<BR><BR>";
             $error .= $e;
 
+            $this->dispatchEvent('get_link_constancy_call_ws_after',array('response' => $e, 'tracking' => $tracking));
+
             $this->_getHelper()->debugging('getLinkConstancyError:', $this->getServiceType());
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
             $this->_getHelper()->debugging($error, $this->getServiceType());
 
             $result->setErrors($e->getMessage());
         }
-        $this->dispatchEvent('get_link_constancy_after',array('result' => $result));
+        $this->dispatchEvent('get_link_constancy_after',array('result' => $result, 'tracking' => $tracking));
         return $result;
     }
 
@@ -431,7 +435,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     {
         $this->dispatchEvent('get_tracking_info_before',array('tracking' => $tracking));
         $result = $this->getTracking($tracking);
-        $this->dispatchEvent('get_tracking_info_after',array('result' => $result));
+        $this->dispatchEvent('get_tracking_info_after',array('result' => $result, 'tracking' => $tracking));
 
         if($result instanceof Mage_Shipping_Model_Tracking_Result){
             if ($tracks = $result->getAllTrackings()) {
@@ -468,9 +472,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 'options'    => $options
             ), $this->getServiceType());
 
-            $this->dispatchEvent('get_tracking_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options));
+            $this->dispatchEvent('get_tracking_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'tracks' => $tracks));
             $client = new SoapClient($gatewayUrl, $options);
-            $this->dispatchEvent('get_tracking_init_soap_client_after',array('client' => $client));
+            $this->dispatchEvent('get_tracking_init_soap_client_after',array('client' => $client, 'tracks' => $tracks));
 
             $dataSent = array(
                 'Pieza' => array(
@@ -482,21 +486,21 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('getTrackingDataSent:', $this->getServiceType());
             $this->_getHelper()->debugging($dataSent, $this->getServiceType());
 
-            $this->dispatchEvent('get_tracking_call_ws_before',array('dataSent' => $dataSent));
+            $this->dispatchEvent('get_tracking_call_ws_before',array('dataSent' => $dataSent, 'tracks' => $tracks));
             $response = $client->ObtenerTrazabilidad($dataSent);
-            $this->dispatchEvent('get_tracking_call_ws_after',array('response' => $response));
+            $this->dispatchEvent('get_tracking_call_ws_after',array('response' => $response, 'tracks' => $tracks));
 
             $this->_getHelper()->debugging('getTrackingResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($response, $this->getServiceType());
         } catch (SoapFault $e) {
-            $this->dispatchEvent('get_tracking_call_ws_after',array('response' => $e));
+            $this->dispatchEvent('get_tracking_call_ws_after',array('response' => $e, 'tracks' => $tracks));
             $response = $e;
             $this->_getHelper()->debugging('getTrackingError:', $this->getServiceType());
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
         }
 
         $result = $this->_parseXmlTrackingResponse($tracks, $response);
-        $this->dispatchEvent('get_tracking_after',array('result' => $result));
+        $this->dispatchEvent('get_tracking_after',array('result' => $result, 'tracks' => $tracks));
 
         return $result;
     }
@@ -625,13 +629,14 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     /**
      * Function to cancel Shipment request to andreani
      *
-     * @param $nroAndreani
+     * @param $tracking
      *
      * @return bool
      */
-    public function cancelShipmentRequest($nroAndreani)
+    public function cancelShipmentRequest($tracking)
     {
         $result = new Varien_Object();
+        $this->dispatchEvent('cancel_shipment_request_before',array('traking' => $tracking));
         try {
             $options = $this->_getHelper()->getSoapOptions();
             $username = $this->_getHelper()->getUsername($this->getServiceType());
@@ -648,24 +653,24 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
             $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
 
-            $this->dispatchEvent('cancel_shipment_request_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header));
+            $this->dispatchEvent('cancel_shipment_request_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'traking' => $tracking));
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
-            $this->dispatchEvent('cancel_shipment_request_init_soap_client_after',array('client' => $client));
+            $this->dispatchEvent('cancel_shipment_request_init_soap_client_after',array('client' => $client, 'traking' => $tracking));
 
             $cancelShipmentInfo = array(
                 'envios' => array(
                     'ParamAnularEnvios' => array(
-                        'NumeroAndreani' => $nroAndreani
+                        'NumeroAndreani' => $tracking
                     )
                 )
             );
             $this->_getHelper()->debugging('cancelShipmentRequestDataSent:', $this->getServiceType());
             $this->_getHelper()->debugging($cancelShipmentInfo, $this->getServiceType());
 
-            $this->dispatchEvent('cancel_shipment_request_call_ws_before',array('dataSent' => $cancelShipmentInfo));
+            $this->dispatchEvent('cancel_shipment_request_call_ws_before',array('dataSent' => $cancelShipmentInfo, 'traking' => $tracking));
             $response = $client->AnularEnvios($cancelShipmentInfo);
-            $this->dispatchEvent('cancel_shipment_request_call_ws_after',array('response' => $response));
+            $this->dispatchEvent('cancel_shipment_request_call_ws_after',array('response' => $response, 'traking' => $tracking));
 
             $this->_getHelper()->debugging('cancelShipmentRequestResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($response, $this->getServiceType());
@@ -679,7 +684,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $result->setObjectResponse($response);
 
         } catch (SoapFault $e) {
-            $this->dispatchEvent('cancel_shipment_request_call_ws_after',array('response' => $e));
+            $this->dispatchEvent('cancel_shipment_request_call_ws_after',array('response' => $e, 'traking' => $tracking));
             $error = libxml_get_last_error();
             $error .= "<BR><BR>";
             $error .= $e;
@@ -691,6 +696,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $result->setErrors($e->getMessage());
         }
 
+        $this->dispatchEvent('cancel_shipment_request_after',array('result' => $result, 'traking' => $tracking));
         return $result;
     }
 
@@ -745,10 +751,10 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
             $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
 
-            $this->dispatchEvent('collect_rates_ws_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header));
+            $this->dispatchEvent('collect_rates_ws_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'request' => $request));
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
-            $this->dispatchEvent('collect_rates_ws_init_soap_client_after',array('client' => $client));
+            $this->dispatchEvent('collect_rates_ws_init_soap_client_after',array('client' => $client, 'request' => $request));
 
             $insurance = 0;
             if ($this->_getHelper()->getConfigData('apply_insurance_on_shipping_price')) {
@@ -769,9 +775,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
             $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
 
-            $this->dispatchEvent('collect_rates_ws_call_ws_before',array('dataSent' => $collectRatesInfo));
+            $this->dispatchEvent('collect_rates_ws_call_ws_before',array('dataSent' => $collectRatesInfo, 'request' => $request));
             $response[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance);
-            $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $response));
+            $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $response, 'request' => $request));
 
             $this->_getHelper()->debugging('collectRatesByWebServiceResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($response, $this->getServiceType());
@@ -805,7 +811,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 }
             }
         }catch (Exception $e) {
-            $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $e));
+            $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $e, 'request' => $request));
 
             $error = libxml_get_last_error();
             $error .= "<BR><BR>";
