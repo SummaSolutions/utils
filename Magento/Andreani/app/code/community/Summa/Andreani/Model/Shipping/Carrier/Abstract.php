@@ -459,7 +459,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     public function getTracking($tracks)
     {
         $this->dispatchEvent('get_tracking_before',array('tracks' => $tracks));
-        $clientNro = $this->_getHelper()->getClientNumber($this->getServiceType());
+        $clientNumber = $this->_getHelper()->getClientNumber($this->getServiceType());
         $gatewayUrl = $this->_getHelper()->getConfigData('gateway_tracking_url');
 
         $options = $this->_getHelper()->getSoapOptions();
@@ -467,7 +467,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         try {
             $this->_getHelper()->debugging('getTrackingDataConnexion:', $this->getServiceType());
             $this->_getHelper()->debugging(array(
-                'clientNro'  => $clientNro,
+                'clientNro'  => $clientNumber,
                 'gatewayUrl' => $gatewayUrl,
                 'options'    => $options
             ), $this->getServiceType());
@@ -480,7 +480,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 'Pieza' => array(
                     'NroPieza'      => '',
                     'NroAndreani'   => $tracks,
-                    'CodigoCliente' => $clientNro
+                    'CodigoCliente' => $clientNumber
                 )
             );
             $this->_getHelper()->debugging('getTrackingDataSent:', $this->getServiceType());
@@ -1304,12 +1304,16 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                     );
                 $weight = ($weight)? $weight : $this->_getHelper()->calculateWeight($item->getProduct());
 
-                $response->setTotalWeight($response->getTotalWeight() + $weight);
-                $response->setTotalVolume($response->getTotalVolume() + ($height * $width * $length));
+                $qty = ($parent = $item->getParentItem()) ?
+                    $parent->getQty():
+                    $item->getQty();
 
-                $response->setTotalHeight($response->getTotalHeight() + $height);
-                $response->setTotalWidth($response->getTotalWidth() + $width);
-                $response->setTotalLength($response->getTotalLength() + $length);
+                $response->setTotalWeight($response->getTotalWeight() + ($weight * $qty));
+                $response->setTotalVolume($response->getTotalVolume() + (($height * $width * $length) * $qty));
+
+                $response->setTotalHeight($response->getTotalHeight() + ($height * $qty));
+                $response->setTotalWidth($response->getTotalWidth() + ($width * $qty));
+                $response->setTotalLength($response->getTotalLength() + ($length * $qty));
             }
 
         }

@@ -423,7 +423,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
                 );
             $length = ($length)?$length:0;
         }
-        return ($width * $height * $length) * 350 / 10000;
+        return ($width * $height * $length) * 350 / 1000;
     }
 
     /**

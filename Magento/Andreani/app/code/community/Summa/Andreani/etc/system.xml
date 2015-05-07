@@ -391,6 +391,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
+                        <sort_order translate="label comment" module="summa_andreani">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_order>
                         <is_tracking_enabled translate="label comment" module="summa_andreani">
                             <label>Tracking enabled</label>
                             <frontend_type>select</frontend_type>
@@ -699,6 +708,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
+                        <sort_order translate="label comment" module="summa_andreani">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_order>
                         <is_tracking_enabled translate="label comment" module="summa_andreani">
                             <label>Tracking enabled</label>
                             <frontend_type>select</frontend_type>
@@ -1031,6 +1049,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
+                        <sort_order translate="label comment" module="summa_andreani">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_order>
                         <is_tracking_enabled translate="label comment" module="summa_andreani">
                             <label>Tracking enabled</label>
                             <frontend_type>select</frontend_type>
