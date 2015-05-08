@@ -63,22 +63,26 @@ Datos de Test:
 Documentacion de Andreani:
 =================
 
-[Documentacion original de Andreani (2013)](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.pdf)
+[Documentacion original de Andreani (2013)](https://github.com/summasolutions/utils/raw/development/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.pdf)
 
-[Documentacion de Andreani 1.8 (02/2015)](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.8.doc)
+[Documentacion de Andreani 1.8 (02/2015)](https://github.com/summasolutions/utils/raw/development/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.8.doc)
 
-[Documentacion de Andreani 1.9 (05/2015)](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.9.doc)
+[Documentacion de Andreani 1.9 (05/2015)](https://github.com/summasolutions/utils/raw/development/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.9.doc)
 
-[Ejemplos PHP de Andreani](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/EJEMPLOSPHPAndreani.zip)
+[Sitio de Andreani con información de los WS](http://www.andreani.com/Services/Show/142/Env%C3%ADos-de-E-Commerce)
+
+[Link de descarga de la Documentacion más Actualizada de Andreani](http://www.andreani.com/FilesRelated/Download?FileId=17)
+
+[Ejemplos PHP de Andreani](https://github.com/summasolutions/utils/raw/development/Magento/Andreani/docs/Documentacion%20De%20Andreani/EJEMPLOSPHPAndreani.zip)
 
 Archivos Adjuntos al Modulo:
 =================
 
-[CSV de Ejemplo de MatrixRate para Test](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/matrixrates%20Para%20Andreani.csv)
+[CSV de Ejemplo de MatrixRate para Test](https://github.com/summasolutions/utils/raw/development/Magento/Andreani/docs/matrixrates%20Para%20Andreani.csv)
 
-[Modulo de MatrixRate para Test](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Matrxrate-5.0.1.tgz)
+[Modulo de MatrixRate para Test](https://github.com/summasolutions/utils/raw/development/Magento/Andreani/docs/Matrxrate-5.0.1.tgz)
 
-[Script SQL para agregar Provincias de Argentina a Magento](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/PROVINCIAS_ARGENTINA.sql)
+[Script SQL para agregar Provincias de Argentina a Magento](https://github.com/summasolutions/utils/raw/development/Magento/Andreani/docs/PROVINCIAS_ARGENTINA.sql)
 
 Listo:
 =================
