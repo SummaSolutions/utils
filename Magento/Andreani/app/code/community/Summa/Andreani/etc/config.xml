@@ -166,10 +166,6 @@
                 <andreani_branch_id>
                     <to_order_address>*</to_order_address>
                 </andreani_branch_id>
-                <!--<dni>
-                    <to_order_address>*</to_order_address>
-                    <to_customer_address>*</to_customer_address>
-                </dni>-->
             </sales_convert_quote_address>
             <sales_convert_order_address>
                 <summa_andreani_insurance_amount>
@@ -183,15 +179,26 @@
                 <andreani_branch_id>
                     <to_quote_address>*</to_quote_address>
                 </andreani_branch_id>
-                <!--<dni>
-                    <to_quote_address>*</to_quote_address>
-                </dni>-->
             </sales_convert_order_address>
-            <!--<customer_address>
+            <!-- UNCOMMENT THIS TO COPY DNI FROM CUSTOMER TO QUOTE AND TO ORDER-->
+            <!--
+            <sales_convert_quote_address>
+                <dni>
+                    <to_order_address>*</to_order_address>
+                    <to_customer_address>*</to_customer_address>
+                </dni>
+            </sales_convert_quote_address>
+            <sales_convert_order_address>
                 <dni>
                     <to_quote_address>*</to_quote_address>
                 </dni>
-            </customer_address>-->
+            </sales_convert_order_address>
+            <customer_address>
+                <dni>
+                    <to_quote_address>*</to_quote_address>
+                </dni>
+            </customer_address>
+            -->
         </fieldsets>
         <pdf>
             <totals>

@@ -51,7 +51,8 @@ $catalogSetup->addAttribute($entityTypeId, 'height_andreani', array(
     'is_searchable' => '1',
     'is_comparable' => '1',
     'user_defined' => '1',
-    'sort_order' => '60'
+    'sort_order' => '60',
+    'frontend_class' => 'required-entry validate-number validate-number-range number-range-1-90'
 ));
 // We suggest use width default attribute of magento but if you need use another here you have an example to create a new one
 $catalogSetup->addAttribute($entityTypeId, 'width_andreani', array(
@@ -68,7 +69,8 @@ $catalogSetup->addAttribute($entityTypeId, 'width_andreani', array(
     'is_searchable' => '1',
     'is_comparable' => '1',
     'user_defined' => '1',
-    'sort_order' => '70'
+    'sort_order' => '70',
+    'frontend_class' => 'required-entry validate-number validate-number-range number-range-1-90'
 ));
 // We suggest use length default attribute of magento but if you need use another here you have an example to create a new one
 $catalogSetup->addAttribute($entityTypeId, 'length_andreani', array(
@@ -85,7 +87,8 @@ $catalogSetup->addAttribute($entityTypeId, 'length_andreani', array(
     'is_searchable' => '1',
     'is_comparable' => '1',
     'user_defined' => '1',
-    'sort_order' => '80'
+    'sort_order' => '80',
+    'frontend_class' => 'required-entry validate-number validate-number-range number-range-1-90'
 ));
 
 /*Get attributes set*/

@@ -1,28 +1,86 @@
 Andreani Summa Module
 ======
 
- * Shipping method for Magento using argentinean carrier **Andreani**.
- * 100% Working with Andreani Web Service and, at the same time, Integrated with MatrixRates to get instant rates if it's needed
+ * Método de envio para **Andreani**.
+ * Integrado con MatrixRates.
+ * Integrado con todos los servicios de Andreani, Envio Estandar, Retiro en Sucursal y Envio Urgente.
+ * Configuraciones para cada servicio, Configuraciones globales para los Web Services.
+ * Observers en todos los llamados a los Web Service para customizacion de las operaciones sin necesidad de overridear.
+ * Status para Andreani en el shipment.
+ * Crones para Actualizar Sucursales de andreani y Status de los Shipments incompletos.
+ * Tracking de los envios.
+ * Shipping Labels de Magento implementados (permite guardar en magento las constancias de los pedidos de andreani).
+ * Botones para generar todos los pasos de andreani en caso de que algun Web Service falle.
+ * Listo para integrar en cualquier ambiente, con atributos listos para añadir si no existiesen en el ambiente a integrar.
+ * Seguro configurable para que sea añadible directamente al precio del envio o a parte como un subtotal.
+ * IVA configurable para MatrixRate (en el caso del Web Service ya viene incluido).
+ * Configuraciones para generar automaticamente el pedido a andreani cuando se realiza el pago o cuando se crea el shipment (desde el admin).
+ * Configuraciones propias de MatrixRate configurables en Andreani de forma que MatrixRate puede estar deshabilitado o con configuraciones para otro Metodo de Envio.
+ * Configuraciones para elegir el Delivery Type para cada servicio de Andreani.
+ * Cuando se elimina un tracking code en Magento se Intenta cancelar el Pedido en Andreani.
+ * Configuraciones para permitir promociones de Free Shipping en cada Servicio.
+ * Traducciones completas en Ingles y Español (ES y AR).
 
-Settuping:
+Instalacion:
 =================
 
 Se instala igual que cualquier módulo de Magento.
 
-How to:
-=================
-TODO
+Para integrarlo con Matrixrate Instalar tambien el Modulito que esta dentro de requirements/MatrixRates
 
-Test data:
-=================
- * Client Number: ANDCORREO
- * User: eCommerce_Integra
- * Password: passw0rd
- * Contract ESTANDAR: AND00EST
- * Contract URGENTE: AND00URG
- * Contract SUCURSAL: AND00SUC
+Por defecto el modulo no instala atributos a los productos para el calculo de volumen y peso aforado requerido por andreani, para instalarlos:
 
-READY:
+1. Copiar app/code/community/Summa/Andreani/sql/mysql4-upgrade-PRODUCT_ATTRIBUTES.php a app/code/community/Summa/Andreani/sql/summa_andreani_setup
+2. Renombrar de forma que PRODUCT_ATTRIBUTES sea reemplazado por la version del installer que corresponda.
+3. Actualizar la version correspondiente en app/code/community/Summa/Andreani/etc/config.xml
+
+Por defecto el modulo no instala el atributo DNI a los customer para los pedidos a andreani, para instalarlo:
+
+1. Copiar app/code/community/Summa/Andreani/sql/mysql4-upgrade-QUOTE_ORDER_ADDRESS_ATTRIBUTES.php a app/code/community/
+Summa/Andreani/sql/summa_andreani_setup
+2. Renombrar de forma que QUOTE_ORDER_ADDRESS_ATTRIBUTES sea reemplazado por la version del installer que corresponda.
+3. Actualizar la version correspondiente en app/code/community/Summa/Andreani/etc/config.xml
+4. Descomentar en app/code/community/Summa/Andreani/etc/config.xml las líneas 184, 201, 118 y 128.
+
+Como usar:
+=================
+
+Por defecto ya viene con todas las configuraciones precargadas para ser funcional utilizando los datos de Test, 
+solo hace falta definir cuales van a ser los atributos de peso, alto, ancho y profundidad de los productos 
+(a menos que se utilizen los installers proporcionados por el modulo), habilitar los servicios de andreani que 
+se van a ofrecer en el sitio, importar las provincias de Argentina y por ultimo ir al admin en Andreani Branches 
+-> Admin Branches y hacer un Fetch de las sucursales.
+
+Datos de Test:
+=================
+ * Número de Cliente: ANDCORREO
+ * Usuario: eCommerce_Integra
+ * Contraseña: passw0rd
+ * Contrato ESTANDAR: AND00EST
+ * Contrato URGENTE: AND00URG
+ * Contrato SUCURSAL: AND00SUC
+
+Documentacion de Andreani:
+=================
+
+[Documentacion original de Andreani (2013)](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.pdf)
+
+[Documentacion de Andreani 1.8 (02/2015)](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.8.doc)
+
+[Documentacion de Andreani 1.9 (05/2015)](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/ImplementacionServiciosAndreani.v1.9.doc)
+
+[Ejemplos PHP de Andreani](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Documentacion%20De%20Andreani/EJEMPLOSPHPAndreani.zip)
+
+Archivos Adjuntos al Modulo:
+=================
+
+[CSV de Ejemplo de MatrixRate para Test](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/matrixrates%20Para%20Andreani.csv)
+
+[Modulo de MatrixRate para Test](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/Matrxrate-5.0.1.tgz)
+
+[Script SQL para agregar Provincias de Argentina a Magento](https://github.com/summasolutions/utils/raw/us_andreani_module/Magento/Andreani/docs/PROVINCIAS_ARGENTINA.sql)
+
+Listo:
 =================
 - Ordenar las configuraciones User, Pass, Nro Cliente, Account Number => Contrato, etc. Quitar configuraciones de Tab Andreani y pasar todo a Shipping Methods
 - Configuracion para limite de peso aforado. 
@@ -56,14 +114,13 @@ READY:
 - Refactorizar/cambiar desarrollo de la generacion del link de la constancia. Se cambio por la implementacion de Shipping Labels de Magento.
 - Añadir configuraciones para habilitar/deshabilitar tracking en cada servicio.
 - Todos los llamados a andreani deben ser parseados a un Varien_Object.
-- Chequear informacion recibida de web service sucursales cuando hace el fetch.
 - Añadir configuracion para decidir que hacer cuando el peso de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception.
-- Añadir configuracion para decidir que hacer cuando el volumen de un producto es menor o igual a 0, setear en 1 (actual), generar error al guardar producto, setear en valor custom, exception.
 - Configuraciones de freeshipping para cada carrier de andreani.
 - Añadir eventos previos y posteriores a los llamados de los servicios de andreani para permitir customizaciones sin edicion/override de codigo.
 - Pasar el seteo de DNI y tipo de DNI a un observer de forma que sirva de referencia.
 - Traducciones al español completas, validar que el codigo este todo en ingles.
+- Validaciones al alto, ancho y largo para no permitir mayores a 90cm
 
 TODO:
 =================
-- Code Review, Test general
++ Code Review, Test general

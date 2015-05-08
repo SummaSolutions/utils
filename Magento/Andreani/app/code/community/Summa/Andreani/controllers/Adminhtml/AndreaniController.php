@@ -92,6 +92,7 @@ class Summa_Andreani_Adminhtml_AndreaniController
         foreach ($cancelShipmentResponse as $trackId => $response) {
             if (!$response->hasErrors() && $response->getCanceledShipment()) {
                 Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Shipment with tracking number %s was cancelled successfully',$trackId));
+                $track->delete();
             } else {
                 Mage::getSingleton('adminhtml/session')->addError($this->__('Could not cancel Shipment with tracking number %s',$trackId));
             }
