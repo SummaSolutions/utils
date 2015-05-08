@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: glopez
- * Date: 27/11/14
- * Time: 17:07
- */
 
-class Grandmarche_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Webshopapps_Matrixrate_Model_Mysql4_Carrier_Matrixrate
+class Summa_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Webshopapps_Matrixrate_Model_Mysql4_Carrier_Matrixrate
 {
     public function getNewRate(Mage_Shipping_Model_Rate_Request $request,$zipRangeSet=0)
     {

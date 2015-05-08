@@ -115,6 +115,10 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <depends>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
                                 <source_rates>2</source_rates>
                             </depends>
                         </heading_matrixrates>
@@ -127,6 +131,10 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <depends>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
                                 <source_rates>2</source_rates>
                             </depends>
                             <comment>Filter prices based on destination AND weight, price or quantity</comment>
@@ -140,6 +148,10 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <depends>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
                                 <source_rates>2</source_rates>
                             </depends>
                             <comment>Filter prices based on country AND/OR region AND/OR city AND/OR postal code</comment>
@@ -153,6 +165,10 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <depends>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
                                 <source_rates>2</source_rates>
                             </depends>
                         </add_iva_to_rates>
@@ -165,6 +181,10 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <depends>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
                                 <source_rates>2</source_rates>
                                 <add_iva_to_rates>1</add_iva_to_rates>
                             </depends>
@@ -232,7 +252,7 @@
                             <sort_order>31</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                         </insurance>
                         <apply_insurance_on_shipping_price translate="label comment" module="summa_andreani">
                             <label>Apply Insurance over shipping Price</label>
@@ -241,7 +261,7 @@
                             <sort_order>32</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <comment><![CDATA[If it's not, then Insurance will be showed like subtotal]]></comment>
                         </apply_insurance_on_shipping_price>
                         <insurance_subtotal_title translate="label comment" module="summa_andreani">
@@ -250,7 +270,7 @@
                             <sort_order>33</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <depends>
                                 <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
                             </depends>
@@ -399,6 +419,9 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
                         </sort_order>
                         <is_tracking_enabled translate="label comment" module="summa_andreani">
                             <label>Tracking enabled</label>
@@ -527,6 +550,14 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
+                                <source_rates>
+                                    <fieldset>andreaniGlobal</fieldset>
+                                    <value>2</value>
+                                </source_rates>
                             </depends>
                             <comment><![CDATA[This string must match with ''delivery_type'' column of Matrix Rates CSV]]></comment>
                         </shipping_type_for_matrixrates>
@@ -716,6 +747,9 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
                         </sort_order>
                         <is_tracking_enabled translate="label comment" module="summa_andreani">
                             <label>Tracking enabled</label>
@@ -844,6 +878,14 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
+                                <source_rates>
+                                    <fieldset>andreaniGlobal</fieldset>
+                                    <value>2</value>
+                                </source_rates>
                             </depends>
                             <comment><![CDATA[This string must match with ''delivery_type'' column of Matrix Rates CSV]]></comment>
                         </shipping_type_for_matrixrates>
@@ -1057,6 +1099,9 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
                         </sort_order>
                         <is_tracking_enabled translate="label comment" module="summa_andreani">
                             <label>Tracking enabled</label>
@@ -1185,6 +1230,14 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <usable_for_andreani>
+                                    <fieldset>matrixrate</fieldset>
+                                    <value>1</value>
+                                </usable_for_andreani>
+                                <source_rates>
+                                    <fieldset>andreaniGlobal</fieldset>
+                                    <value>2</value>
+                                </source_rates>
                             </depends>
                             <comment><![CDATA[This string must match with ''delivery_type'' column of Matrix Rates CSV]]></comment>
                         </shipping_type_for_matrixrates>
