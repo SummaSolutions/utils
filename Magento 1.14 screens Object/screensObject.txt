@@ -1,0 +1,121 @@
+var bp = {
+    xsmall: 479,
+    small: 639,
+    medium: 767,
+    large: 1023,
+    xlarge: 1279
+};
+var screensObj = function(){
+    this.isMobile = false;
+    this.isTablet = false;
+    this.isDesktop = false;
+    this.isTouch = false;
+    this.xsmall = false;
+    this.small = false;
+    this.medium = false;
+    this.large = false;
+    this.xlarge = false;
+    this.validateScreen = function(){
+        if (Modernizr.mq("screen and (max-width:" + bp.medium + "px)")){
+            this.isMobile = true;
+            this.isTablet = false;
+            this.isDesktop = false;
+
+            // If the W <= bp.xsmall
+            if (Modernizr.mq("screen and (max-width:" + bp.xsmall + "px)")){
+                this.xsmall = true;
+                this.small = false;
+                this.medium = false;
+                this.large = false;
+                this.xlarge = false;
+            }
+            else{
+                // If the W <= bp.small && W > bp.xsmall
+                if (Modernizr.mq("screen and (max-width:" + bp.small + "px)")){
+                    this.xsmall = false;
+                    this.small = true;
+                    this.medium = false;
+                    this.large = false;
+                    this.xlarge = false;
+                }
+                else{
+                    // If the W <= bp.medium && W > bp.small
+                    if (Modernizr.mq("screen and (max-width:" + bp.medium + "px)")){
+                        this.xsmall = false;
+                        this.small = false;
+                        this.medium = true;
+                        this.large = false;
+                        this.xlarge = false;
+                    }
+                }
+            }
+        }
+        else if(Modernizr.mq("screen and (min-width:" + (bp.medium + 1) +  "px) and (max-width:" + (bp.large) +  "px)")){
+            this.isMobile = false;
+            this.isTablet = true;
+            this.isDesktop = false;
+
+            // If the W <= bp.large && W > bp.medium
+            this.xsmall = false;
+            this.small = false;
+            this.medium = false;
+            this.large = true;
+            this.xlarge = false;
+        }
+        else{
+            this.isMobile = false;
+            this.isTablet = false;
+            this.isDesktop = true;
+
+            if (Modernizr.mq("screen and (max-width:" + bp.xlarge + "px)")){
+                // If W <= bp.xlarge && W > bp.large
+                this.xsmall = false;
+                this.small = false;
+                this.medium = false;
+                this.large = true;
+                this.xlarge = false;
+            }
+            else{
+                // If W > bp.xlarge
+                this.xsmall = false;
+                this.small = false;
+                this.medium = false;
+                this.large = false;
+                this.xlarge = true;
+            }
+
+        }
+    };
+    this.launchValidateScreen = function(){
+        var _this = this;
+        jQuery(window).resize(function(){
+            _this.validateScreen();
+        });
+    };
+    this.setIsTouch = function() {
+        var deviceAgent = navigator.userAgent.toLowerCase();
+        var isTouch = Modernizr.touch || (deviceAgent.match(/(iphone|ipod|ipad)/) ||
+            deviceAgent.match(/(android)/)  ||
+            deviceAgent.match(/(iemobile)/) ||
+            deviceAgent.match(/iphone/i) ||
+            deviceAgent.match(/ipad/i) ||
+            deviceAgent.match(/ipod/i) ||
+            deviceAgent.match(/blackberry/i) ||
+            deviceAgent.match(/bada/i));
+        if (isTouch){
+            this.isTouch = true;
+            jQuery('html').addClass('isTouch');
+        }
+        else{
+            this.isTouch = false;
+        }
+        return this.isTouch;
+    };
+    this.init = function(){
+        this.setIsTouch();
+        this.validateScreen();
+        this.launchValidateScreen();
+    };
+    this.init();
+};
+var screens = new screensObj();
