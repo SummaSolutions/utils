@@ -38,6 +38,18 @@ class MilestoneAnalyzer extends TicketsAnalyzer
     private $_completedStates;
     private $_indicators;
 
+    private $from;
+
+    private $to;
+
+    function getFrom(){
+        return $this->from;
+    }
+
+    function getTo(){
+        return $this->to;
+    }
+
     function __construct($key, $secret, $space, $completedStates, $exceptions)
     {
         parent::__construct($key, $secret, $space, $exceptions);

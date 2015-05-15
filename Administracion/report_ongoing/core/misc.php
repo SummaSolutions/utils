@@ -49,6 +49,44 @@ function alterTr($ticket)
     return $output;
 }
 
+function alterTrNew($ticket)
+{
+    $output = '';
+
+    if (isset($ticket['draggingTime']) && $ticket['draggingTime'] != '') {
+        $output = 'bgcolor = "#EDBFAD"';
+
+    } elseif (isset($ticket['fromPreviousPeriod']) && $ticket['fromPreviousPeriod']) {
+        $output = 'bgcolor = "#F2F255"';
+    }
+    else if( isset($ticket['isEpic']) && $ticket['isEpic']){
+        $output = ' bgcolor = "#BEE6CD" title="This is an Epic" ';
+    }
+    else if( isset($ticket['total_estimate']) && $ticket['total_estimate'] == 0){
+        $output = ' bgcolor = "#E6B1BB" title="No estimation" ';
+    }
+    else if(
+        isset($ticket['total_estimate']) &&
+        isset($ticket['total_invested_hours']) &&
+        $ticket['total_invested_hours'] > $ticket['total_estimate']
+    )
+    {
+        $output = ' bgcolor = "#F5F598" title="More than estimated" ';
+    }
+
+    else if(
+        isset($ticket['total_estimate']) &&
+        isset($ticket['total_invested_hours']) &&
+        $ticket['total_invested_hours'] < $ticket['total_estimate']
+    )
+    {
+        $output = ' bgcolor = "#D6F2CE" title="Less than estimated" ';
+    }
+
+
+    return $output;
+}
+
 
 function formatValue($value){
 
