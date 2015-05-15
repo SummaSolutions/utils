@@ -25,6 +25,7 @@ class TicketsAnalyzer {
     protected $_totalEstimatedHours;
     protected $_totalPonderation;
     protected $_ticketsWithNoEstimation;
+    protected $_space;
 
     const EPIC = 3;
 
@@ -85,9 +86,14 @@ class TicketsAnalyzer {
         return $this->_generalWorkRatio;
     }
 
+    public function getSpace(){
+        return $this->_space;
+    }
+
     function __construct($key, $secret, $space, $exceptions)
     {
         $this->_conn = new AssemblaConnector($key, $secret, $space);
+        $this->_space = $space;
         $this->_dataCollector = new DataCollector($key, $secret, $space);
         $this->_exceptionsList = $exceptions;
         $this->_excludedTickets = array();
