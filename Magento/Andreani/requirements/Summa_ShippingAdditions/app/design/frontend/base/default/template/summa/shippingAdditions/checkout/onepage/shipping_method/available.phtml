@@ -1,0 +1,141 @@
+<?php /** @var $this Summa_ShippingAdditions_Block_Checkout_Onepage_Shipping_Method_Available */ ?>
+<?php $_shippingRateGroups = $this->getShippingRates(); ?>
+<?php if (!$_shippingRateGroups): ?>
+    <p><?php echo $this->__('Sorry, no quotes are available for this order at this time.') ?></p>
+<?php else: ?>
+    <dl class="sp-methods">
+    <?php $shippingCodePrice = array(); ?>
+    <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
+        <?php $showAsSelect = $this->showAsSelectShippingMethod($code); ?>
+        <dt><?php echo $this->escapeHtml($this->getCarrierName($code)) ?></dt>
+        <dd>
+            <ul <?php if ($showAsSelect && count($_rates) != 1): ?> class="no-display" <?php endif; ?> >
+            <?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate): ?>
+                <?php $shippingCodePrice[] = "'".$_rate->getCode()."':".(float)$_rate->getPrice(); ?>
+                <li>
+                   <?php if ($_rate->getErrorMessage()): ?>
+                    <ul class="messages"><li class="error-msg"><ul><li><?php echo $this->escapeHtml($_rate->getErrorMessage()) ?></li></ul></li></ul>
+                   <?php else: ?>
+                        <?php if ($_sole) : ?>
+                        <span class="no-display"><input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>" checked="checked" /></span>
+                        <?php else: ?>
+                        <input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>"<?php if($_rate->getCode()===$this->getAddressShippingMethod()) echo ' checked="checked"' ?> class="radio"/>
+
+                        <?php if ($_rate->getCode() === $this->getAddressShippingMethod()): ?>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                                lastPrice = <?php echo (float)$_rate->getPrice(); ?>;
+                            //]]>
+                        </script>
+                        <?php endif; ?>
+
+                        <?php endif; ?>
+                        <label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
+                        <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                        <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+                        <?php echo $_excl; ?>
+                        <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                            (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                        <?php endif; ?>
+                        </label>
+                   <?php endif ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+            <?php if ($showAsSelect && count($_rates) != 1): ?>
+                <select name="select_shipping_method" id="select_shipping_method_<?php echo $code ?>" class="select-shipping-method-<?php echo $code ?>">
+                    <option value=""><?php echo Mage::helper('summa_shippingAdditions')->__('Select one method.') ?></option>
+                    <?php foreach ($_rates as $_rate): ?>
+                        <option value="s_method_<?php echo $_rate->getCode() ?>" <?php if($_rate->getCode()===$this->getAddressShippingMethod()) echo ' selected' ?>>
+                            <?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
+                            <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                            <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+                            <?php echo $_excl; ?>
+                            <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                            <?php endif; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <label for="select_shipping_method_<?php echo $code ?>" class="no-display"></label>
+            <?php endif; ?>
+            <?php if ($html = $this->getShippingMethodFormHtml($code)): // THIS CONDITION ADDED TO IMPROVE SHIPPING BLOCK ADDITION ?>
+                <div class="block-shipping-method-<?php echo $code ?>">
+                    <?php echo $html; ?>
+                </div>
+            <?php endif; ?>
+        </dd>
+    <?php endforeach; ?>
+    </dl>
+<script type="text/javascript">
+//<![CDATA[
+    <?php if (!empty($shippingCodePrice)): ?>
+        var shippingCodePrice = {<?php echo implode(',',$shippingCodePrice); ?>};
+    <?php endif; ?>
+
+    $$('input[type="radio"][name="shipping_method"]').each(function(el){
+        Event.observe(el, 'click', function(){
+            // Clean all selects to avoid confusion
+            $$('select[name="select_shipping_method"]').each(function(select){
+                if (el != $(select.options[select.selectedIndex].value)) {
+                    // Allow select first Item
+                    select.options[0].disabled = false;
+                    select.selectedIndex = 0;
+                }
+            });
+            if (el.checked == true) {
+                var getShippingCode = el.getValue();
+                <?php if (!empty($shippingCodePrice)): ?>
+                var newPrice = shippingCodePrice[getShippingCode];
+                if (!lastPrice) {
+                    lastPrice = newPrice;
+                    quoteBaseGrandTotal += newPrice;
+                }
+                if (newPrice != lastPrice) {
+                    quoteBaseGrandTotal += (newPrice-lastPrice);
+                    lastPrice = newPrice;
+                }
+                <?php endif; ?>
+                checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
+                return false;
+            }
+        });
+    });
+
+    $$('select[name="select_shipping_method"]').each(function(el){
+        Event.observe(el, 'change', function(){
+            // Avoid select first Item
+            el.options[0].disabled = true;
+            var element = $(el.options[el.selectedIndex].value);
+            //Click for Prototype without add additional JS
+            var eventName = 'click',
+                oEvent;
+            if (document.createEvent) {
+                oEvent = document.createEvent('MouseEvents');
+                oEvent.initMouseEvent(eventName, true, true, document.defaultView,
+                    0, 0, 0, 0, 0, false, false, false, false, 0, element);
+                element.dispatchEvent(oEvent);
+            }
+            else {
+                var defaultOptions = {
+                    pointerX: 0,
+                    pointerY: 0,
+                    button: 0,
+                    ctrlKey: false,
+                    altKey: false,
+                    shiftKey: false,
+                    metaKey: false,
+                    bubbles: true,
+                    cancelable: true
+                };
+                var options = Object.extend(defaultOptions, arguments[2] || { });
+                options.clientX = options.pointerX;
+                options.clientY = options.pointerY;
+                oEvent = Object.extend(document.createEventObject(), options);
+                element.fireEvent('on' + eventName, oEvent);
+            }
+        });
+    });
+//]]>
+</script>
+<?php endif; ?>

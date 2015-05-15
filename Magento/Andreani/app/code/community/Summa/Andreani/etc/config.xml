@@ -332,6 +332,7 @@
                 <password>passw0rd</password>
                 <model>summa_andreani/shipping_carrier_standard</model>
                 <contract>AND00EST</contract>
+                <additional_description>Cap. Fed., GBA, region capital and main cities: 48-72 business hours. Rest of country: 72-144 business hours.</additional_description>
                 <title>Andreani Standard</title>
                 <name>Shipping Standard</name>
                 <sort_order>10</sort_order>
@@ -342,6 +343,7 @@
                 <show_only_free>1</show_only_free>
                 <include_free_ship_items>0</include_free_ship_items>
                 <showmethod>0</showmethod>
+                <show_as_select>0</show_as_select>
             </andreaniStandard>
             <andreaniStorepickup>
                 <active>0</active>
@@ -354,6 +356,7 @@
                 <password>passw0rd</password>
                 <model>summa_andreani/shipping_carrier_storepickup</model>
                 <contract>AND00SUC</contract>
+                <additional_description>Cap. Fed., GBA, region capital and main cities: 48-72 business hours. Rest of country: 72-144 business hours.</additional_description>
                 <title>Andreani StorePickup</title>
                 <name>Shipping StorePickup</name>
                 <sort_order>12</sort_order>
@@ -368,6 +371,7 @@
                 <show_only_free>1</show_only_free>
                 <include_free_ship_items>0</include_free_ship_items>
                 <showmethod>0</showmethod>
+                <show_as_select>1</show_as_select>
             </andreaniStorepickup>
             <andreaniUrgent>
                 <active>0</active>
@@ -380,6 +384,7 @@
                 <password>passw0rd</password>
                 <model>summa_andreani/shipping_carrier_urgent</model>
                 <contract>AND00URG</contract>
+                <additional_description>Cap. Fed., GBA, region capital and main cities: 48-72 business hours. Rest of country: 72-144 business hours.</additional_description>
                 <title>Andreani Urgent</title>
                 <name>Shipping Urgent</name>
                 <sort_order>11</sort_order>
@@ -390,6 +395,7 @@
                 <show_only_free>1</show_only_free>
                 <include_free_ship_items>0</include_free_ship_items>
                 <showmethod>0</showmethod>
+                <show_as_select>0</show_as_select>
             </andreaniUrgent>
         </carriers>
         <sales>

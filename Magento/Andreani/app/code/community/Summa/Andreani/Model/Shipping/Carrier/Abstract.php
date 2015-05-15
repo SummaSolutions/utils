@@ -721,9 +721,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             /** @var $method Mage_Shipping_Model_Rate_Result_Method */
             $method = Mage::getModel('shipping/rate_result_method');
             $method->setCarrier($this->_code);
-            $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+            $method->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
             $method->setMethod($this->_freeShipping_method);
-            $method->setMethodTitle($this->_getHelper()->getFreeMethodText($this->getServiceType()));
+            $method->setMethodTitle($this->_getHelper()->__($this->_getHelper()->getFreeMethodText($this->getServiceType())));
             $method->setPrice('0.00');
             $result->append($method);
 
@@ -789,11 +789,11 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                     $method = Mage::getModel('shipping/rate_result_method');
 
                     $method->setCarrier($this->_code);
-                    $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+                    $method->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
 
                     $method->setMethod($this->_code);
 
-                    $methodTitle = $this->_getHelper()->getConfigData('name', $this->getServiceType());
+                    $methodTitle = $this->_getHelper()->__($this->_getHelper()->getConfigData('name', $this->getServiceType()));
 
                     $method->setMethodTitle($methodTitle);
 
@@ -805,7 +805,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 } elseif($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
                     $error = Mage::getModel('shipping/rate_result_error');
                     $error->setCarrier($this->_code);
-                    $error->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+                    $error->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
                     $error->setErrorMessage($this->_getHelper()->__('Andreani is not available. %s',$rate->getErrors()));
                     $result = $error;
                 }
@@ -824,7 +824,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             if($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
                 $error = Mage::getModel('shipping/rate_result_error');
                 $error->setCarrier($this->_code);
-                $error->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+                $error->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
                 $error->setErrorMessage($this->_getHelper()->__('Andreani is not available for this request.'));
                 $result = $error;
             }
@@ -892,9 +892,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             /** @var $method Mage_Shipping_Model_Rate_Result_Method */
             $method = Mage::getModel('shipping/rate_result_method');
             $method->setCarrier($this->_code);
-            $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+            $method->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
             $method->setMethod($this->_freeShipping_method);
-            $method->setMethodTitle($this->_getHelper()->getFreeMethodText($this->getServiceType()));
+            $method->setMethodTitle($this->_getHelper()->__($this->_getHelper()->getFreeMethodText($this->getServiceType())));
             $method->setPrice('0.00');
             $result->append($method);
 
@@ -923,11 +923,11 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $method = Mage::getModel('shipping/rate_result_method');
 
                 $method->setCarrier($this->_code);
-                $method->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+                $method->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
 
                 $method->setMethod($this->_code);
 
-                $method->setMethodTitle($this->_getHelper()->getConfigData('name', $this->getServiceType()));
+                $method->setMethodTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('name', $this->getServiceType())));
 
                 $method->setCost($rate['cost']);
                 $method->setDeliveryType($rate['delivery_type']);
@@ -951,7 +951,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         if (!$result->getAllRates() && $this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
             $error = Mage::getModel('shipping/rate_result_error');
             $error->setCarrier($this->_code);
-            $error->setCarrierTitle($this->_getHelper()->getConfigData('title', $this->getServiceType()));
+            $error->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
             $error->setErrorMessage($this->_getHelper()->__('Andreani is not available for this request.'));
             $result = $error;
         }

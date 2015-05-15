@@ -124,6 +124,9 @@ Listo:
 - Pasar el seteo de DNI y tipo de DNI a un observer de forma que sirva de referencia.
 - Traducciones al español completas, validar que el codigo este todo en ingles.
 - Validaciones al alto, ancho y largo para no permitir mayores a 90cm
+- Añadir al frontend algun string advirtiendo al customer de los tiempos de demora de los envios "Capital, GBA, capitales de provincias y principales ciudades: 48-72 hs hábiles. Resto del país: 72-144 hs hábiles."
+- Implementar un modulo que proporcione la capacidad de añadir un bloque adicional para los shipping methods de la misma forma que lo hace Magento nativamente para los Payment Methods
+- Implementar un modulo que proporcione la capacidad de mostrar como select los methods de un shipping carrier
 
 TODO:
 =================

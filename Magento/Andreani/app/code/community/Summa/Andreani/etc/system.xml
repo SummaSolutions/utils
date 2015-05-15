@@ -541,6 +541,29 @@
                             </depends>
                             <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                         </contract>
+                        <additional_description translate="label comment" module="summa_andreani">
+                            <label>Additional Description</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </additional_description>
+                        <show_as_select translate="label comment" module="summa_andreani">
+                            <label>Show as a Select</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>24</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </show_as_select>
                         <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
                             <label>Shipping Type for Matrix Rates</label>
                             <frontend_type>text</frontend_type>
@@ -869,6 +892,29 @@
                             </depends>
                             <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                         </contract>
+                        <additional_description translate="label comment" module="summa_andreani">
+                            <label>Additional Description</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </additional_description>
+                        <show_as_select translate="label comment" module="summa_andreani">
+                            <label>Show as a Select</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>24</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </show_as_select>
                         <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
                             <label>Shipping Type for Matrix Rates</label>
                             <frontend_type>text</frontend_type>
@@ -1221,6 +1267,29 @@
                             </depends>
                             <comment><![CDATA[The default contract is only for test purposes, for production purposes use your credentials]]></comment>
                         </contract>
+                        <additional_description translate="label comment" module="summa_andreani">
+                            <label>Additional Description</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </additional_description>
+                        <show_as_select translate="label comment" module="summa_andreani">
+                            <label>Show as a Select</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>24</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </show_as_select>
                         <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
                             <label>Shipping Type for Matrix Rates</label>
                             <frontend_type>text</frontend_type>

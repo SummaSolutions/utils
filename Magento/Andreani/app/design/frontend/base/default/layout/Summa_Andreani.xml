@@ -47,4 +47,20 @@
             <block type="summa_andreani/sales_order_total" name="summa_andreani.sales.order.total" />
         </reference>
     </sales_email_order_creditmemo_items>
+
+    <!-- SUPPORT FOR SUMMA SHIPPING ADDITIONS -->
+    <checkout_cart_index>
+        <reference name="checkout.cart.shipping">
+            <block type="summa_andreani/shipping_method_standard" name="shipment.method.andreaniStandard" template="summa/andreani/shippingMethod.phtml" as="shipment.method.andreaniStandard" />
+            <block type="summa_andreani/shipping_method_storepickup" name="shipment.method.andreaniStorepickup" template="summa/andreani/shippingMethod.phtml" as="shipment.method.andreaniStorepickup" />
+            <block type="summa_andreani/shipping_method_urgent" name="shipment.method.andreaniUrgent" template="summa/andreani/shippingMethod.phtml" as="shipment.method.andreaniUrgent" />
+        </reference>
+    </checkout_cart_index>
+    <checkout_onepage_shippingmethod>
+        <reference name="root">
+            <block type="summa_andreani/shipping_method_standard" name="shipment.method.andreaniStandard" template="summa/andreani/shippingMethod.phtml" as="shipment.method.andreaniStandard" />
+            <block type="summa_andreani/shipping_method_storepickup" name="shipment.method.andreaniStorepickup" template="summa/andreani/shippingMethod.phtml" as="shipment.method.andreaniStorepickup" />
+            <block type="summa_andreani/shipping_method_urgent" name="shipment.method.andreaniUrgent" template="summa/andreani/shippingMethod.phtml" as="shipment.method.andreaniUrgent" />
+        </reference>
+    </checkout_onepage_shippingmethod>
 </layout>

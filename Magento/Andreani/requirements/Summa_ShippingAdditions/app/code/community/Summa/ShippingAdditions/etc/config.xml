@@ -1,0 +1,37 @@
+<config>
+    <modules>
+        <Summa_ShippingAdditions>
+            <version>1.0.0</version>
+        </Summa_ShippingAdditions>
+    </modules>
+    <global>
+        <blocks>
+            <summa_shippingAdditions>
+                <class>Summa_ShippingAdditions_Block</class>
+            </summa_shippingAdditions>
+        </blocks>
+        <helpers>
+            <summa_shippingAdditions>
+                <class>Summa_ShippingAdditions_Helper</class>
+            </summa_shippingAdditions>
+        </helpers>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <summa_shippingAdditions>
+                    <file>summa/shippingAdditions.xml</file>
+                </summa_shippingAdditions>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <summa_shippingAdditions>
+                    <files>
+                        <default>Summa_ShippingAdditions.csv</default>
+                    </files>
+                </summa_shippingAdditions>
+            </modules>
+        </translate>
+    </frontend>
+</config>
