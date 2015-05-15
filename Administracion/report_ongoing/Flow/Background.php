@@ -28,6 +28,7 @@ class Background
     function __construct($file){
         $serialized = file_get_contents('../parameters/' . $file);
         $arrParams = unserialize($serialized);
+        unlink('../parameters/' . $file);
         $this->key = $arrParams['key'];
         $this->secret = $arrParams['secret'];
         $this->project = $arrParams['project'];
@@ -59,9 +60,9 @@ class Background
             }
         }
 
-        if( !isset($this->plan)){
+        if( !isset($this->plan) || empty($this->plan) ){
             echo "You have selected no plan level at all. Nothing to do!";
-            file_put_contents ( '../parameters/' . $this->file, false );
+            file_put_contents ( '../parameters/' . $this->file, '[ERROR] No hay plan' );
             die;
         }
         else{
@@ -69,7 +70,6 @@ class Background
             if( isset($this->filterByTags) && $this->filterByTags == "1"){
                 $analyzer->setTags($this->tags);
             }
-
 
             $analyzer->analyzePeriod($this->datefrom, $this->dateTo, $this->plan, $users);
             file_put_contents ( '../parameters/' . $this->file, serialize($analyzer) );

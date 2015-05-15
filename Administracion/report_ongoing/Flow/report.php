@@ -6,11 +6,13 @@
     $params = serialize($_POST);
     $paramFile = time() . '-params.txt';
     file_put_contents ( '../parameters/' . $paramFile , $params );
-    $command = 'nohup nice -n 10 php ../core/Background.php ' . $paramFile . ' > /dev/null &';
+    $command = 'nohup nice -n 10 php Background.php ' . $paramFile . ' > /dev/null &';
     $pid = shell_exec(sprintf('%s ', $command));
 ?>
 
 <head>
+    <title>Flow Based Project - Indicator report</title>
+    <meta charset="utf-8">
     <script src='../js/jquery-1.10.2.min.js' ></script>
     <script>
         ready = false;
@@ -24,8 +26,8 @@
                 data = new Object();
                 data.file = '<?php echo $fileName; ?>';
 
-                ajaxCall("../core/check.php",data, function(response){
-                    if (response != 'false'){
+                ajaxCall("check.php",data, function(response){
+                    if (response != 'false') {
                         ready = true;
                         //alert(response.success);
                         document.open();
@@ -33,13 +35,13 @@
                         document.close();
                         window.clearInterval(int);
                     }else{
-                        document.open();
+                        /*document.open();
                         document.write(intent.toString());
-                        document.close();
+                        document.close();*/
 
                     }
                 });
-            }, 1000);//setTimeout(function() {
+            }, 60000);//setTimeout(function() {
 
 
 
@@ -70,7 +72,7 @@
     </script>
 </head>
 <body>
-    <h1>ESPERANDO POR RESULTADOS</h1>
+    <h1>Calculando resultados, espere por favor</h1>
 
 </body>
 </html>
