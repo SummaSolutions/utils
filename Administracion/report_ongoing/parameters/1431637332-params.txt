@@ -1,1 +1,0 @@
-a:11:{s:3:"key";s:20:"cfbc848c5e2816ac3381";s:6:"secret";s:40:"8f21a57b9b86dedeafdc22f34d90d5dff93130f4";s:7:"project";s:10:"stylewatch";s:8:"dateFrom";s:10:"2015-05-01";s:6:"dateTo";s:10:"2015-05-31";s:10:"exceptions";s:0:"";s:18:"skipUserValidation";s:0:"";s:4:"plan";a:1:{i:0;s:1:"2";}s:11:"filterByTag";s:1:"1";s:4:"tags";s:4:"flow";s:4:"file";s:22:"1431637332-results.txt";}

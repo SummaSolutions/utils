@@ -29,10 +29,10 @@
 
 
 <h1>Ongoing project Metrics</h1>
-<h2> NOMBRE DE PROYECTO </h2>
+<h2> <?php echo $analyzer->getSpace(); ?> </h2>
 <br>
 
-<h2>range: DATEFROM to DATETO </h2>
+<h2>range: <?php echo $analyzer->getFrom(); ?> to <?php echo $analyzer->getTo(); ?> </h2>
 <br>
 <br>
 <h3>Completed Tickets</h3>

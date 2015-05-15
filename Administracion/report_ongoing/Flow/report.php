@@ -24,7 +24,7 @@
                 data = new Object();
                 data.file = '<?php echo $fileName; ?>';
 
-                ajaxCall("../core/check",data, function(response){
+                ajaxCall("../core/check.php",data, function(response){
                     if (response != 'false'){
                         ready = true;
                         //alert(response.success);

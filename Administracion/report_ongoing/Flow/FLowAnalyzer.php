@@ -15,6 +15,10 @@ class FLowAnalyzer extends TicketsAnalyzer
 
     private $_tags = null;
 
+    private $from;
+
+    private $to;
+
     function setTags($tags)
     {
 
@@ -25,6 +29,13 @@ class FLowAnalyzer extends TicketsAnalyzer
         }
     }
 
+    function getFrom(){
+        return $this->from;
+    }
+
+    function getTo(){
+        return $this->to;
+    }
 
     function getPerceivedDeviation()
     {
@@ -55,7 +66,8 @@ class FLowAnalyzer extends TicketsAnalyzer
     function analyzePeriod($from, $to, $planLevels, $users)
     {
         date_default_timezone_set('America/Argentina/Buenos_Aires');
-
+        $this->from = $from;
+        $this->to = $to;
         $this->_users = $users;
         $this->filterTickets($from, $to, $planLevels);
         $this->calculateTicketResults();

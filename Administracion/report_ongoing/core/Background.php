@@ -28,7 +28,6 @@ class Background
     function __construct($file){
         $serialized = file_get_contents('../parameters/' . $file);
         $arrParams = unserialize($serialized);
-        var_dump($arrParams);
         $this->key = $arrParams['key'];
         $this->secret = $arrParams['secret'];
         $this->project = $arrParams['project'];
@@ -41,8 +40,6 @@ class Background
         $this->datefrom = $arrParams['dateFrom'];
         $this->dateTo = $arrParams['dateTo'];
         $this->file = $arrParams['file'];
-        file_put_contents ( 'logueo.log' , 'PLAN: '. print_r($this->plan, true). PHP_EOL,FILE_APPEND );
-        file_put_contents ( 'logueo.log' , 'KEY: '. $this->key. PHP_EOL,FILE_APPEND );
     }
 
     public function execute(){
@@ -52,7 +49,6 @@ class Background
             $exceptions = null;
         }
 
-        file_put_contents ( 'logueo.log' , 'Empezamos a ejecutar ' . PHP_EOL,FILE_APPEND );
         $analyzer = new FLowAnalyzer($this->key, $this->secret, $this->project, $exceptions);
 
         $users = null;

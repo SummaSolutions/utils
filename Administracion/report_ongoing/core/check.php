@@ -1,5 +1,6 @@
 <?php
 require_once("../Flow/FLowAnalyzer.php");
+require_once("../core/misc.php");
 $fileName = $_POST['file'];
 //$result['error'] = 'false';
 //$result['success'] = 'Satisfactorio';
