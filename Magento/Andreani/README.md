@@ -26,7 +26,12 @@ Instalacion:
 
 Se instala igual que cualquier módulo de Magento.
 
-Para integrarlo con Matrixrate Instalar tambien el Modulito que esta dentro de requirements/MatrixRates
+Para integrarlo con Matrixrate Instalar tambien el Modulito que esta dentro de requirements/MatrixRates y luego descomentar las lineas 10 y 11 de 
+app/etc/modules/Summa_Andreani.xml
+
+Para poder visualizar la descripcion adicional de cada metodo de envio y permitir que se muestren como Selects en vez de radio buttons se debe
+instalar el modulo Summa_ShippingAdditions que esta dentro de requirements/Summa_ShippingAdditions y luego descomentar la linea 9 de 
+app/etc/modules/Summa_Andreani.xml
 
 Por defecto el modulo no instala atributos a los productos para el calculo de volumen y peso aforado requerido por andreani, para instalarlos:
 

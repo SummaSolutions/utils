@@ -550,6 +550,10 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <installed>
+                                    <fieldset>summaShippingAdditional</fieldset>
+                                    <value>1</value>
+                                </installed>
                             </depends>
                         </additional_description>
                         <show_as_select translate="label comment" module="summa_andreani">
@@ -562,6 +566,10 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <installed>
+                                    <fieldset>summaShippingAdditional</fieldset>
+                                    <value>1</value>
+                                </installed>
                             </depends>
                         </show_as_select>
                         <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
@@ -901,6 +909,10 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <installed>
+                                    <fieldset>summaShippingAdditional</fieldset>
+                                    <value>1</value>
+                                </installed>
                             </depends>
                         </additional_description>
                         <show_as_select translate="label comment" module="summa_andreani">
@@ -913,6 +925,10 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <installed>
+                                    <fieldset>summaShippingAdditional</fieldset>
+                                    <value>1</value>
+                                </installed>
                             </depends>
                         </show_as_select>
                         <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
@@ -1276,6 +1292,10 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <installed>
+                                    <fieldset>summaShippingAdditional</fieldset>
+                                    <value>1</value>
+                                </installed>
                             </depends>
                         </additional_description>
                         <show_as_select translate="label comment" module="summa_andreani">
@@ -1288,6 +1308,10 @@
                             <show_in_store>1</show_in_store>
                             <depends>
                                 <active>1</active>
+                                <installed>
+                                    <fieldset>summaShippingAdditional</fieldset>
+                                    <value>1</value>
+                                </installed>
                             </depends>
                         </show_as_select>
                         <shipping_type_for_matrixrates translate="label comment" module="summa_andreani">
