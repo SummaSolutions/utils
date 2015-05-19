@@ -66,10 +66,8 @@ class Background
             die;
         }
         else{
-            file_put_contents ( '../parameters/logueo.log' , 'Estamos aca ' . $this->filterByTags .  PHP_EOL, FILE_APPEND );
 
             if( isset($this->filterByTags) && $this->filterByTags == "1"){
-                file_put_contents ( '../parameters/logueo.log' , $this->tags . PHP_EOL , FILE_APPEND);
                 $analyzer->setTags($this->tags);
             }
 
