@@ -1,32 +1,30 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: abressan
- * Date: 9/8/13
- * Time: 7:53 PM
- */
-?>
+<?php include '../header.php'; ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Ongoing projects - Indicators report (step 1)</title>
-    <meta charset="utf-8">
-</head>
+    <form action="step2.php" method="post" role="form">
+        <fieldset>
+            <legend>Specify your Assembla credentials</legend>
 
-<body>
-<h1>Specify your Assembla credentials</h1>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="key">Assembla Key</label>
+                    <input type="text" id="key" name="key" class="form-control" value="cfbc848c5e2816ac3381" placeholder="Assembla Key" required="required">
+                </div>
 
-<form action="step2.php" method="post">
-    Assembla Key: <input type="text" name="key" value="cfbc848c5e2816ac3381" size="60"><br>
-    Assembla Secret: <input type="text" name="secret" value="8f21a57b9b86dedeafdc22f34d90d5dff93130f4" size="60"><br>
-    Assembla Project: <input type="text" name="project" value="summa-qbc" size="60"><br><br>
-    <INPUT type="submit" value="Next"> <INPUT type="reset">
-</form>
+                <div class="form-group col-md-4">
+                    <label for="secret">Assembla Secret</label>
+                    <input type="text" id="secret" name="secret" class="form-control" value="8f21a57b9b86dedeafdc22f34d90d5dff93130f4" placeholder="Assembla Secret" required="required">
+                </div>
 
-</body>
-
-</html>
+                <div class="form-group col-md-4">
+                    <label for="project">Assembla Project</label>
+                    <input type="text" id="project" name="project" class="form-control" value="" placeholder="Assembla Project" required="required">
+                </div>
+            </div>
 
 
+        </fieldset>
 
+        <button type="submit" class="btn btn-lg btn-primary">Next</button>
+    </form>
+
+<?php include '../footer.php'; ?>

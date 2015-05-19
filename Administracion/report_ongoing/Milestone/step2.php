@@ -1,3 +1,4 @@
+<?php include '../header.php'; ?>
 <?php
 /**
  * Created by PhpStorm.
@@ -16,60 +17,64 @@ $milestones = json_decode($conn->getMilestones(0, 100));
 
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Milestone Based projects - Indicators report (step 2)</title>
-    <meta charset="utf-8">
-</head>
+    <form action="report.php" method="post" role="form">
+        <input type="hidden" name="key" value="<?php echo $_POST['key']; ?>">
+        <input type="hidden" name="secret" value="<?php echo $_POST['secret']; ?>">
+        <input type="hidden" name="project" value="<?php echo $_POST['project']; ?>">
 
-<body>
+        <div class="row">
+            <fieldset class="col-md-4">
+                <legend>Milestone</legend>
 
+                <div class="form-group">
+                    <select class="form-control" id="milestone" name="milestone">
+                        <?php foreach ($milestones as $milestone) : ?>
+                            <option value="<?php echo $milestone->id; ?>"><?php echo $milestone->title; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-<h1>Specify report details</h1>
+                <legend>Plan Levels to consider</legend>
 
-<form action="report.php" method="post">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="plan[]" value="0">No Plan Level</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="plan[]" value="1">Subtask</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="plan[]" value="2" checked>Story</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="plan[]" value="3">Epic</label>
+                    </div>
+                </div>
+            </fieldset>
 
-    <input type="hidden" name="key" value="<?php echo $_POST['key']; ?>">
-    <input type="hidden" name="secret" value="<?php echo $_POST['secret']; ?>">
-    <input type="hidden" name="project" value="<?php echo $_POST['project']; ?>">
+            <fieldset class="col-md-4">
+                <legend>Specify the "delivered" statuses</legend>
 
-    Select the milestone:
-    <select name="milestone">
-        <?php
-        foreach ($milestones as $milestone) {
-            echo '<option value="' . $milestone->id . '">' . $milestone->title . '</option>';
-        }
-        ?>
-    </select>
+                <div class="form-group">
+                    <?php foreach ($statuses as $status) : ?>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="status[]" value="<?php echo $status->name; ?>"><?php echo $status->name; ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </fieldset>
 
-    <fieldset>
-        <legend>Plan Levels to consider</legend>
-        <input type="checkbox"  name="plan[]" value="0">No Plan Level<br>
-        <input type="checkbox"  name="plan[]" value="1">Subtask<br>
-        <input type="checkbox" checked name="plan[]" value="2">Story<br>
-        <input type="checkbox"  name="plan[]" value="3">Epic<br>
-    </fieldset>
+            <fieldset class="col-md-4">
+                <legend>Exceptions</legend>
 
-    <fieldset>
-        <legend>Specify the "delivered" statuses</legend>
-        <?php
-        foreach ($statuses as $status) {
-            echo '<input type ="checkbox" name="status[]" value="' . $status->name . '">' . $status->name . '<br>';
-        }
-        ?>
-    </fieldset>
+                <div class="form-group">
+                    <label for="exceptions">Specify the tickets that should be ignored, if any (separate them with commas)</label>
+                    <textarea name="exceptions" id="exceptions" class="form-control" rows="4" cols="50"></textarea>
+                </div>
+            </fieldset>
+        </div>
 
-    <fieldset>
-        <legend>Exceptions</legend>
-        Specify the tickets that should be ignored, if any (separate them with commas). <br>
-        <textarea name="exceptions" rows="4" cols="50"></textarea>
-    </fieldset>
+        <button type="submit" class="btn btn-lg btn-primary">Next</button>
+    </form>
 
-
-    <INPUT type="submit" value="Next"> <INPUT type="reset">
-</form>
-
-</body>
-
-</html>
+<?php include '../footer.php'; ?>

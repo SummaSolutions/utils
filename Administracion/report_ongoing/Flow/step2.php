@@ -1,3 +1,4 @@
+<?php include '../header.php'; ?>
 <?php
 /**
  * Created by PhpStorm.
@@ -13,17 +14,6 @@ $users = json_decode($conn->getSpaceMembers());
 
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Flow Based projects - Indicators report - Step 2</title>
-    <meta charset="utf-8">
-</head>
-
-<body>
-
-<h1>Specify the team members to consider</h1>
-
 <form action="report.php" method="post">
 
     <input type="hidden" name="key" value="<?php echo $_POST['key']; ?>">
@@ -33,36 +23,86 @@ $users = json_decode($conn->getSpaceMembers());
     <input type="hidden" name="dateTo" value="<?php echo $_POST['dateTo']; ?>">
     <input type="hidden" name="exceptions" value="<?php echo $_POST['exceptions']; ?>">
 
-    <input type="checkbox" name="skipUserValidation" value="" checked>Skip Users validation<br><br>
+<!--    <input type="checkbox" name="skipUserValidation" value="" checked>Skip Users validation<br><br>-->
+<!---->
+<!--    <fieldset>-->
+<!--        <legend>Team Members</legend>-->
+<!--        --><?php
+//        foreach ($users as $user)
+//        {
+//            echo '<input type ="checkbox" name="users[]" value="' . $user->id . '">' . $user->name . '<br>';
+//        }
+//        ?>
+<!--    </fieldset>-->
+<!---->
+<!--    <fieldset>-->
+<!--        <legend>Plan Levels to consider</legend>-->
+<!--        <input type="checkbox"  name="plan[]" value="0">No Plan Level<br>-->
+<!--        <input type="checkbox"  name="plan[]" value="1">Subtask<br>-->
+<!--        <input type="checkbox" checked name="plan[]" value="2">Story<br>-->
+<!--        <input type="checkbox"  name="plan[]" value="3">Epic<br>-->
+<!--    </fieldset>-->
+<!---->
+<!--    <fieldset>-->
+<!--        <legend>Tags</legend>-->
+<!--        <input type="checkbox"  name="filterByTag" value="1">Filter by Tags<br>-->
+<!--        Tags to use: <input type="text" name="tags">-->
+<!--    </fieldset>-->
 
-    <fieldset>
-        <legend>Team Members</legend>
-        <?php
-        foreach ($users as $user)
-        {
-            echo '<input type ="checkbox" name="users[]" value="' . $user->id . '">' . $user->name . '<br>';
-        }
-        ?>
-    </fieldset>
 
-    <fieldset>
-        <legend>Plan Levels to consider</legend>
-        <input type="checkbox"  name="plan[]" value="0">No Plan Level<br>
-        <input type="checkbox"  name="plan[]" value="1">Subtask<br>
-        <input type="checkbox" checked name="plan[]" value="2">Story<br>
-        <input type="checkbox"  name="plan[]" value="3">Epic<br>
-    </fieldset>
+    <div class="row">
+        <fieldset class="col-md-4">
+            <legend>Team members to consider</legend>
 
-    <fieldset>
-        <legend>Tags</legend>
-        <input type="checkbox"  name="filterByTag" value="1">Filter by Tags<br>
-        Tags to use: <input type="text" name="tags">
-    </fieldset>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input type="checkbox" name="skipUserValidation" value="">Skip Users validation</label>
+                </div>
+            </div>
 
+            <div class="form-group">
+                <?php foreach ($users as $user) : ?>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="users[]" value="<?php echo $user->id; ?>"><?php echo $user->name; ?></label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </fieldset>
 
-    <INPUT type="submit" value="Next">
+        <fieldset class="col-md-4">
+            <legend>Plan Levels to consider</legend>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input type="checkbox" name="plan[]" value="0">No Plan Level</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="plan[]" value="1">Subtask</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="plan[]" value="2" checked>Story</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="plan[]" value="3">Epic</label>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="col-md-4">
+            <legend>Tags</legend>
+
+            <div class="checkbox">
+                <label><input type="checkbox" name="filterByTag" value="1">Filter by Tags</label>
+            </div>
+
+            <div class="form-group">
+                <label for="tags">Tags to use</label>
+                <input type="text" id="tags" name="tags" class="form-control" value="" placeholder="Tags">
+            </div>
+        </fieldset>
+    </div>
+
+<!--    <INPUT type="submit" value="Next">-->
+    <button type="submit" class="btn btn-lg btn-primary">Next</button>
 </form>
-
-</body>
-
-</html>
+<?php include '../footer.php'; ?>
