@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html>
+<?php include '../header.php'; ?>
 <?php
     $fileName = time() . '-results.txt';
     $_POST['file'] = $fileName;
@@ -10,16 +9,13 @@
     $pid = shell_exec(sprintf('%s ', $command));
 ?>
 
-<head>
-    <title>Flow Based Project - Indicator report</title>
-    <meta charset="utf-8">
-    <script src='../js/jquery-1.10.2.min.js' ></script>
+
+<!--    <script src='../js/jquery-1.10.2.min.js' ></script>-->
     <script>
         ready = false;
         jQuery.noConflict();
         var int = 0;
         jQuery(document).ready(function(){
-            //while (ready == false){
             intent = 0;
             int = self.setInterval(function(){
                 intent = intent + 1;
@@ -29,24 +25,16 @@
                 ajaxCall("check.php",data, function(response){
                     if (response != 'false') {
                         ready = true;
-                        //alert(response.success);
                         document.open();
                         document.write(response);
                         document.close();
                         window.clearInterval(int);
                     }else{
-                        /*document.open();
-                        document.write(intent.toString());
-                        document.close();*/
+
 
                     }
                 });
-            }, 60000);//setTimeout(function() {
-
-
-
-            //}
-
+            }, 60000);
         });
 
         function ajaxCall(ruta,objParametros,callback){
@@ -70,9 +58,10 @@
             });
         }
     </script>
-</head>
-<body>
-    <h1>Calculando resultados, espere por favor</h1>
 
-</body>
-</html>
+    <div style="width:100%; margin:0 auto; text-align: center">
+        <h1>Calculando resultados, espere por favor</h1>
+        <img src="https://cms.americanexpress.com/Internet/MYCA/StaticFiles/images/istatement/spinwheel-140.gif" alt="ajax" />
+    </div>
+
+<?php include '../footer.php'; ?>

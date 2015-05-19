@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html>
-
+<?php include '../header.php'; ?>
 <?php
 $fileName = time() . '-results.txt';
 $_POST['file'] = $fileName;
@@ -11,8 +9,8 @@ $command = 'nohup nice -n 10 php Background.php ' . $paramFile . ' > /dev/null &
 $pid = shell_exec(sprintf('%s ', $command));
 ?>
 
-<head>
-    <script src='../js/jquery-1.10.2.min.js' ></script>
+
+<!--    <script src='../js/jquery-1.10.2.min.js' ></script>-->
     <script>
         ready = false;
         jQuery.noConflict();
@@ -28,23 +26,16 @@ $pid = shell_exec(sprintf('%s ', $command));
                 ajaxCall("check.php",data, function(response){
                     if (response != 'false'){
                         ready = true;
-                        //alert(response.success);
                         document.open();
                         document.write(response);
                         document.close();
                         window.clearInterval(int);
                     }else{
-                        /*document.open();
-                        document.write(intent.toString());
-                        document.close();*/
+
 
                     }
                 });
-            }, 60000);//setTimeout(function() {
-
-
-
-            //}
+            }, 60000);
 
         });
 
@@ -70,14 +61,9 @@ $pid = shell_exec(sprintf('%s ', $command));
         }
     </script>
 
-    <title>Milestone Based Project - Indicator report</title>
-    <meta charset="utf-8">
+    <div style="width:100%; margin:0 auto; text-align: center">
+        <h1>Calculando resultados, espere por favor</h1>
+        <img src="https://cms.americanexpress.com/Internet/MYCA/StaticFiles/images/istatement/spinwheel-140.gif" alt="ajax" />
+    </div>
 
-
-</head>
-
-<body>
-<h1>Calculando resultados, espere por favor</h1>
-
-</body>
-</html>
+<?php include '../footer.php'; ?>
