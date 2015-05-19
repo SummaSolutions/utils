@@ -36,7 +36,7 @@ class Background
         $this->skipUserValidation = $arrParams['skipUserValidation'];
         $this->users = $arrParams['users'];
         $this->plan = $arrParams['plan'];
-        $this->filterByTags = $arrParams['filterByTags'];
+        $this->filterByTags = $arrParams['filterByTag'];
         $this->tags = $arrParams['tags'];
         $this->datefrom = $arrParams['dateFrom'];
         $this->dateTo = $arrParams['dateTo'];
@@ -66,8 +66,10 @@ class Background
             die;
         }
         else{
+            file_put_contents ( '../parameters/logueo.log' , 'Estamos aca ' . $this->filterByTags .  PHP_EOL, FILE_APPEND );
 
             if( isset($this->filterByTags) && $this->filterByTags == "1"){
+                file_put_contents ( '../parameters/logueo.log' , $this->tags . PHP_EOL , FILE_APPEND);
                 $analyzer->setTags($this->tags);
             }
 
