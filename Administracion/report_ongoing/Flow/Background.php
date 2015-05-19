@@ -36,7 +36,7 @@ class Background
         $this->skipUserValidation = $arrParams['skipUserValidation'];
         $this->users = $arrParams['users'];
         $this->plan = $arrParams['plan'];
-        $this->filterByTags = $arrParams['filterByTags'];
+        $this->filterByTags = $arrParams['filterByTag'];
         $this->tags = $arrParams['tags'];
         $this->datefrom = $arrParams['dateFrom'];
         $this->dateTo = $arrParams['dateTo'];
