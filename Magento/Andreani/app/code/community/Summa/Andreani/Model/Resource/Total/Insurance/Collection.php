@@ -18,6 +18,6 @@ class Summa_Andreani_Model_Resource_Total_Insurance_Collection
      */
     protected function _construct()
     {
-        $this->_init('mage_sales/quote_address');
+        $this->_init('sales/quote_address');
     }
 }
