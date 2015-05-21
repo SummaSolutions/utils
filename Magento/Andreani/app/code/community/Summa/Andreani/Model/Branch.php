@@ -211,7 +211,11 @@ class Summa_Andreani_Model_Branch
             ->addFieldToFilter('enabled', 1);
 
         if($regionId){
-            $collection->addFieldToFilter('region_id', $regionId);
+            if (is_string($regionId)) {
+                $collection->addFieldToFilter('region_id', $regionId);
+            } elseif (is_array($regionId)) {
+                $collection->addFieldToFilter('region_id', array('in' => $regionId));
+            }
         }
 
         return $collection;

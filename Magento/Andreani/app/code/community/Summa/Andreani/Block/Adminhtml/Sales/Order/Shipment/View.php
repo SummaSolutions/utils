@@ -3,8 +3,8 @@
 /**
  * Summa_Andreani_Block_Adminhtml_Shipment_View
  *
- * @category Grandmarche
- * @package  Grandmarche_Andreani
+ * @category Andreani
+ * @package  Andreani
  * @author   Facundo Capua <fcapua@summasolutions.net>
  * @license  http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  * @link     http://www.summasolutions.net/

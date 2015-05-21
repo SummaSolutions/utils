@@ -399,7 +399,8 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         $width = 0;
         $length = 0;
         if ($product->getTypeId() === "simple") {
-            $height =
+            $height = ($product->getData($this->getConfigData('attribute_height')))?
+                $product->getData($this->getConfigData('attribute_height')):
                 Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
                     $product->getId(),
                     $this->getConfigData('attribute_height'),
@@ -407,7 +408,8 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
                 );
             $height = ($height)?$height:0;
 
-            $width =
+            $width = ($product->getData($this->getConfigData('attribute_width')))?
+                $product->getData($this->getConfigData('attribute_width')):
                 Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
                     $product->getId(),
                     $this->getConfigData('attribute_width'),
@@ -415,7 +417,8 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
                 );
             $width = ($width)?$width:0;
 
-            $length =
+            $length = ($product->getData($this->getConfigData('attribute_length')))?
+                $product->getData($this->getConfigData('attribute_length')):
                 Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
                     $product->getId(),
                     $this->getConfigData('attribute_length'),
