@@ -228,12 +228,10 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         if ($service != 'global') {
             $this->_debuggingEnabled = $this->getConfigData('debug',$service);
         } else {
-            $this->_debuggingEnabled = true;
+            $this->_debuggingEnabled = false;
         }
 
-        if ($this->_debuggingEnabled) {
-            Mage::log($this->__($toLog), null, 'andreani.log',true);
-        }
+        Mage::log($this->__($toLog), null, 'andreani.log',$this->_debuggingEnabled);
 
         return $this->_debuggingEnabled;
     }
