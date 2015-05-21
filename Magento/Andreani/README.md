@@ -39,13 +39,15 @@ Por defecto el modulo no instala atributos a los productos para el calculo de vo
 2. Renombrar de forma que PRODUCT_ATTRIBUTES sea reemplazado por la version del installer que corresponda.
 3. Actualizar la version correspondiente en app/code/community/Summa/Andreani/etc/config.xml
 
-Por defecto el modulo no instala el atributo DNI a los customer para los pedidos a andreani, para instalarlo:
+Por defecto el modulo no instala el atributo DNI, Numero, Piso y Departamento a las direcciones de los customer para los pedidos a andreani, para instalarlo:
 
 1. Copiar app/code/community/Summa/Andreani/sql/mysql4-upgrade-QUOTE_ORDER_ADDRESS_ATTRIBUTES.php a app/code/community/
 Summa/Andreani/sql/summa_andreani_setup
 2. Renombrar de forma que QUOTE_ORDER_ADDRESS_ATTRIBUTES sea reemplazado por la version del installer que corresponda.
 3. Actualizar la version correspondiente en app/code/community/Summa/Andreani/etc/config.xml
-4. Descomentar en app/code/community/Summa/Andreani/etc/config.xml las líneas 184, 201, 118 y 128.
+4. Descomentar en app/code/community/Summa/Andreani/etc/config.xml las líneas 182, 199, 117 y 127.
+5. Revisar en cada proyecto que dichos campos esten mostrandose en los formularios del frontend de forma que 
+los customers puedan cargar dicha informacion.
 
 Como usar:
 =================

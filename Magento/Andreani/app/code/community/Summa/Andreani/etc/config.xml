@@ -114,7 +114,6 @@
                     </summa_andreani_product_save_before>
                 </observers>
             </catalog_product_save_before>
-            <!-- EXAMPLE OF OBSERVER -->
             <!--
             <summa_andreani_do_shipment_request_call_ws_before>
                 <observers>
@@ -180,7 +179,6 @@
                     <to_quote_address>*</to_quote_address>
                 </andreani_branch_id>
             </sales_convert_order_address>
-            <!-- UNCOMMENT THIS TO COPY DNI FROM CUSTOMER TO QUOTE AND TO ORDER-->
             <!--
             <sales_convert_quote_address>
                 <dni>

@@ -195,7 +195,12 @@ class Summa_Andreani_Model_Observer
         }
     }
 
-// RELATEDS TO INSURANCE
+    /**
+     * Function to set Summa Andreani Insurance on Invoice Save After
+     * @param Varien_Event_Observer $observer
+     *
+     * @return $this
+     */
     public function invoiceSaveAfter(Varien_Event_Observer $observer)
     {
         $invoice = $observer->getEvent()->getInvoice();
@@ -207,6 +212,12 @@ class Summa_Andreani_Model_Observer
         return $this;
     }
 
+    /**
+     * Function to set Summa Andreani Insurance on Creditmemo Save After
+     * @param Varien_Event_Observer $observer
+     *
+     * @return $this
+     */
     public function creditmemoSaveAfter(Varien_Event_Observer $observer)
     {
         /* @var $creditmemo Mage_Sales_Model_Order_Creditmemo */
@@ -219,12 +230,19 @@ class Summa_Andreani_Model_Observer
         return $this;
     }
 
+    /**
+     * Function to set Summa Andreani Insurance on Update Paypal Total
+     * @param $evt
+     */
     public function updatePaypalTotal($evt){
         $cart = $evt->getPaypalCart();
         $cart->updateTotal(Mage_Paypal_Model_Cart::TOTAL_SUBTOTAL,$cart->getSalesEntity()->getSummaAndreaniInsuranceAmount());
     }
 
-    // EXAMPLE OF OBSERVER
+    /**
+     * Function to set Number, Floor, Apartment and Dni on do shipment Request
+     * @param Varien_Event_Observer $observer
+     */
     public function beforeDoShipmentRequestAddDataExtra(Varien_Event_Observer $observer)
     {
         /** @var Mage_Sales_Model_Order $order */
