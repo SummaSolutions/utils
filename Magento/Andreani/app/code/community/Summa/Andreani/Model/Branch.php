@@ -31,6 +31,8 @@ class Summa_Andreani_Model_Branch
      */
     protected $_serviceType = null;
 
+    const HIGHER_POSTAL_CODE_CABA = 1500;
+    const HIGHER_POSTAL_CODE_GBA = 2000;
     /**
      * Internal constructor not depended on params. Can be used for object initialization
      */
@@ -182,11 +184,11 @@ class Summa_Andreani_Model_Branch
         $model = Mage::getSingleton('directory/region');
         $countryCode = 'AR';
         if ($regionToFound == 'BUENOS AIRES') {
-            if ($postalCode < 1500) {
+            if ($postalCode < self::HIGHER_POSTAL_CODE_CABA) {
                 $region = $model->loadByCode('Ciudad Autónoma de Buenos Aires', $countryCode);
                 return $region->getId();
             } else {
-                if ($postalCode < 2000) {
+                if ($postalCode < self::HIGHER_POSTAL_CODE_GBA) {
                     $region = $model->loadByCode('Buenos Aires - GBA', $countryCode);
                     return $region->getId();
                 } else {
