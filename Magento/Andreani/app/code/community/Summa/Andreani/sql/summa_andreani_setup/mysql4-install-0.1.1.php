@@ -20,9 +20,9 @@ $table = $installer->getConnection()
     ->addColumn('address', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
     ), 'Address')
-    ->addColumn('time_attendance', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ->addColumn('opening_hours', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Time Attendance')
+    ), 'Opening Hours')
     ->addColumn('lat', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
     ), 'Lat')
@@ -32,21 +32,21 @@ $table = $installer->getConnection()
     ->addColumn('email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
     ), 'Email')
-    ->addColumn('kind_phone_1', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ->addColumn('phone_type_1', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
-    ), 'Kind Phone 1')
+    ), 'Phone Type 1')
     ->addColumn('phone_1', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => false,
     ), 'Phone 1')
-    ->addColumn('kind_phone_2', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ->addColumn('phone_type_2', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
-    ), 'Kind Phone 2')
+    ), 'Phone Type 2')
     ->addColumn('phone_2', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
     ), 'Phone 2')
-    ->addColumn('kind_phone_3', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+    ->addColumn('phone_type_3', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
-    ), 'Kind Phone 3')
+    ), 'Phone Type 3')
     ->addColumn('phone_3', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable'  => true,
     ), 'Phone 3')
