@@ -69,7 +69,7 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
             'required'  => true,
         ));
 
-        $fieldset->addField('time_attendance', 'text', array(
+        $fieldset->addField('opening_hours', 'text', array(
             'name'      => 'time_attendance',
             'label'     => Mage::helper('summa_andreani')->__('Time Attendance'),
             'title'     => Mage::helper('summa_andreani')->__('Time Attendance'),
@@ -141,8 +141,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
             'required'  => true
         ));
 
-        $fieldset->addField('kind_phone_1', 'text', array(
-            'name'      => 'kind_phone_1',
+        $fieldset->addField('phone_type_1', 'text', array(
+            'name'      => 'phone_type_1',
             'label'     => Mage::helper('summa_andreani')->__('Kind Phone 1'),
             'title'     => Mage::helper('summa_andreani')->__('Kind Phone 1'),
             'required'  => true,
@@ -155,8 +155,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
             'required'  => true,
         ));
 
-        $fieldset->addField('kind_phone_2', 'text', array(
-            'name'      => 'kind_phone_2',
+        $fieldset->addField('phone_type_2', 'text', array(
+            'name'      => 'phone_type_2',
             'label'     => Mage::helper('summa_andreani')->__('Kind Phone 2'),
             'title'     => Mage::helper('summa_andreani')->__('Kind Phone 2'),
             'required'  => false,
@@ -169,8 +169,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
             'required'  => false,
         ));
 
-        $fieldset->addField('kind_phone_3', 'text', array(
-            'name'      => 'kind_phone_3',
+        $fieldset->addField('phone_type_3', 'text', array(
+            'name'      => 'phone_type_3',
             'label'     => Mage::helper('summa_andreani')->__('Kind Phone 3'),
             'title'     => Mage::helper('summa_andreani')->__('Kind Phone 3'),
             'required'  => false,
