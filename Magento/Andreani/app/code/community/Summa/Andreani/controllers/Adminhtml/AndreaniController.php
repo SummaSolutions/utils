@@ -71,7 +71,7 @@ class Summa_Andreani_Adminhtml_AndreaniController
 
         if (!Mage::helper('summa_andreani')->isAndreaniShippingCarrier($shipment->getOrder()->getShippingCarrier()))
         {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('The carrier is\'nt Andreani'));
+            Mage::getSingleton('adminhtml/session')->addError($this->__('The carrier isn\'t Andreani'));
             $this->_redirectReferer();
         }
 
@@ -130,7 +130,7 @@ class Summa_Andreani_Adminhtml_AndreaniController
                 Mage::log($e->getMessage(), null, 'andreani.log');
             }
         } else {
-            Mage::helper('summa_andreani')->throwException(Mage::helper('summa_andreani')->__('The carrier is\'nt Andreani'));
+            Mage::helper('summa_andreani')->throwException(Mage::helper('summa_andreani')->__('The carrier isn\'t Andreani'));
         }
         $this->_redirectReferer();
     }
