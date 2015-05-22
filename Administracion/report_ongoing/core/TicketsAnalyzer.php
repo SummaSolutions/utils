@@ -138,7 +138,7 @@ class TicketsAnalyzer {
      * Calculate estimations and investments from the related subtasks.
      * @param $parent
      */
-    protected function calculateFromRelated($parent){
+    protected function calculateFromRelated($parent, $tickets = null){
 
         if( $parent->hierarchy_type != 2){
             // Do this only for stories. All others, they remain as they are.
@@ -171,7 +171,11 @@ class TicketsAnalyzer {
                 }
 
                 // Get the details
-                $ticket = json_decode($this->_conn->getTicket(false, $related));
+                $ticket = $this->getRelatedFromTickets($tickets,$related);
+
+                if ($ticket == false){
+                    $ticket = json_decode($this->_conn->getTicket(false, $related));
+                }
 
                 // Add up the values.
                 $totalEstimate += $ticket->estimate;
@@ -187,7 +191,21 @@ class TicketsAnalyzer {
 
     }
 
+    /**
+     * Check if the related is in $tickets
+     */
+    protected function getRelatedFromTickets($tickets,$relatedId){
+        $t = false;
+        if ($tickets != null){
+            foreach ($tickets as $ticket){
+                if ($ticket->id == $relatedId){
+                    $t = $ticket;
+                }
+            }
+        }
 
+        return $t;
+    }
 
     /**
      * Calculate the indicators for the period.

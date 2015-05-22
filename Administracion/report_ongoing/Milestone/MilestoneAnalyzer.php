@@ -154,7 +154,7 @@ class MilestoneAnalyzer extends TicketsAnalyzer
                 if (!$this->ticketIsInExceptionList($ticket)) {
 
                     if ($ticket->milestone_id == $targetMilestoneID) {
-                        $this->processTicketInMilestone($ticket);
+                        $this->processTicketInMilestone($ticket,$tickets);
 
                     } else {
                         $this->processTicketNotInMilestone($ticket);
@@ -169,9 +169,9 @@ class MilestoneAnalyzer extends TicketsAnalyzer
      *
      * @param $ticket
      */
-    private function processTicketInMilestone($ticket)
+    private function processTicketInMilestone($ticket, $tickets = null)
     {
-        $this->calculateFromRelated($ticket);
+        $this->calculateFromRelated($ticket,$tickets);
 
         if ($this->ticketIsComplete($ticket)) {
 
