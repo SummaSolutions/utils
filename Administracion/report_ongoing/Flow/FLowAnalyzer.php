@@ -93,7 +93,8 @@ class FLowAnalyzer extends TicketsAnalyzer
                     $from,
                     $to,
                     $ticket,
-                    is_null($ticket->completed_date));
+                    is_null($ticket->completed_date),
+                    $tickets);
             }
         }
     }
@@ -119,9 +120,9 @@ class FLowAnalyzer extends TicketsAnalyzer
  * @param $ticket
  */
 private
-function processTicket($from, $to, $ticket, $isPending = false)
+function processTicket($from, $to, $ticket, $isPending = false, $tickets = null)
 {
-    $this->calculateFromRelated($ticket);
+    $this->calculateFromRelated($ticket, $tickets);
 
     // Adjust ticket estimation.
     // If it is task or no plan, copy the estimate

@@ -35,7 +35,7 @@ $pid = shell_exec(sprintf('%s ', $command));
 
                     }
                 });
-            }, 60000);
+            }, 30000);
 
         });
 

@@ -34,7 +34,7 @@
 
                     }
                 });
-            }, 60000);
+            }, 30000);
         });
 
         function ajaxCall(ruta,objParametros,callback){
