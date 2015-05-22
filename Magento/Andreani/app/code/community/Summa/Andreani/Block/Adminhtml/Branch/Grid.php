@@ -75,7 +75,7 @@ class Summa_Andreani_Block_Adminhtml_Branch_Grid
 
         $this->addColumn('phone_type_1',
             array(
-                'header'=> Mage::helper('summa_andreani')->__('Kind Phone 1'),
+                'header'=> Mage::helper('summa_andreani')->__('Phone Type 1'),
                 'index' => 'kind_phone_1'
             )
         );

@@ -143,8 +143,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
 
         $fieldset->addField('phone_type_1', 'text', array(
             'name'      => 'phone_type_1',
-            'label'     => Mage::helper('summa_andreani')->__('Kind Phone 1'),
-            'title'     => Mage::helper('summa_andreani')->__('Kind Phone 1'),
+            'label'     => Mage::helper('summa_andreani')->__('Phone Type 1'),
+            'title'     => Mage::helper('summa_andreani')->__('Phone Type 1'),
             'required'  => true,
         ));
 
@@ -157,8 +157,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
 
         $fieldset->addField('phone_type_2', 'text', array(
             'name'      => 'phone_type_2',
-            'label'     => Mage::helper('summa_andreani')->__('Kind Phone 2'),
-            'title'     => Mage::helper('summa_andreani')->__('Kind Phone 2'),
+            'label'     => Mage::helper('summa_andreani')->__('Phone Type 2'),
+            'title'     => Mage::helper('summa_andreani')->__('Phone Type 2'),
             'required'  => false,
         ));
 
@@ -171,8 +171,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Edit_Form
 
         $fieldset->addField('phone_type_3', 'text', array(
             'name'      => 'phone_type_3',
-            'label'     => Mage::helper('summa_andreani')->__('Kind Phone 3'),
-            'title'     => Mage::helper('summa_andreani')->__('Kind Phone 3'),
+            'label'     => Mage::helper('summa_andreani')->__('Phone Type 3'),
+            'title'     => Mage::helper('summa_andreani')->__('Phone Type 3'),
             'required'  => false,
         ));
 
