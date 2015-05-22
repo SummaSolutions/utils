@@ -180,6 +180,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     /**
      * Do return of shipment
      * @deprecated because Andreani don't support shipping label generation for a return
+     *             Code mustn't be removed in order to be used when Andreani begins to provide support for shipping label generation and returns.
      *
      * @param $request
      *
