@@ -61,8 +61,8 @@ class Summa_Andreani_Block_Adminhtml_Branch_Grid
 
         $this->addColumn('opening_hours',
             array(
-                'header'=> Mage::helper('summa_andreani')->__('Time Attendance'),
-                'index' => 'time_attendance'
+                'header'=> Mage::helper('summa_andreani')->__('Opening Hours'),
+                'index' => 'opening_hours'
             )
         );
 
@@ -76,7 +76,7 @@ class Summa_Andreani_Block_Adminhtml_Branch_Grid
         $this->addColumn('phone_type_1',
             array(
                 'header'=> Mage::helper('summa_andreani')->__('Phone Type 1'),
-                'index' => 'kind_phone_1'
+                'index' => 'phone_type_1'
             )
         );
 
