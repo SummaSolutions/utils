@@ -277,40 +277,40 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $shipmentInfo = array(
                     'compra' => array(
                         /* Shipping Data */
-                        'SucursalRetiro'          => $address->getAndreaniBranchId() /* Required = Condicional; */
-                    , 'Provincia'                 => $address->getRegion()
-                    , 'Localidad'                 => $address->getCity()
-                    , 'CodigoPostalDestino'       => $address->getPostcode() /* Required = true; */
-                    , 'Calle'                     => $streets[0] /* Required = true; */
-                    , 'Numero'                    => '-' /* Required = true; */
-                    , 'Departamento'              => NULL
-                    , 'Piso'                      => NULL
+                        'SucursalRetiro'            => $address->getAndreaniBranchId(), /* Required = Condicional; */
+                        'Provincia'                 => $address->getRegion(),
+                        'Localidad'                 => $address->getCity(),
+                        'CodigoPostalDestino'       => $address->getPostcode(), /* Required = true; */
+                        'Calle'                     => $streets[0], /* Required = true; */
+                        'Numero'                    => '-', /* Required = true; */
+                        'Departamento'              => NULL,
+                        'Piso'                      => NULL,
 
                         /* Recipient Data */
-                    , 'NombreApellido'            => $address->getFirstname() . ' ' . $address->getLastname() /* Required = true; */
-                    , 'TipoDocumento'             => 'DNI' /* Required = true; */
-                    , 'NumeroDocumento'           => 'xxxxxxxx' /* Required = true; */
-                    , 'NumeroCelular'             => NULL
-                    , 'NumeroTelefono'            => $address->getTelephone()
-                    , 'Email'                     => $order->getCustomerEmail()
-                    , 'NombreApellidoAlternativo' => NULL
+                        'NombreApellido'            => $address->getFirstname() . ' ' . $address->getLastname(), /* Required = true; */
+                        'TipoDocumento'             => 'DNI', /* Required = true; */
+                        'NumeroDocumento'           => 'xxxxxxxx', /* Required = true; */
+                        'NumeroCelular'             => NULL,
+                        'NumeroTelefono'            => $address->getTelephone(),
+                        'Email'                     => $order->getCustomerEmail(),
+                        'NombreApellidoAlternativo' => NULL,
 
                         /* Delivery Data  */
-                    , 'NumeroTransaccion'         => $order->getIncrementId()
-                    , 'DetalleProductosEntrega'   => $detailsProductsSend
-                    , 'DetalleProductosRetiro'    => NULL
-                    , 'Peso'                      => $totals->getTotalWeight()
-                    , 'Volumen'                   => $totals->getTotalVolume() /* Required = Condicional;  */
-                    , 'ValorACobrar'              => NULL /* Required = Condicional; */
-                    , 'ValorDeclarado'            => NULL /* Required = Condicional; */
+                        'NumeroTransaccion'         => $order->getIncrementId(),
+                        'DetalleProductosEntrega'   => $detailsProductsSend,
+                        'DetalleProductosRetiro'    => NULL,
+                        'Peso'                      => $totals->getTotalWeight(),
+                        'Volumen'                   => $totals->getTotalVolume(), /* Required = Condicional;  */
+                        'ValorACobrar'              => NULL, /* Required = Condicional; */
+                        'ValorDeclarado'            => NULL, /* Required = Condicional; */
 
                         /* Billing Data */
-                    , 'Contrato'                  => $contract /* Required = true; */
-                    , 'SucursalCliente'           => NULL/* Required = Condicional; */
-                    , 'CategoriaDistancia'        => $order->getRegionId() /* Required = Condicional; */
-                    , 'CategoriaFacturacion'      => NULL /* Required = Condicional; */
-                    , 'CategoriaPeso'             => NULL /* Required = Condicional; */
-                    , 'Tarifa'                    => NULL /* Required = Condicional; */
+                        'Contrato'                  => $contract, /* Required = true; */
+                        'SucursalCliente'           => NULL,/* Required = Condicional; */
+                        'CategoriaDistancia'        => $order->getRegionId(), /* Required = Condicional; */
+                        'CategoriaFacturacion'      => NULL, /* Required = Condicional; */
+                        'CategoriaPeso'             => NULL, /* Required = Condicional; */
+                        'Tarifa'                    => NULL /* Required = Condicional; */
                     )
                 );
 
@@ -343,11 +343,19 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
                 $result->setErrors($e->getMessage());
 
-                $this->dispatchEvent('do_shipment_request_call_ws_after',array('shipmentInfo' => $shipmentInfo, 'response' => $e, 'order' => $order, 'items' => $items, 'params' => $params));
+                $this->dispatchEvent('do_shipment_request_soap_error',array('shipmentInfo' => $shipmentInfo, 'response' => $e, 'order' => $order, 'items' => $items, 'params' => $params));
 
                 $this->_getHelper()->debugging('doShipmentRequestError:', $this->getServiceType());
                 $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
                 $this->_getHelper()->debugging($error, $this->getServiceType());
+            } catch (Exception $e) {
+                $result->setErrors($e->getMessage());
+
+                $this->dispatchEvent('do_shipment_request_error',array('shipmentInfo' => $shipmentInfo, 'response' => $e, 'order' => $order, 'items' => $items, 'params' => $params));
+
+                $this->_getHelper()->debugging('doShipmentRequestError:', $this->getServiceType());
+                $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+                $this->_getHelper()->debugging($e, $this->getServiceType());
             }
         } else {
             $result->setErrors($this->_getHelper()->__('Service unavailable. You mus\'t set enabled the service %s with code %s', $this->_getHelper()->getConfigData('title', $this->getServiceType()), $this->getCode()));
@@ -413,13 +421,21 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $error .= "<BR><BR>";
             $error .= $e;
 
-            $this->dispatchEvent('get_link_constancy_call_ws_after',array('response' => $e, 'tracking' => $tracking));
+            $this->dispatchEvent('get_link_constancy_soap_error',array('response' => $e, 'tracking' => $tracking));
 
             $this->_getHelper()->debugging('getLinkConstancyError:', $this->getServiceType());
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
             $this->_getHelper()->debugging($error, $this->getServiceType());
 
             $result->setErrors($e->getMessage());
+        } catch (Exception $e) {
+            $result->setErrors($e->getMessage());
+
+            $this->dispatchEvent('get_link_constancy_error',array('response' => $e, 'tracking' => $tracking));
+
+            $this->_getHelper()->debugging('getLinkConstancyError:', $this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+            $this->_getHelper()->debugging($e, $this->getServiceType());
         }
         $this->dispatchEvent('get_link_constancy_after',array('result' => $result, 'tracking' => $tracking));
         return $result;
@@ -493,10 +509,18 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('getTrackingResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($response, $this->getServiceType());
         } catch (SoapFault $e) {
-            $this->dispatchEvent('get_tracking_call_ws_after',array('response' => $e, 'tracks' => $tracks));
+            $this->dispatchEvent('get_tracking_soap_error',array('response' => $e, 'tracks' => $tracks));
             $response = $e;
             $this->_getHelper()->debugging('getTrackingError:', $this->getServiceType());
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+        } catch (Exception $e) {
+            $response = $e;
+
+            $this->dispatchEvent('get_tracking_error',array('response' => $e, 'tracks' => $tracks));
+
+            $this->_getHelper()->debugging('getTrackingError:', $this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+            $this->_getHelper()->debugging($e, $this->getServiceType());
         }
 
         $result = $this->_parseXmlTrackingResponse($tracks, $response);
@@ -636,7 +660,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     public function cancelShipmentRequest($tracking)
     {
         $result = new Varien_Object();
-        $this->dispatchEvent('cancel_shipment_request_before',array('traking' => $tracking));
+        $this->dispatchEvent('cancel_shipment_request_before',array('tracking' => $tracking));
         try {
             $options = $this->_getHelper()->getSoapOptions();
             $username = $this->_getHelper()->getUsername($this->getServiceType());
@@ -653,10 +677,10 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
 
             $wsse_header = $this->_getHelper()->getWsseHeader($username,$password);
 
-            $this->dispatchEvent('cancel_shipment_request_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'traking' => $tracking));
+            $this->dispatchEvent('cancel_shipment_request_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'tracking' => $tracking));
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
-            $this->dispatchEvent('cancel_shipment_request_init_soap_client_after',array('client' => $client, 'traking' => $tracking));
+            $this->dispatchEvent('cancel_shipment_request_init_soap_client_after',array('client' => $client, 'tracking' => $tracking));
 
             $cancelShipmentInfo = array(
                 'envios' => array(
@@ -668,9 +692,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('cancelShipmentRequestDataSent:', $this->getServiceType());
             $this->_getHelper()->debugging($cancelShipmentInfo, $this->getServiceType());
 
-            $this->dispatchEvent('cancel_shipment_request_call_ws_before',array('dataSent' => $cancelShipmentInfo, 'traking' => $tracking));
+            $this->dispatchEvent('cancel_shipment_request_call_ws_before',array('dataSent' => $cancelShipmentInfo, 'tracking' => $tracking));
             $response = $client->AnularEnvios($cancelShipmentInfo);
-            $this->dispatchEvent('cancel_shipment_request_call_ws_after',array('response' => $response, 'traking' => $tracking));
+            $this->dispatchEvent('cancel_shipment_request_call_ws_after',array('response' => $response, 'tracking' => $tracking));
 
             $this->_getHelper()->debugging('cancelShipmentRequestResponse:', $this->getServiceType());
             $this->_getHelper()->debugging($response, $this->getServiceType());
@@ -684,7 +708,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $result->setObjectResponse($response);
 
         } catch (SoapFault $e) {
-            $this->dispatchEvent('cancel_shipment_request_call_ws_after',array('response' => $e, 'traking' => $tracking));
+            $this->dispatchEvent('cancel_shipment_request_soap_error',array('response' => $e, 'tracking' => $tracking));
             $error = libxml_get_last_error();
             $error .= "<BR><BR>";
             $error .= $e;
@@ -694,9 +718,17 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging($error, $this->getServiceType());
 
             $result->setErrors($e->getMessage());
+        } catch (Exception $e) {
+            $result->setErrors($e->getMessage());
+
+            $this->dispatchEvent('cancel_shipment_request_error',array('response' => $e, 'tracking' => $tracking));
+
+            $this->_getHelper()->debugging('cancelShipmentRequestError:', $this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+            $this->_getHelper()->debugging($e, $this->getServiceType());
         }
 
-        $this->dispatchEvent('cancel_shipment_request_after',array('result' => $result, 'traking' => $tracking));
+        $this->dispatchEvent('cancel_shipment_request_after',array('result' => $result, 'tracking' => $tracking));
         return $result;
     }
 
@@ -810,8 +842,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                     $result = $error;
                 }
             }
-        }catch (Exception $e) {
-            $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $e, 'request' => $request));
+        } catch (SoapFault $e) {
+            $this->dispatchEvent('collect_rates_ws_soap_error',array('response' => $e, 'request' => $request));
 
             $error = libxml_get_last_error();
             $error .= "<BR><BR>";
@@ -820,6 +852,20 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $this->_getHelper()->debugging('collectRatesByWebServiceError:', $this->getServiceType());
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
             $this->_getHelper()->debugging($error, $this->getServiceType());
+
+            if($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
+                $error = Mage::getModel('shipping/rate_result_error');
+                $error->setCarrier($this->_code);
+                $error->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
+                $error->setErrorMessage($this->_getHelper()->__('Andreani is not available for this request.'));
+                $result = $error;
+            }
+        } catch (Exception $e) {
+            $this->dispatchEvent('collect_rates_ws_error',array('response' => $e, 'request' => $request));
+
+            $this->_getHelper()->debugging('collectRatesByWebServiceError:', $this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+            $this->_getHelper()->debugging($e, $this->getServiceType());
 
             if($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
                 $error = Mage::getModel('shipping/rate_result_error');
@@ -912,9 +958,9 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
         }
 
-        $iva = 0;
-        if ($this->_getHelper()->getConfigData('add_iva_to_rates')) {
-            $iva = $this->_getHelper()->calculateIVA($request->getPackageValue());
+        $vat = 0;
+        if ($this->_getHelper()->getConfigData('add_vat_to_rates')) {
+            $vat = $this->_getHelper()->calculateVAT($request->getPackageValue());
         }
 
         foreach ($rateArray as $rate) {
@@ -938,8 +984,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                     $price += $insurance;
                 }
 
-                if ($iva) {
-                    $price += $iva;
+                if ($vat) {
+                    $price += $vat;
                 }
 
                 $method->setPrice($this->getFinalPriceWithHandlingFee($price));
@@ -1349,8 +1395,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         $weightUnits = $params['weight_units'];
         $dimensionUnits = $params['dimension_units'];
 
-        $weightMultiplicator = ($weightUnits == 'KILOGRAM')?1000:453.59237;
-        $dimensionMultiplicator = ($dimensionUnits == 'CENTIMETER')?1:0.393700787;
+        $weightMultiplicator = ($weightUnits == Zend_Measure_Weight::KILOGRAM)?1000:453.59237;
+        $dimensionMultiplicator = ($dimensionUnits == Zend_Measure_Length::CENTIMETER)?1:0.393700787;
 
         $height = $params['height'];
         $height = $height * $dimensionMultiplicator;

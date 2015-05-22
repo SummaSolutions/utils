@@ -25,7 +25,7 @@ class Summa_Andreani_Adminhtml_AndreaniController
 
         if (!Mage::helper('summa_andreani')->isAndreaniShippingCarrier($shipment->getOrder()->getShippingCarrier()))
         {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('The carrier is\'nt Andreani'));
+            Mage::getSingleton('adminhtml/session')->addError($this->__('The carrier isn\'t Andreani'));
             $this->_redirectReferer();
         }
 

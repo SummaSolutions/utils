@@ -61,7 +61,13 @@ class Summa_Andreani_Model_Branch
      */
     public function fetchBranches()
     {
-        return $this->_persistBranchesResponse(Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->fetchBranches());
+        $result = Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->fetchBranches();
+        if ($result->getFetchedBranches()) {
+            $result = $this->_persistBranchesResponse($result->getObjectResponse());
+        } else {
+            $result = $result->getFetchedBranches();
+        }
+        return $result;
     }
 
     /**

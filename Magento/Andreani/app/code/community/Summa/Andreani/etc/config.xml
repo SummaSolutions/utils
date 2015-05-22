@@ -98,11 +98,11 @@
             </sales_order_shipment_track_delete_before>
             <sales_order_shipment_save_commit_after>
                 <observers>
-                    <andreani_sales_order_shipment_save_commit_after>
+                    <summa_andreani_sales_order_shipment_save_commit_after>
                         <type>model</type>
                         <class>summa_andreani/observer</class>
                         <method>shipmentGlobalSaveAfter</method>
-                    </andreani_sales_order_shipment_save_commit_after>
+                    </summa_andreani_sales_order_shipment_save_commit_after>
                 </observers>
             </sales_order_shipment_save_commit_after>
             <catalog_product_save_before>

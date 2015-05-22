@@ -62,9 +62,9 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
      */
     public function fetchBranches($branches = null)
     {
+        $result = new Varien_Object();
         try
         {
-
             $options = array(
                 'soap_version' => SOAP_1_2,
                 'exceptions' => true,
@@ -110,20 +110,39 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
 
             $this->_getHelper()->debugging('fetchBranchesResponse:',$this->getServiceType());
             $this->_getHelper()->debugging($response,$this->getServiceType());
-
-            return $response;
+            if (
+                is_object($response) &&
+                isset($response->ConsultarSucursalesResult) &&
+                isset($response->ConsultarSucursalesResult->ResultadoConsultarSucursales) &&
+                is_array($response->ConsultarSucursalesResult->ResultadoConsultarSucursales)
+            ) {
+                $result->setFetchedBranches(true);
+            } else {
+                $result->setFetchedBranches(false);
+            }
+            $result->setObjectResponse($response);
         } catch (SoapFault $e) {
             $error = libxml_get_last_error();
             $error .= "<BR><BR>";
             $error .= $e;
 
-            $this->dispatchEvent('fetch_branches_call_ws_after',array('response' => $e, 'branches' => $branches));
-            $this->_getHelper()->debugging('fetchBranchesException:',$this->getServiceType());
+            $result->setErrors($e->getMessage());
+            $result->setFetchedBranches(false);
+            $this->dispatchEvent('fetch_branches_soap_error',array('response' => $e, 'branches' => $branches));
+            $this->_getHelper()->debugging('fetchBranchesError:',$this->getServiceType());
             $this->_getHelper()->debugging($e->getMessage(),$this->getServiceType());
             $this->_getHelper()->debugging($error,$this->getServiceType());
 
-            return false;
+        } catch (Exception $e) {
+
+            $result->setErrors($e->getMessage());
+            $result->setFetchedBranches(false);
+            $this->dispatchEvent('fetch_branches_error',array('response' => $e, 'branches' => $branches));
+            $this->_getHelper()->debugging('fetchBranchesError:', $this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+            $this->_getHelper()->debugging($e, $this->getServiceType());
         }
+        return $result;
     }
 
     /**
@@ -259,8 +278,8 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
                     $result = $error;
                 }
             }
-        }catch(Exception $e) {
-            $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $e, 'request' => $request));
+        } catch(SoapFault $e) {
+            $this->dispatchEvent('collect_rates_ws_soap_error',array('response' => $e, 'request' => $request));
 
             $error = libxml_get_last_error();
             $error .= "<BR><BR>";
@@ -269,6 +288,20 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             $this->_getHelper()->debugging('collectRatesByWebServiceError:', $this->getServiceType());
             $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
             $this->_getHelper()->debugging($error, $this->getServiceType());
+
+            if($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
+                $error = Mage::getModel('shipping/rate_result_error');
+                $error->setCarrier($this->_code);
+                $error->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
+                $error->setErrorMessage($this->_getHelper()->__('Andreani is not available for this request.'));
+                $result = $error;
+            }
+        } catch (Exception $e) {
+            $this->dispatchEvent('collect_rates_ws_error',array('response' => $e, 'request' => $request));
+
+            $this->_getHelper()->debugging('collectRatesByWebServiceError:', $this->getServiceType());
+            $this->_getHelper()->debugging($e->getMessage(), $this->getServiceType());
+            $this->_getHelper()->debugging($e, $this->getServiceType());
 
             if($this->_getHelper()->getConfigData('showmethod',$this->getServiceType())) {
                 $error = Mage::getModel('shipping/rate_result_error');
@@ -335,9 +368,9 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             $insurance = $this->_getHelper()->calculateInsurance($request->getPackageValue());
         }
 
-        $iva = 0;
-        if ($this->_getHelper()->getConfigData('add_iva_to_rates')) {
-            $iva = $this->_getHelper()->calculateIVA($request->getPackageValue());
+        $vat = 0;
+        if ($this->_getHelper()->getConfigData('add_vat_to_rates')) {
+            $vat = $this->_getHelper()->calculateVAT($request->getPackageValue());
         }
 
         foreach ($rateArray as $rate) {
@@ -369,8 +402,8 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
                         $price += $insurance;
                     }
 
-                    if ($iva) {
-                        $price += $iva;
+                    if ($vat) {
+                        $price += $vat;
                     }
 
                     $method->setPrice($this->getFinalPriceWithHandlingFee($price));

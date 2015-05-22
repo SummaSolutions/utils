@@ -375,14 +375,14 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Function to Calculate IVA
+     * Function to Calculate VAT
      * @param $ratePrice
      *
      * @return float
      */
-    public function calculateIVA($ratePrice)
+    public function calculateVAT($ratePrice)
     {
-        return $ratePrice * $this->getConfigData('iva_percentage') / 100;
+        return $ratePrice * $this->getConfigData('vat_percentage') / 100;
     }
 
     /**
