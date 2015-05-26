@@ -231,7 +231,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_debuggingEnabled = false;
         }
 
-        if (is_string($toLog) || is_array($toLog)) {
+        if (is_string($toLog)) {
             $toLog = $this->__($toLog);
         }
 
