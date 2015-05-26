@@ -300,7 +300,7 @@
                 <iva_percentage>21</iva_percentage>
                 <!-- GATEWAY SETTINGS -->
                 <gateway_tracking_url>https://www.e-andreani.com/eAndreaniWSStaging/Service.svc?wsdl</gateway_tracking_url>
-                <gateway_storepickup_url>https://www.e-andreani.com/CasaStaging/eCommerce/ConsultaSucursales.svc?singleWsdl</gateway_storepickup_url>
+                <gateway_storepickup_url>https://www.e-andreani.com/CasaStaging/eCommerce/ConsultaSucursales.svc?wsdl</gateway_storepickup_url>
                 <gateway_url>https://www.e-andreani.com/CasaStaging/ecommerce/ImposicionRemota.svc?wsdl</gateway_url>
                 <gateway_rates_url>https://www.e-andreani.com.ar/CasaStaging/eCommerce/CotizacionEnvio.svc?wsdl</gateway_rates_url>
                 <!-- INSURANCE SETTINGS -->
