@@ -231,7 +231,11 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_debuggingEnabled = false;
         }
 
-        Mage::log($this->__($toLog), null, 'andreani.log',$this->_debuggingEnabled);
+        if (is_string($toLog) || is_array($toLog)) {
+            $toLog = $this->__($toLog);
+        }
+
+        Mage::log($toLog, null, 'andreani.log',$this->_debuggingEnabled);
 
         return $this->_debuggingEnabled;
     }
