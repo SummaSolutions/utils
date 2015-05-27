@@ -283,6 +283,9 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <depends>
+                                <apply_insurance_on_shipping_price>0</apply_insurance_on_shipping_price>
+                            </depends>
                         </apply_insurance_when_free_shipping>
                         <!-- ATTRIBUTES SETTINGS -->
                         <heading_attributes translate="label" module="summa_andreani">
