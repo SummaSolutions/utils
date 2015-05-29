@@ -3,14 +3,14 @@
     <sections>
         <carriers>
             <groups>
-                <summaShippingAdditional translate="label" module="summa_andreani">
+                <summaShippingAdditional translate="label" module="summa_shippingAdditional">
                     <label>Summa Shipping Additional Module</label>
                     <sort_order>0</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <heading_global translate="label" module="summa_andreani">
+                        <heading_global translate="label" module="summa_shippingAdditional">
                             <label>This settings are hidden because just must be used like a filter on depends</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <sort_order>0</sort_order>
@@ -18,7 +18,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </heading_global>
-                        <installed>
+                        <installed translate="label" module="summa_shippingAdditional">
                             <label>State Installed Module</label>
                             <sort_order>1</sort_order>
                             <frontend_type>hidden</frontend_type>

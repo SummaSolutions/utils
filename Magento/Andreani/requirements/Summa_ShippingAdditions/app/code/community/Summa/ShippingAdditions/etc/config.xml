@@ -34,6 +34,17 @@
             </modules>
         </translate>
     </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <summa_shippingAdditions>
+                    <files>
+                        <default>Summa_ShippingAdditions.csv</default>
+                    </files>
+                </summa_shippingAdditions>
+            </modules>
+        </translate>
+    </adminhtml>
     <default>
         <carriers>
             <summaShippingAdditional>

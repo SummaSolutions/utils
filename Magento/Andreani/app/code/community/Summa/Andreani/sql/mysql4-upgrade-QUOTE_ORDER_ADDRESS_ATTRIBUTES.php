@@ -30,7 +30,8 @@ $fields  = array(
         'visible_in_advanced_search'    => 0,
         'unique'                        => 0,
         'is_configurable'               => 0,
-        'position'                      => 200
+        'sort_order'                    => 45,
+        'position'                      => 45
     ),
     'number'    => array(
         'type'                          => 'varchar',
@@ -47,7 +48,8 @@ $fields  = array(
         'visible_in_advanced_search'    => 0,
         'unique'                        => 0,
         'is_configurable'               => 0,
-        'position'                      => 201
+        'sort_order'                    => 71,
+        'position'                      => 71
     ),
     'floor'     => array(
         'type'                          => 'varchar',
@@ -64,7 +66,8 @@ $fields  = array(
         'visible_in_advanced_search'    => 0,
         'unique'                        => 0,
         'is_configurable'               => 0,
-        'position'                      => 202
+        'sort_order'                    => 72,
+        'position'                      => 72
     ),
     'apartment' => array(
         'type'                          => 'varchar',
@@ -81,7 +84,8 @@ $fields  = array(
         'visible_in_advanced_search'    => 0,
         'unique'                        => 0,
         'is_configurable'               => 0,
-        'position'                      => 203
+        'sort_order'                    => 73,
+        'position'                      => 73
     )
 );
 
@@ -99,6 +103,7 @@ foreach($fields as $code => $fieldOptions){
     Mage::getModel('eav/config')
         ->getAttribute('customer_address', $code)
         ->setData('used_in_forms', $fieldsets)
+        ->setData('sort_order',$fieldOptions['sort_order'])
         ->save();
 }
 $installer->endSetup();
