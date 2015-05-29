@@ -224,7 +224,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
 
                 $collectRatesInfo = array(
                     'cotizacionEnvio' => array(
-                        'CPDestino'      => $request->getDestPostcode(),
+                        'CPDestino'      => $branch->getPostalCode(),
                         'Cliente'        => $clientNumber,
                         'Contrato'       => $contract,
                         'Peso'           => $totals->getTotalWeight(),
