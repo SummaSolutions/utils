@@ -155,9 +155,13 @@ class Summa_Andreani_Helper_Shipments
      */
     public function preparePdf($link)
     {
-        $pdfString = file_get_contents($link);
-        $endPDF = strrpos($pdfString, '%%EOF');
-        return substr($pdfString,0,$endPDF + 6);
+        if (filter_var($link,FILTER_VALIDATE_URL)) {
+            $pdfString = file_get_contents($link);
+            $endPDF = strrpos($pdfString, '%%EOF');
+            return substr($pdfString,0,$endPDF + 6);
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -168,10 +172,12 @@ class Summa_Andreani_Helper_Shipments
      */
     public function addShippingLabel($shipment,$andreaniResponse)
     {
-        $shipment = $this->getShipment($shipment);
-        $labelsContent = array($andreaniResponse->getShippingLabelContent());
-        $outputPdf = $this->_combineLabelsPdf($labelsContent);
-        $shipment->setShippingLabel($outputPdf->render())->save();
+        if (!$andreaniResponse->hasShippingLabelErrors()) {
+            $shipment = $this->getShipment($shipment);
+            $labelsContent = array($andreaniResponse->getShippingLabelContent());
+            $outputPdf = $this->_combineLabelsPdf($labelsContent);
+            $shipment->setShippingLabel($outputPdf->render())->save();
+        }
     }
 
     /**

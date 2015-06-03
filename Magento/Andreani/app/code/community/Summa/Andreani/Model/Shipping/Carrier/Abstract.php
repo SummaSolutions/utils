@@ -162,10 +162,14 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
             if ($result->hasErrors()) {
                 break;
             } else {
-                $data[] = array(
-                    'tracking_number' => $result->getTrackingNumber(),
-                    'label_content'   => $helper->preparePdf($result->getShippingLabelContent())
-                );
+                if ($result->hasShippingLabelErrors()) {
+                    $helper->addTrackingCode($request->getOrderShipment(),$result,$this);
+                } else {
+                    $data[] = array(
+                        'tracking_number' => $result->getTrackingNumber(),
+                        'label_content'   => $helper->preparePdf($result->getShippingLabelContent())
+                    );
+                }
             }
         }
         $response = new Varien_Object(array(
@@ -330,10 +334,13 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 } else {
                     $result->setTrackingNumber($response->ConfirmarCompraResult->NumeroAndreani);
                     $constancyResult = $this->getLinkConstancy($result->getTrackingNumber());
-                    if ($constancyResult->getConstancyUrl()) {
+                    if ($constancyResult->getConstancyUrl() && !$constancyResult->hasErrors()) {
                         $result->setShippingLabelContent($constancyResult->getConstancyUrl());
                     } else {
                         $result->setShippingLabelContent($this->_getHelper()->__('Receive') . ' ' . $response->ConfirmarCompraResult->Recibo);
+                        if ($constancyResult->hasErrors()) {
+                            $result->setShippingLabelErrors($constancyResult->getErrors());
+                        }
                     }
                 }
                 $result->setObjectResponse($response);

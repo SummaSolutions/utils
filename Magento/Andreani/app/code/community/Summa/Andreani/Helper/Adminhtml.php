@@ -47,7 +47,9 @@ class Summa_Andreani_Helper_Adminhtml
         if ($shipment->getOrder()->canShip()) {
             return false;
         }
-        if ($shipment->getSummaAndreaniShipmentStatus() == Summa_Andreani_Model_Status::SHIPMENT_NEW) {
+        $tracks = $shipment->getAllTracks();
+        if ($shipment->getSummaAndreaniShipmentStatus() == Summa_Andreani_Model_Status::SHIPMENT_NEW &&
+            !empty($tracks)) {
             return true;
         }
         return false;

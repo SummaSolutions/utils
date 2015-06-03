@@ -40,11 +40,11 @@ class Summa_Andreani_Adminhtml_AndreaniController
             if (Mage::helper('summa_andreani')->isAndreaniCarrierCode($track->getCarrierCode())) {
                 $constancyResponse = Mage::getSingleton('shipping/config')->getCarrierInstance($track->getCarrierCode())->getLinkConstancy($track->getNumber());
 
-                if (isset($constancyResponse->ImprimirConstanciaResult)) {
+                if (!$constancyResponse->hasErrors()) {
                     /** @var $helper Summa_Andreani_Helper_Shipments */
                     $helper = Mage::helper('summa_andreani/shipments');
                     $response = new Varien_Object();
-                    $response->setShippingLabelContent($helper->preparePdf($constancyResponse->ImprimirConstanciaResult->ResultadoImprimirConstancia->PdfLinkFile));
+                    $response->setShippingLabelContent($helper->preparePdf($constancyResponse->getConstancyUrl()));
                     $helper->addShippingLabel($shipment,$response);
 
                     Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('summa_andreani')->__('Successfully recovered constancy link from Andreani for tracking %s',$track->getNumber()));
@@ -85,19 +85,22 @@ class Summa_Andreani_Adminhtml_AndreaniController
         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
         foreach ($tracks as $track) {
             if (Mage::helper('summa_andreani')->isAndreaniCarrierCode($track->getCarrierCode())) {
-                $cancelShipmentResponse[$track->getNumber()] = Mage::getSingleton('shipping/config')->getCarrierInstance($this->getCarrierCode())->cancelShipmentRequest($track->getNumber());
+                $cancelShipmentResponse[$track->getNumber()] = Mage::getSingleton('shipping/config')->getCarrierInstance($track->getCarrierCode())->cancelShipmentRequest($track->getNumber());
             }
         }
-
+        $allTracksDeleted = true;
         foreach ($cancelShipmentResponse as $trackId => $response) {
             if (!$response->hasErrors() && $response->getCanceledShipment()) {
-                Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Shipment with tracking number %s was cancelled successfully',$trackId));
                 $track->delete();
             } else {
                 Mage::getSingleton('adminhtml/session')->addError($this->__('Could not cancel Shipment with tracking number %s',$trackId));
+                $allTracksDeleted = false;
             }
         }
 
+        if ($allTracksDeleted) {
+            $shipment->setShippingLabel('')->save();
+        }
         $this->_redirectReferer();
     }
 
