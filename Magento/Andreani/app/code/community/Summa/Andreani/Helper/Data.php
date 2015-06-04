@@ -117,15 +117,17 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
      * @param bool $generateMagentoShipment
      * @param Mage_Sales_Model_Order_Shipment $shipmentToAddTracks
      *
-     * @return bool
+     * @return Varien_Object
      */
     public function generateAndreaniShipment(Mage_Sales_Model_Order $order, $generateMagentoShipment=true, $shipmentToAddTracks = null)
     {
+        $result = new Varien_Object();
         /** @var $carrier Summa_Andreani_Model_Shipping_Carrier_Abstract */
         $carrier = $order->getShippingCarrier();
 
         if (!$this->isAndreaniShippingCarrier($carrier)) {
-            return false;
+            $result->setResult(false)
+                ->setErrors($this->__('The carrier isn\'t Andreani'));
         }
         /** @var $helper Summa_Andreani_Helper_Shipments */
         $helper = Mage::helper('summa_andreani/shipments');
@@ -147,6 +149,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             if($response->hasErrors()){
                 $this->throwException($response->getErrors(),$carrier->getServiceType());
             }
+            Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Andreani Shipment with tracking number %s was created successfully',$response->getTrackingNumber()));
             if ($generateMagentoShipment === true) {
 
                 $data['order_info']['order'] = $order;
@@ -155,18 +158,23 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
                 $data['order_info']['tracking_number'] = $response->getTrackingNumber();
 
                 $shipment_id = $helper->saveShipment($data);
-                $helper->addShippingLabel($shipment_id,$response);
-
+                if ($helper->addShippingLabel($shipment_id,$response)) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Successfully recovered constancy link from Andreani for tracking %s',$response->getTrackingNumber()));
+                }
             } elseif ($shipmentToAddTracks !== null) { // support for generation of shipments from Magento Admin
-                $helper->addShippingLabel($shipmentToAddTracks,$response);
+                if ($helper->addShippingLabel($shipmentToAddTracks,$response)) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Successfully recovered constancy link from Andreani for tracking %s',$response->getTrackingNumber()));
+                }
                 $helper->addTrackingCode($shipmentToAddTracks,$response,$carrier);
             }
-            return true;
+            $result->setResult(true);
         } catch (Exception $e) {
             Mage::getSingleton('core/session')->addError($e->getMessage());
             $this->debugging($e->getMessage());
-            return false;
+            $result->setResult(false)
+                ->setErrors($e->getMessage());
         }
+        return $result;
     }
 
     /**
@@ -256,7 +264,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
         }
         throw new Mage_Adminhtml_Exception(
             $this->__(
-                'Exception throwed on Andreani. %s',
+                'Exception threw on Andreani. %s',
                 $this->__($info)
             )
         );

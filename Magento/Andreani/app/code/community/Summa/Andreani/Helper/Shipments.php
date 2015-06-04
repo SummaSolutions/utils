@@ -97,6 +97,11 @@ class Summa_Andreani_Helper_Shipments
             );
 
             Mage::getModel('sales/order_shipment_api')->sendInfo($shipment_id);
+
+            /* @var $shipment Mage_Sales_Model_Order_Shipment */
+            $shipment = Mage::getModel('sales/order_shipment')->loadByIncrementId($shipment_id);
+            $shipment->setSummaAndreaniShipmentStatus(Summa_Andreani_Model_Status::SHIPMENT_NEW)
+                ->save();
         }
 
         return $shipment_id;
@@ -169,15 +174,19 @@ class Summa_Andreani_Helper_Shipments
      * @param $andreaniResponse
      *
      * @throws Zend_Pdf_Exception
+     * @return bool $result
      */
     public function addShippingLabel($shipment,$andreaniResponse)
     {
+        $result = false;
         if (!$andreaniResponse->hasShippingLabelErrors()) {
             $shipment = $this->getShipment($shipment);
             $labelsContent = array($andreaniResponse->getShippingLabelContent());
             $outputPdf = $this->_combineLabelsPdf($labelsContent);
             $shipment->setShippingLabel($outputPdf->render())->save();
+            $result = true;
         }
+        return $result;
     }
 
     /**

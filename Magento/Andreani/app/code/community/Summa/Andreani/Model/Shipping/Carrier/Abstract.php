@@ -1324,7 +1324,20 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
         $response->setTotalWidth(0);
         $response->setTotalLength(0);
         foreach ($items as $item) {
+            if ($item instanceof Mage_Sales_Model_Order_Shipment_Item)
+            {
+                $item = $item->getOrderItem();
+                if ($item->getHasChildren()) {
+                    $result = $this->getTotalsWVFromItems($item->getChildrenItems());
 
+                    $response->setTotalWeight($response->getTotalWeight() + $result->getTotalWeight());
+                    $response->setTotalVolume($response->getTotalVolume() + $result->getTotalVolume());
+
+                    $response->setTotalHeight($response->getTotalHeight() + $result->getTotalHeight());
+                    $response->setTotalWidth($response->getTotalWidth() + $result->getTotalWidth());
+                    $response->setTotalLength($response->getTotalLength() + $result->getTotalLength());
+                }
+            }
             if ($item->getProductType() === "simple") {
                 $height =
                     Mage::getSingleton('catalog/resource_product')->getAttributeRawValue(
@@ -1359,8 +1372,8 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
                 $weight = ($weight)? $weight : $this->_getHelper()->calculateWeight($item->getProduct());
 
                 $qty = ($parent = $item->getParentItem()) ?
-                    $parent->getQty():
-                    $item->getQty();
+                    $parent->getQtyShipped():
+                    $item->getQtyShipped();
 
                 $response->setTotalWeight($response->getTotalWeight() + ($weight * $qty));
                 $response->setTotalVolume($response->getTotalVolume() + (($height * $width * $length) * $qty));

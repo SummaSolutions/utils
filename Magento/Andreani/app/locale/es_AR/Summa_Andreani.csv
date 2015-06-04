@@ -114,7 +114,7 @@
 "Select one product attribute","Seleccione un atributo de producto"
 "Andreani WebService","Web Service de Andreani"
 "Matrix Rates","Matrix Rates"
-"Exception throwed on Andreani. %s","Excepcion lanzada en Andreani. %s"
+"Exception threw on Andreani. %s","Excepcion lanzada en Andreani. %s"
 "Andreani Branches","Sucursales de Andreani"
 "Admin Branches","Administración de Sucursales"
 "Branch Information","Informacion de la Sucursal"
@@ -174,3 +174,4 @@
 "Shipping Urgent","Andreani Urgente"
 "Free Shipping using Andreani Urgent","Envio gratuito por Andreani Urgente"
 "Show as a Select","Mostrar en un select"
+"Andreani Shipment with tracking number %s was created successfully","Pedido a Andreani con número de tracking %s se creo exitosamente"

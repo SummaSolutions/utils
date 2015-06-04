@@ -57,7 +57,10 @@ class Summa_Andreani_Model_Observer
             $this->_getHelper()->isAndreaniShippingCarrier($shippingCarrier) &&
             $this->_getHelper()->isAutoCreateShipmentOnInvoiceEnabled()
         ){
-            $this->_getHelper()->generateAndreaniShipment($order);
+            $result = $this->_getHelper()->generateAndreaniShipment($order);
+            if (!$result->getResult()) {
+                Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('Exception threw on Andreani. %s',$result->getErrors()));
+            }
         }
     }
 
@@ -108,6 +111,8 @@ class Summa_Andreani_Model_Observer
             }
             $this->_getShipmentHelper()->addTrackingCode($shipment,$response,$carrier);
             $this->_getShipmentHelper()->addShippingLabel($shipment,$response);
+            $shipment->setSummaAndreaniShipmentStatus(Summa_Andreani_Model_Status::SHIPMENT_NEW)
+                ->save();
         }
         return $this;
     }

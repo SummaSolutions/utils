@@ -17,8 +17,8 @@ class Summa_Andreani_Helper_Adminhtml
      */
     public function canGenerateConstancy($shipment)
     {
-        $shippingMethod = $shipment->getOrder()->getShippingMethod();
-        if ($this->_getHelperData()->isAndreaniShippingMethod($shippingMethod)) {
+        $order = $shipment->getOrder();
+        if (!$this->_getHelperData()->isAndreaniShippingCarrier($order->getShippingCarrier())) {
             return false;
         }
 
@@ -40,8 +40,8 @@ class Summa_Andreani_Helper_Adminhtml
      */
     public function canCancelShipment($shipment)
     {
-        $shippingMethod = $shipment->getOrder()->getShippingMethod();
-        if ($this->_getHelperData()->isAndreaniShippingMethod($shippingMethod)) {
+        $order = $shipment->getOrder();
+        if (!$this->_getHelperData()->isAndreaniShippingCarrier($order->getShippingCarrier())) {
             return false;
         }
         if ($shipment->getOrder()->canShip()) {

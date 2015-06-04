@@ -19,25 +19,25 @@ class Summa_Andreani_Adminhtml_AndreaniController
         $shipment = Mage::getModel('sales/order_shipment')->load($shipmentId);
 
         if(!$shipment->getId()){
-            Mage::getSingleton('adminhtml/session')->addError($this->__('There was an error loading the shipment'));
+            Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('There was an error loading the shipment'));
             $this->_redirectReferer();
         }
 
-        if (!Mage::helper('summa_andreani')->isAndreaniShippingCarrier($shipment->getOrder()->getShippingCarrier()))
+        if (!$this->_getAndreaniHelper()->isAndreaniShippingCarrier($shipment->getOrder()->getShippingCarrier()))
         {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('The carrier isn\'t Andreani'));
+            Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('The carrier isn\'t Andreani'));
             $this->_redirectReferer();
         }
 
         $tracks = $shipment->getAllTracks();
         if(empty($tracks)){
-            Mage::getSingleton('adminhtml/session')->addError($this->__('No tracking numbers were found in the shipment'));
+            Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('No tracking numbers were found in the shipment'));
             $this->_redirectReferer();
         }
 
         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
         foreach ($tracks as $track) {
-            if (Mage::helper('summa_andreani')->isAndreaniCarrierCode($track->getCarrierCode())) {
+            if ($this->_getAndreaniHelper()->isAndreaniCarrierCode($track->getCarrierCode())) {
                 $constancyResponse = Mage::getSingleton('shipping/config')->getCarrierInstance($track->getCarrierCode())->getLinkConstancy($track->getNumber());
 
                 if (!$constancyResponse->hasErrors()) {
@@ -47,10 +47,10 @@ class Summa_Andreani_Adminhtml_AndreaniController
                     $response->setShippingLabelContent($helper->preparePdf($constancyResponse->getConstancyUrl()));
                     $helper->addShippingLabel($shipment,$response);
 
-                    Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('summa_andreani')->__('Successfully recovered constancy link from Andreani for tracking %s',$track->getNumber()));
+                    Mage::getSingleton('adminhtml/session')->addSuccess($this->_getAndreaniHelper()->__('Successfully recovered constancy link from Andreani for tracking %s',$track->getNumber()));
 
                 } else {
-                    Mage::getSingleton('adminhtml/session')->addError(Mage::helper('summa_andreani')->__('There was an error calling Andreani WebService on tracking %s',$track->getNumber()));
+                    Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('There was an error calling Andreani WebService on tracking %s',$track->getNumber()));
                 }
             }
         }
@@ -65,27 +65,29 @@ class Summa_Andreani_Adminhtml_AndreaniController
         $shipment = Mage::getModel('sales/order_shipment')->load($shipmentId);
 
         if(!$shipment->getId()){
-            Mage::getSingleton('adminhtml/session')->addError($this->__('There was an error loading the shipment'));
+            Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('There was an error loading the shipment'));
             $this->_redirectReferer();
         }
 
-        if (!Mage::helper('summa_andreani')->isAndreaniShippingCarrier($shipment->getOrder()->getShippingCarrier()))
+        if (!$this->_getAndreaniHelper()->isAndreaniShippingCarrier($shipment->getOrder()->getShippingCarrier()))
         {
-            Mage::getSingleton('adminhtml/session')->addError($this->__('The carrier isn\'t Andreani'));
+            Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('The carrier isn\'t Andreani'));
             $this->_redirectReferer();
         }
 
         $tracks = $shipment->getAllTracks();
         if(empty($tracks)){
-            Mage::getSingleton('adminhtml/session')->addError($this->__('No tracking numbers were found in the shipment'));
+            Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('No tracking numbers were found in the shipment'));
             $this->_redirectReferer();
         }
 
         $cancelShipmentResponse = array();
         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
         foreach ($tracks as $track) {
-            if (Mage::helper('summa_andreani')->isAndreaniCarrierCode($track->getCarrierCode())) {
-                $cancelShipmentResponse[$track->getNumber()] = Mage::getSingleton('shipping/config')->getCarrierInstance($track->getCarrierCode())->cancelShipmentRequest($track->getNumber());
+            if ($this->_getAndreaniHelper()->isAndreaniCarrierCode($track->getCarrierCode())) {
+                $cancelShipmentResponse[$track->getNumber()] =
+                    Mage::getSingleton('shipping/config')->getCarrierInstance($track->getCarrierCode())
+                        ->cancelShipmentRequest($track->getNumber());
             }
         }
         $allTracksDeleted = true;
@@ -93,7 +95,7 @@ class Summa_Andreani_Adminhtml_AndreaniController
             if (!$response->hasErrors() && $response->getCanceledShipment()) {
                 $track->delete();
             } else {
-                Mage::getSingleton('adminhtml/session')->addError($this->__('Could not cancel Shipment with tracking number %s',$trackId));
+                Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('Could not cancel Shipment with tracking number %s',$trackId));
                 $allTracksDeleted = false;
             }
         }
@@ -115,25 +117,30 @@ class Summa_Andreani_Adminhtml_AndreaniController
         $shipment = Mage::getModel('sales/order_shipment')->load($shipmentId);
         $order = $shipment->getOrder();
         $carrier = $order->getShippingCarrier();
-        if (Mage::helper('summa_andreani')->isAndreaniShippingCarrier($carrier))
+        if ($this->_getAndreaniHelper()->isAndreaniShippingCarrier($carrier))
         {
             try {
                 /** @var $carrier Summa_Andreani_Model_Shipping_Carrier_Abstract */
                 $response = $carrier->doShipmentRequest($order,$shipment->getAllItems());
 
                 if($response->hasErrors()){
-                    Mage::helper('summa_andreani')->throwException($response->getErrors(),$carrier->getServiceType());
+                    $this->_getAndreaniHelper()->throwException($response->getErrors(),$carrier->getServiceType());
                 }
+                Mage::getSingleton('adminhtml/session')->addSuccess($this->_getAndreaniHelper()->__('Andreani Shipment with tracking number %s was created successfully',$response->getTrackingNumber()));
                 /** @var $helper Summa_Andreani_Helper_Shipments */
                 $helper = Mage::helper('summa_andreani/shipments');
-                $helper->addShippingLabel($shipment,$response);
+                if ($helper->addShippingLabel($shipment,$response)) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess($this->_getAndreaniHelper()->__('Successfully recovered constancy link from Andreani for tracking %s',$response->getTrackingNumber()));
+                }
                 $helper->addTrackingCode($shipment,$response,$carrier);
+                $shipment->setSummaAndreaniShipmentStatus(Summa_Andreani_Model_Status::SHIPMENT_NEW)
+                    ->save();
             } catch (Exception $e) {
                 Mage::getSingleton('core/session')->addError($e->getMessage());
                 Mage::log($e->getMessage(), null, 'andreani.log');
             }
         } else {
-            Mage::helper('summa_andreani')->throwException(Mage::helper('summa_andreani')->__('The carrier isn\'t Andreani'));
+            $this->_getAndreaniHelper()->throwException($this->_getAndreaniHelper()->__('The carrier isn\'t Andreani'));
         }
         $this->_redirectReferer();
     }
@@ -141,10 +148,20 @@ class Summa_Andreani_Adminhtml_AndreaniController
     public function generateShipmentsAction()
     {
         $orderId = $this->getRequest()->getParam('order_id');
+        /** @var Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->load($orderId);
-        Mage::helper('summa_andreani')->generateAndreaniShipment($order);
-
-
+        $result = $this->_getAndreaniHelper()->generateAndreaniShipment($order);
+        if (!$result->getResult()) {
+            Mage::getSingleton('adminhtml/session')->addError($this->_getAndreaniHelper()->__('Exception threw on Andreani. %s',$result->getErrors()));
+        }
         $this->_redirect('*/sales_order/view', array('order_id' => $orderId));
+    }
+
+    /**
+     * @return Summa_Andreani_Helper_Data
+     */
+    protected function _getAndreaniHelper()
+    {
+        return Mage::helper('summa_andreani');
     }
 }
