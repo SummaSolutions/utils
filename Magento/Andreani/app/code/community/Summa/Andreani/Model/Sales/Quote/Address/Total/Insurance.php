@@ -68,7 +68,7 @@ class Summa_Andreani_Model_Sales_Quote_Address_Total_Insurance
         if (!count($this->_getAddressItems($address))) {
             return false;
         }
-        if (!$address->getShippingMethod()) {
+        if (!$address->getShippingMethod() || !$address->getShippingRateByCode($address->getShippingMethod())) {
             return false;
         }
         if (!$helper->isAndreaniShippingCarrier(

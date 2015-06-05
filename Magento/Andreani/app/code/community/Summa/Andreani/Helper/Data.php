@@ -169,7 +169,7 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
             }
             $result->setResult(true);
         } catch (Exception $e) {
-            Mage::getSingleton('core/session')->addError($e->getMessage());
+            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             $this->debugging($e->getMessage());
             $result->setResult(false)
                 ->setErrors($e->getMessage());

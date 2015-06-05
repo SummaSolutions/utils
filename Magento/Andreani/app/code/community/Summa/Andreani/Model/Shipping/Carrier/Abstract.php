@@ -139,7 +139,7 @@ abstract class Summa_Andreani_Model_Shipping_Carrier_Abstract
     public function requestToShipment(Mage_Shipping_Model_Shipment_Request $request)
     {
         $this->_getHelper()->debugging('requestToShipment:', $this->getServiceType());
-        $this->_getHelper()->debugging($request, $this->getServiceType());
+        $this->_getHelper()->debugging($request->getData(), $this->getServiceType());
 
         $packages = $request->getPackages();
         if (!is_array($packages) || !$packages) {

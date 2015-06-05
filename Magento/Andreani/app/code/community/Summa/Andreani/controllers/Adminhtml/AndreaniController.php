@@ -136,7 +136,7 @@ class Summa_Andreani_Adminhtml_AndreaniController
                 $shipment->setSummaAndreaniShipmentStatus(Summa_Andreani_Model_Status::SHIPMENT_NEW)
                     ->save();
             } catch (Exception $e) {
-                Mage::getSingleton('core/session')->addError($e->getMessage());
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
                 Mage::log($e->getMessage(), null, 'andreani.log');
             }
         } else {
