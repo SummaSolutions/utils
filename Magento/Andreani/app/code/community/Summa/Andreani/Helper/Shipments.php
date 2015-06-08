@@ -165,7 +165,7 @@ class Summa_Andreani_Helper_Shipments
             $endPDF = strrpos($pdfString, '%%EOF');
             return substr($pdfString,0,$endPDF + 6);
         } else {
-            return '';
+            return $link;
         }
     }
 
@@ -180,11 +180,19 @@ class Summa_Andreani_Helper_Shipments
     {
         $result = false;
         if (!$andreaniResponse->hasShippingLabelErrors()) {
-            $shipment = $this->getShipment($shipment);
-            $labelsContent = array($andreaniResponse->getShippingLabelContent());
-            $outputPdf = $this->_combineLabelsPdf($labelsContent);
-            $shipment->setShippingLabel($outputPdf->render())->save();
-            $result = true;
+            try {
+                $shipment = $this->getShipment($shipment);
+                $pdf = $this->preparePdf($andreaniResponse->getShippingLabelContent());
+                $labelsContent = array($pdf);
+                $outputPdf = $this->_combineLabelsPdf($labelsContent);
+                $shipment->setShippingLabel($outputPdf->render())->save();
+                $result = true;
+            } catch (Exception $e) {
+                $shipment = $this->getShipment($shipment);
+                /** @var Summa_Andreani_Model_Shipping_Carrier_Abstract $carrier */
+                $carrier = $shipment->getOrder()->getShippingCarrier();
+                $this->_getHelper()->debugging($e->getMessage(),$carrier->getServiceType());
+            }
         }
         return $result;
     }
@@ -255,5 +263,13 @@ class Summa_Andreani_Helper_Shipments
         $page->drawImage($pdfImage, 0, 0, $xSize, $ySize);
         unlink($tmpFileName);
         return $page;
+    }
+
+    /**
+     * @return Summa_Andreani_Helper_Data
+     */
+    protected function _getHelper()
+    {
+        return Mage::helper('summa_andreani');
     }
 }
