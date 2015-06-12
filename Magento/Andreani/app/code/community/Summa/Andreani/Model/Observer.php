@@ -267,4 +267,98 @@ class Summa_Andreani_Model_Observer
         $shipmentInfo['compra']['Piso'] = $floor;
         $shipmentInfo['compra']['NumeroDocumento'] = $DNI_number;
     }
+
+    public function beforeDoShipmentRequestValidateStorepickup(Varien_Event_Observer $observer)
+    {
+        $shipmentInfo = $observer->getShipmentInfo();
+
+        /** @var Summa_Andreani_Model_Shipping_Carrier_Abstract $carrier */
+        $carrier = $observer->getDataObject();
+
+        if ($this->_getHelper()->isAndreaniShippingCarrier($carrier,Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->getServiceType()) &&
+            !$shipmentInfo['compra']['SucursalRetiro']) {
+            /** @var Mage_Sales_Model_Order $order */
+            $order = $observer->getOrder();
+            /** @var Mage_Sales_Model_Order_Address $shippingAddress */
+            $shippingAddress = $order->getShippingAddress();
+
+            $code = Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getCode();
+
+            $orderCarrierCode = explode('_',$order->getShippingMethod());
+            if (current($orderCarrierCode) === $code) {
+                $branchId = end($orderCarrierCode);
+
+                // Set branch ID to the address
+                $shippingAddress->setAndreaniBranchId($branchId);
+
+                $branch = Mage::getModel('summa_andreani/branch')->load($branchId, 'branch_id');
+                if ($branch) {
+                    $shippingAddress->setStreet($branch->getAddress());
+                    $shippingAddress->setCity(ucwords(strtolower($branch->getCity())));
+
+                    $region = Mage::getModel('directory/region')->load($branch->getRegionId());
+                    if ($region) {
+                        $shippingAddress->setRegion($region->getDefaultName());
+                    }
+
+                    $shippingAddress->setRegionId($branch->getRegionId());
+                    $shippingAddress->setPostcode($branch->getPostalCode());
+
+                    $phone = $branch->getPhone1();
+                    if (!$phone) {
+                        $phone = 'N/A';
+                    }
+                    $shippingAddress->setTelephone($phone);
+
+                    $shipmentInfo['compra']['SucursalRetiro'] = $shippingAddress->getAndreaniBranchId();
+                    $shipmentInfo['compra']['Provincia'] = $shippingAddress->getRegion();
+                    $shipmentInfo['compra']['Localidad'] = $shippingAddress->getCity();
+                    $shipmentInfo['compra']['CodigoPostalDestino'] = $shippingAddress->getPostcode();
+                    $shipmentInfo['compra']['Calle'] = $shippingAddress->getAddress();
+                    $shipmentInfo['compra']['Numero'] = '-';
+                    $shipmentInfo['compra']['NombreApellido'] = $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname();
+                    $shipmentInfo['compra']['NumeroTelefono'] = $shippingAddress->getTelephone();
+
+                    $shippingAddress->save();
+                }
+            }
+        }
+    }
+
+    public function salesOrderAddressSaveBefore(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Sales_Model_Order_Address $shippingAddress */
+        $shippingAddress = $observer->getAddress();
+
+        $code = Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getCode();
+
+        $quoteCarrierCode = explode('_',$shippingAddress->getShippingMethod());
+        if (current($quoteCarrierCode) === $code &&
+            !$shippingAddress->getAndreaniBranchId()) {
+            $branchId = end($quoteCarrierCode);
+
+            // Set branch ID to the address
+            $shippingAddress->setAndreaniBranchId($branchId);
+
+            $branch = Mage::getModel('summa_andreani/branch')->load($branchId, 'branch_id');
+            if ($branch) {
+                $shippingAddress->setStreet($branch->getAddress());
+                $shippingAddress->setCity(ucwords(strtolower($branch->getCity())));
+
+                $region = Mage::getModel('directory/region')->load($branch->getRegionId());
+                if ($region) {
+                    $shippingAddress->setRegion($region->getDefaultName());
+                }
+
+                $shippingAddress->setRegionId($branch->getRegionId());
+                $shippingAddress->setPostcode($branch->getPostalCode());
+
+                $phone = $branch->getPhone1();
+                if (!$phone) {
+                    $phone = 'N/A';
+                }
+                $shippingAddress->setTelephone($phone);
+            }
+        }
+    }
 }

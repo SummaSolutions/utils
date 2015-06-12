@@ -86,7 +86,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
 
             $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username'=> $username, 'password'=>$password));
 
-            $this->dispatchEvent('fetch_branches_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'branches' => $branches));
+            $this->dispatchEvent('fetch_branches_init_soap_client_before',array('gateway_url' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'branches' => $branches));
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
             $this->dispatchEvent('fetch_branches_init_soap_client_after',array('client' => $client, 'branches' => $branches));
@@ -104,7 +104,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             $this->_getHelper()->debugging('fetchBranchesDataSent:',$this->getServiceType());
             $this->_getHelper()->debugging($branchesToGet,$this->getServiceType());
 
-            $this->dispatchEvent('fetch_branches_call_ws_before',array('dataSent' => $branchesToGet, 'branches' => $branches));
+            $this->dispatchEvent('fetch_branches_call_ws_before',array('data_sent' => $branchesToGet, 'branches' => $branches));
             $response = $client->ConsultarSucursales($branchesToGet);
             $this->dispatchEvent('fetch_branches_call_ws_after',array('response' => $response, 'branches' => $branches));
 
@@ -207,7 +207,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             ), $this->getServiceType());
 
             $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
-            $this->dispatchEvent('collect_rates_ws_init_soap_client_before',array('gatewayUrl' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'request' => $request));
+            $this->dispatchEvent('collect_rates_ws_init_soap_client_before',array('gateway_url' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'request' => $request));
             $client = new SoapClient($gatewayUrl, $options);
             $client->__setSoapHeaders(array($wsse_header));
             $this->dispatchEvent('collect_rates_ws_init_soap_client_after',array('client' => $client, 'request' => $request));
@@ -237,7 +237,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
                 $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
                 $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
 
-                $this->dispatchEvent('collect_rates_ws_call_ws_before',array('dataSent' => $collectRatesInfo, 'request' => $request));
+                $this->dispatchEvent('collect_rates_ws_call_ws_before',array('data_sent' => $collectRatesInfo, 'request' => $request));
                 $response[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance, $branch->getBranchId());
                 $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $response, 'request' => $request));
 

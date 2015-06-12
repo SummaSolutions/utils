@@ -27,10 +27,10 @@ $catalogSetup->addAttribute($entityTypeId, 'weight_andreani', array(
     'default_value' => '',
     'is_filterable' => '1',
     'is_filterable_in_search' => '1',
-    'visible' => '1',
+    'visible' => '0',
     'visible_on_front' => '1',
     'is_global'  => '1',
-    'required' => '1',
+    'required' => '0',
     'is_searchable' => '1',
     'is_comparable' => '1',
     'user_defined' => '1',
@@ -100,6 +100,7 @@ foreach ($attributesSet as $attributeSet) {
     $catalogSetup->addAttributeToSet($entityTypeId, $attributeSetId, 'General', 'height_andreani', '60');
     $catalogSetup->addAttributeToSet($entityTypeId, $attributeSetId, 'General', 'width_andreani', '70');
     $catalogSetup->addAttributeToSet($entityTypeId, $attributeSetId, 'General', 'length_andreani', '80');
+    $catalogSetup->addAttributeToSet($entityTypeId, $attributeSetId, 'General', 'weight_andreani', '90');
 }
 
 $installer->endSetup();

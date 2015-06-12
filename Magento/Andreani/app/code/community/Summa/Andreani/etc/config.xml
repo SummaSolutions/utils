@@ -114,17 +114,31 @@
                     </summa_andreani_product_save_before>
                 </observers>
             </catalog_product_save_before>
-            <!--
             <summa_andreani_do_shipment_request_call_ws_before>
                 <observers>
+                    <!--
                     <summa_andreani_add_data_extra>
                         <type>model</type>
                         <class>summa_andreani/observer</class>
                         <method>beforeDoShipmentRequestAddDataExtra</method>
                     </summa_andreani_add_data_extra>
+                    -->
+                    <summa_andreani_validate_storepickup>
+                        <type>model</type>
+                        <class>summa_andreani/observer</class>
+                        <method>beforeDoShipmentRequestValidateStorepickup</method>
+                    </summa_andreani_validate_storepickup>
                 </observers>
             </summa_andreani_do_shipment_request_call_ws_before>
-            -->
+            <sales_order_address_save_before>
+                <observers>
+                    <summa_andreani_sales_order_address_save_before>
+                        <type>model</type>
+                        <class>summa_andreani/observer</class>
+                        <method>salesOrderAddressSaveBefore</method>
+                    </summa_andreani_sales_order_address_save_before>
+                </observers>
+            </sales_order_address_save_before>
         </events>
         <sales>
             <quote>
@@ -163,6 +177,7 @@
                     <to_order_address>*</to_order_address>
                 </base_summa_andreani_insurance_amount>
                 <andreani_branch_id>
+                    <to_order>*</to_order>
                     <to_order_address>*</to_order_address>
                 </andreani_branch_id>
             </sales_convert_quote_address>
@@ -176,7 +191,9 @@
                     <to_quote_address>*</to_quote_address>
                 </base_summa_andreani_insurance_amount>
                 <andreani_branch_id>
+                    <to_order>*</to_order>
                     <to_quote_address>*</to_quote_address>
+                    <to_order_address>*</to_order_address>
                 </andreani_branch_id>
             </sales_convert_order_address>
             <!--

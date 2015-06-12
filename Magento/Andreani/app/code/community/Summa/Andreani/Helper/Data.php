@@ -30,12 +30,26 @@ class Summa_Andreani_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Function to know if the shipping carrier instance is one of Andreani Shipping Carriers
      * @param $shippingCarrier
+     * @param string $carrier
      *
      * @return bool
      */
-    public function isAndreaniShippingCarrier($shippingCarrier)
+    public function isAndreaniShippingCarrier($shippingCarrier, $carrier = '')
     {
-        return $shippingCarrier instanceof Summa_Andreani_Model_Shipping_Carrier_Abstract;
+        switch ($carrier) {
+            case Mage::getSingleton('summa_andreani/shipping_carrier_standard')->getServiceType():
+                $isShippingCarrier = $shippingCarrier instanceof Summa_Andreani_Model_Shipping_Carrier_Standard;
+                break;
+            case Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->getServiceType():
+                $isShippingCarrier = $shippingCarrier instanceof Summa_Andreani_Model_Shipping_Carrier_Storepickup;
+                break;
+            case Mage::getSingleton('summa_andreani/shipping_carrier_urgent')->getServiceType():
+                $isShippingCarrier = $shippingCarrier instanceof Summa_Andreani_Model_Shipping_Carrier_Urgent;
+                break;
+            default:
+               $isShippingCarrier = $shippingCarrier instanceof Summa_Andreani_Model_Shipping_Carrier_Abstract;
+        }
+        return $isShippingCarrier;
     }
 
     /**
