@@ -98,7 +98,10 @@ class Summa_Andreani_Model_Observer
         /** @var Summa_Andreani_Model_Shipping_Carrier_Abstract $carrier */
         $carrier = $order->getShippingCarrier();
         if (
-            Mage::app()->getRequest()->getControllerName() === 'sales_order_shipment' &&
+            (
+                Mage::app()->getRequest()->getControllerName() === 'sales_order_shipment' ||
+                Mage::app()->getRequest()->getControllerName() === 'sales_order_invoice'
+            ) &&
             Mage::app()->getRequest()->getActionName() === "save" &&
             $this->_getHelper()->isAndreaniShippingCarrier($carrier) &&
             $this->_getHelper()->isAutoCreateShippingOnShipmentEnabled()
@@ -156,18 +159,22 @@ class Summa_Andreani_Model_Observer
     }
 
     /**
-     * Observer on Shipment save after GLOBAL
+     * Observer on Shipment save before GLOBAL
      * At this moment, this observer set Order status based-on Shipment Andreani Status
      * @param Varien_Event_Observer $observer
      *
      * @throws Exception
      */
-    public function shipmentGlobalSaveAfter(Varien_Event_Observer $observer)
+    public function shipmentGlobalSaveBefore(Varien_Event_Observer $observer)
     {
         $shipment = $observer->getShipment();
         /** @var Mage_Sales_Model_Order $order */
         $order = $shipment->getOrder();
         $saveOrder = false;
+        if ($this->_getHelper()->isAndreaniShippingCarrier($order->getShippingCarrier()) &&
+            is_null($shipment->getSummaAndreaniShipmentStatus())) {
+            $shipment->setSummaAndreaniShipmentStatus(Summa_Andreani_Model_Status::SHIPMENT_NEW);
+        }
         switch ($shipment->getSummaAndreaniShipmentStatus()) {
             case Summa_Andreani_Model_Status::SHIPMENT_NEW:
                 if ($order->getStatus() !== Summa_Andreani_Model_Status::ORDER_STATUS_NEW) {
@@ -261,22 +268,26 @@ class Summa_Andreani_Model_Observer
         $DNI_number = $address->getDni();
 
         $shipmentInfo = $observer->getShipmentInfo();
+        $shipmentData = $shipmentInfo->getData();
 
-        $shipmentInfo['compra']['Numero'] = $number;
-        $shipmentInfo['compra']['Departamento'] = $apartment;
-        $shipmentInfo['compra']['Piso'] = $floor;
-        $shipmentInfo['compra']['NumeroDocumento'] = $DNI_number;
+        $shipmentData['compra']['Numero'] = $number;
+        $shipmentData['compra']['Departamento'] = $apartment;
+        $shipmentData['compra']['Piso'] = $floor;
+        $shipmentData['compra']['NumeroDocumento'] = $DNI_number;
+
+        $shipmentInfo->setData($shipmentData);
     }
 
     public function beforeDoShipmentRequestValidateStorepickup(Varien_Event_Observer $observer)
     {
         $shipmentInfo = $observer->getShipmentInfo();
+        $shipmentData = $shipmentInfo->getData();
 
         /** @var Summa_Andreani_Model_Shipping_Carrier_Abstract $carrier */
         $carrier = $observer->getDataObject();
 
         if ($this->_getHelper()->isAndreaniShippingCarrier($carrier,Mage::getSingleton('summa_andreani/shipping_carrier_storepickup')->getServiceType()) &&
-            !$shipmentInfo['compra']['SucursalRetiro']) {
+            !$shipmentData['compra']['SucursalRetiro']) {
             /** @var Mage_Sales_Model_Order $order */
             $order = $observer->getOrder();
             /** @var Mage_Sales_Model_Order_Address $shippingAddress */
@@ -310,14 +321,16 @@ class Summa_Andreani_Model_Observer
                     }
                     $shippingAddress->setTelephone($phone);
 
-                    $shipmentInfo['compra']['SucursalRetiro'] = $shippingAddress->getAndreaniBranchId();
-                    $shipmentInfo['compra']['Provincia'] = $shippingAddress->getRegion();
-                    $shipmentInfo['compra']['Localidad'] = $shippingAddress->getCity();
-                    $shipmentInfo['compra']['CodigoPostalDestino'] = $shippingAddress->getPostcode();
-                    $shipmentInfo['compra']['Calle'] = $shippingAddress->getAddress();
-                    $shipmentInfo['compra']['Numero'] = '-';
-                    $shipmentInfo['compra']['NombreApellido'] = $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname();
-                    $shipmentInfo['compra']['NumeroTelefono'] = $shippingAddress->getTelephone();
+                    $shipmentData['compra']['SucursalRetiro'] = $shippingAddress->getAndreaniBranchId();
+                    $shipmentData['compra']['Provincia'] = $shippingAddress->getRegion();
+                    $shipmentData['compra']['Localidad'] = $shippingAddress->getCity();
+                    $shipmentData['compra']['CodigoPostalDestino'] = $shippingAddress->getPostcode();
+                    $shipmentData['compra']['Calle'] = $shippingAddress->getAddress();
+                    $shipmentData['compra']['Numero'] = '-';
+                    $shipmentData['compra']['NombreApellido'] = $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname();
+                    $shipmentData['compra']['NumeroTelefono'] = $shippingAddress->getTelephone();
+
+                    $shipmentInfo->setData($shipmentData);
 
                     $shippingAddress->save();
                 }
@@ -332,10 +345,11 @@ class Summa_Andreani_Model_Observer
 
         $code = Mage::getModel('summa_andreani/shipping_carrier_storepickup')->getCode();
 
-        $quoteCarrierCode = explode('_',$shippingAddress->getShippingMethod());
-        if (current($quoteCarrierCode) === $code &&
+        $carrierCode = explode('_',$shippingAddress->getOrder()->getShippingMethod());
+        if ($shippingAddress->getAddressType() != 'billing' &&
+            current($carrierCode) === $code &&
             !$shippingAddress->getAndreaniBranchId()) {
-            $branchId = end($quoteCarrierCode);
+            $branchId = end($carrierCode);
 
             // Set branch ID to the address
             $shippingAddress->setAndreaniBranchId($branchId);

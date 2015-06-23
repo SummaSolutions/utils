@@ -51,7 +51,16 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
      */
     public function getAllowedMethods()
     {
-        return array($this->_code=>$this->getConfigData('name'));
+        $allowedMethods = array();
+        $collection = Mage::getModel('summa_andreani/branch')->getBranches();
+        foreach ($collection as $branch) {
+            $methodCode = $this->_code;
+            $methodTitle = $this->_getHelper()->__($this->_getHelper()->getConfigData('name', $this->getServiceType()));
+            $methodCode .= '_' . $branch->getBranchId();
+            $methodTitle .= ' ' . ucfirst(strtolower($branch->getDescription()));
+            $allowedMethods[$methodCode] = $methodTitle;
+        }
+        return $allowedMethods;
     }
 
     /**
@@ -62,50 +71,47 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
      */
     public function fetchBranches($branches = null)
     {
+        if (!is_null($branches)) {
+            $branches = new Varien_Object(array('branches' => $branches));
+        }
         $result = new Varien_Object();
         try
         {
-            $options = array(
-                'soap_version' => SOAP_1_2,
-                'exceptions' => true,
-                'trace' => 1,
-                'wdsl_local_copy' => true
-            );
-            $username   = $this->_getHelper()->getUsername($this->getServiceType());
-            $password   = $this->_getHelper()->getPassword($this->getServiceType());
-
-            $gatewayUrl = $this->_getHelper()->getConfigData('gateway_storepickup_url');
-
+            $connexionData = new Varien_Object(array(
+                'username'      => $this->_getHelper()->getUsername($this->getServiceType()),
+                'password'      => $this->_getHelper()->getPassword($this->getServiceType()),
+                'gateway_url'   => $this->_getHelper()->getConfigData('gateway_storepickup_url'),
+                'options'       => $this->_getHelper()->getSoapOptions()
+            ));
             $this->_getHelper()->debugging('fetchBranchesDataConnexion:',$this->getServiceType());
-            $this->_getHelper()->debugging(array(
-                'username' => $username,
-                'password' => $password,
-                'gatewayStorePickupUrl' => $gatewayUrl,
-                'options' => $options
-            ),$this->getServiceType());
+            $this->_getHelper()->debugging($connexionData->getData(),$this->getServiceType());
 
-            $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username'=> $username, 'password'=>$password));
+            $wsse_header = $this->_getHelper()->getWsseHeader($connexionData->getUsername(),$connexionData->getPassword());
 
-            $this->dispatchEvent('fetch_branches_init_soap_client_before',array('gateway_url' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'branches' => $branches));
-            $client = new SoapClient($gatewayUrl, $options);
+            $this->dispatchEvent('fetch_branches_init_soap_client_before',array('gateway_url' => $connexionData->getGatewayUrl(), 'options' => $connexionData->getOptions(), 'wsse_header' => $wsse_header, 'branches' => $branches));
+            $client = new SoapClient($connexionData->getGatewayUrl(), $connexionData->getOptions());
             $client->__setSoapHeaders(array($wsse_header));
             $this->dispatchEvent('fetch_branches_init_soap_client_after',array('client' => $client, 'branches' => $branches));
 
             if (is_null($branches)) {
-                $branchesToGet = array(
-                    'consulta' => array()
+                $branchesToGet = new Varien_Object(
+                    array(
+                        'consulta' => array()
+                    )
                 );
             } else {
-                $branchesToGet = array(
-                    'consulta' => $branches
+                $branchesToGet = new Varien_Object(
+                    array(
+                        'consulta' => $branches->getBranches()
+                    )
                 );
             }
 
             $this->_getHelper()->debugging('fetchBranchesDataSent:',$this->getServiceType());
-            $this->_getHelper()->debugging($branchesToGet,$this->getServiceType());
+            $this->_getHelper()->debugging($branchesToGet->getData(),$this->getServiceType());
 
             $this->dispatchEvent('fetch_branches_call_ws_before',array('data_sent' => $branchesToGet, 'branches' => $branches));
-            $response = $client->ConsultarSucursales($branchesToGet);
+            $response = $client->ConsultarSucursales($branchesToGet->getData());
             $this->dispatchEvent('fetch_branches_call_ws_after',array('response' => $response, 'branches' => $branches));
 
             $this->_getHelper()->debugging('fetchBranchesResponse:',$this->getServiceType());
@@ -171,7 +177,7 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
                 $method->setCarrier($this->_code);
                 $method->setCarrierTitle($this->_getHelper()->__($this->_getHelper()->getConfigData('title', $this->getServiceType())));
 
-                $methodCode = $this->_freeShipping_method;
+                $methodCode = $this->_code;
                 $methodTitle = $this->_getHelper()->__($this->_getHelper()->getFreeMethodText($this->getServiceType()));
                 $methodCode .= '_' . $branch->getBranchId();
                 $methodTitle .= ' ' . ucfirst(strtolower($branch->getDescription()));
@@ -189,26 +195,22 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
         }
 
         try {
-            $contract = $this->_getHelper()->getContract($this->getServiceType());
-            $clientNumber = $this->_getHelper()->getClientNumber($this->getServiceType());
-
-            $options = $this->_getHelper()->getSoapOptions();
-            $username = $this->_getHelper()->getUsername($this->getServiceType());
-            $password = $this->_getHelper()->getPassword($this->getServiceType());
-
-            $gatewayUrl = $this->_getHelper()->getConfigData('gateway_rates_url');
+            $connexionData = new Varien_Object(array(
+                'client_number' => $this->_getHelper()->getClientNumber($this->getServiceType()),
+                'contract'      => $this->_getHelper()->getContract($this->getServiceType()),
+                'username'      => $this->_getHelper()->getUsername($this->getServiceType()),
+                'password'      => $this->_getHelper()->getPassword($this->getServiceType()),
+                'gateway_url'   => $this->_getHelper()->getConfigData('gateway_rates_url'),
+                'options'       => $this->_getHelper()->getSoapOptions()
+            ));
 
             $this->_getHelper()->debugging('collectRatesByWebServiceDataConnexion:', $this->getServiceType());
-            $this->_getHelper()->debugging(array(
-                'username'        => $username,
-                'password'        => $password,
-                'gatewayRatesUrl' => $gatewayUrl,
-                'options'         => $options
-            ), $this->getServiceType());
+            $this->_getHelper()->debugging($connexionData->getData(), $this->getServiceType());
 
-            $wsse_header = Mage::getModel('summa_andreani/api_soap_header', array('username' => $username, 'password' => $password));
-            $this->dispatchEvent('collect_rates_ws_init_soap_client_before',array('gateway_url' => $gatewayUrl, 'options' => $options, 'wsse_header' => $wsse_header, 'request' => $request));
-            $client = new SoapClient($gatewayUrl, $options);
+            $wsse_header = $this->_getHelper()->getWsseHeader($connexionData->getUsername(),$connexionData->getPassword());
+
+            $this->dispatchEvent('collect_rates_ws_init_soap_client_before',array('gateway_url' => $connexionData->getGatewayUrl(), 'options' => $connexionData->getOptions(), 'wsse_header' => $wsse_header, 'request' => $request));
+            $client = new SoapClient($connexionData->getGatewayUrl(), $connexionData->getOptions());
             $client->__setSoapHeaders(array($wsse_header));
             $this->dispatchEvent('collect_rates_ws_init_soap_client_after',array('client' => $client, 'request' => $request));
 
@@ -222,23 +224,25 @@ class Summa_Andreani_Model_Shipping_Carrier_Storepickup
             /** @var $branch Summa_Andreani_Model_Branch */
             foreach ($collection as $branch) {
 
-                $collectRatesInfo = array(
-                    'cotizacionEnvio' => array(
-                        'CPDestino'      => $branch->getPostalCode(),
-                        'Cliente'        => $clientNumber,
-                        'Contrato'       => $contract,
-                        'Peso'           => $totals->getTotalWeight(),
-                        'SucursalRetiro' => $branch->getBranchId(), //Required if it's storepickup
-                        'ValorDeclarado' => '', // Optional
-                        'Volumen'        => $totals->getTotalVolume(),
+                $collectRatesInfo = new Varien_Object(
+                    array(
+                        'cotizacionEnvio' => array(
+                            'CPDestino'      => $branch->getPostalCode(),
+                            'Cliente'        => $connexionData->getClientNumber(),
+                            'Contrato'       => $connexionData->getContract(),
+                            'Peso'           => $totals->getTotalWeight(),
+                            'SucursalRetiro' => $branch->getBranchId(), //Required if it's storepickup
+                            'ValorDeclarado' => '', // Optional
+                            'Volumen'        => $totals->getTotalVolume(),
+                        )
                     )
                 );
 
                 $this->_getHelper()->debugging('collectRatesByWebServiceDataSent:', $this->getServiceType());
-                $this->_getHelper()->debugging($collectRatesInfo, $this->getServiceType());
+                $this->_getHelper()->debugging($collectRatesInfo->getData(), $this->getServiceType());
 
                 $this->dispatchEvent('collect_rates_ws_call_ws_before',array('data_sent' => $collectRatesInfo, 'request' => $request));
-                $response[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo), $insurance, $branch->getBranchId());
+                $response[] = $this->_parseRatesFromWebService($client->CotizarEnvio($collectRatesInfo->getData()), $insurance, $branch->getBranchId());
                 $this->dispatchEvent('collect_rates_ws_call_ws_after',array('response' => $response, 'request' => $request));
 
                 $this->_getHelper()->debugging('collectRatesByWebServiceResponse:', $this->getServiceType());

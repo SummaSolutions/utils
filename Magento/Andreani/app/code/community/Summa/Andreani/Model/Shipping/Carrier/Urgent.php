@@ -51,7 +51,9 @@ class Summa_Andreani_Model_Shipping_Carrier_Urgent
      */
     public function getAllowedMethods()
     {
-        return array($this->_code=>$this->getConfigData('name'));
+        return array(
+            $this->_code=>$this->_getHelper()->__($this->_getHelper()->getConfigData('name', $this->getServiceType()))
+        );
     }
 
 }
