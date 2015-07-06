@@ -1,0 +1,45 @@
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Badges') ?></h4>
+    </div>
+    <fieldset>
+        <legend><?php echo $this->__('Badges') ?></legend>
+
+        <table cellspacing="0" class="form-list">
+        	<?php for($i=1; $i<=Mage::helper('summa_badge')->getNroBadges(); $i++) :?>
+				<tr>
+					<td class="label"><label for="badge_<?php echo $i?>"><?php echo $this->getBadgeLabel($i) ?></label></td>
+					<td class="value">
+						<select id="badge_<?php echo $i?>" name="<?php echo $this->getFieldSuffix() ?>[badge_<?php echo $i?>]" class="select">
+							<?php foreach($this->getBadgeOption($i) as $option) :?>
+								<?php $_selected = ($option['value'] == $this->getFieldValue('badge_'.$i)) ? 'selected="selected"' : '' ?>
+								<option value="<?php echo $option['value']?>" <?php echo $_selected;?>><?php echo $option['label']?></option>
+							<?php endforeach;?>
+						</select>
+					</td>
+					<td class="scope-label"><span class="nobr"></span></td>
+				</tr>
+			<?php endfor;?>
+	    </table>
+    </fieldset>
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Badges PDP') ?></h4>
+    </div>
+    <fieldset>
+        <legend><?php echo $this->__('Badges PDP') ?></legend>
+        <table cellspacing="0" class="form-list">
+            <tr>
+                <td class="label"><label for="badge_pdp"><?php echo $this->getBadgePdpLabel() ?></label></td>
+                <td class="value">
+                    <select id="badge_pdp" name="<?php echo $this->getFieldSuffix() ?>[badge_pdp]" class="select">
+                        <?php foreach($this->getBadgePdpOption() as $option) :?>
+                            <?php $_selected = ($option['value'] == $this->getFieldValue('badge_pdp')) ? 'selected="selected"' : '' ?>
+                            <option value="<?php echo $option['value']?>" <?php echo $_selected;?>><?php echo $option['label']?></option>
+                        <?php endforeach;?>
+                    </select>
+                </td>
+                <td class="scope-label"><span class="nobr"></span></td>
+            </tr>
+        </table>
+    </fieldset>
+</div>

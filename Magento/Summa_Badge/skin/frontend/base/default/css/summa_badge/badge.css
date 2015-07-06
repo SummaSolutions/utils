@@ -1,0 +1,14 @@
+.badge_1, .badge_2, .badge_3, .badge_4, .badge_5, .badge_6 {
+    position: absolute;
+}
+
+.batches, .img-badge{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.badge-wrapper {
+    position: relative;
+    z-index: 1;
+}
