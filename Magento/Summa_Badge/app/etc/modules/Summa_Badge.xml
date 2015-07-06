@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_Badge>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <VES_VendorsCategory />
+            </depends>
+        </Summa_Badge>
+    </modules>
+</config>
