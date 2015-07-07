@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Summa_Badge>
+            <version>0.2.2</version>
+        </Summa_Badge>
+    </modules>
+    <global>
+        <models>
+            <summa_badge>
+                <class>Summa_Badge_Model</class>
+                <resourceModel>summa_badge_resource</resourceModel>
+            </summa_badge>
+
+            <summa_badge_resource>
+                <class>Summa_Badge_Model_Resource</class>
+                <entities>
+                    <badge>
+                        <table>summa_badge</table>
+                    </badge>
+                </entities>
+            </summa_badge_resource>
+
+        </models>
+        <blocks>
+            <summa_badge>
+                <class>Summa_Badge_Block</class>
+            </summa_badge>
+
+            <adminhtml>
+                <rewrite>
+                    <cms_wysiwyg_images_content>Summa_Badge_Block_Adminhtml_Wysiwyg_Images_Content</cms_wysiwyg_images_content>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+        <helpers>
+            <summa_badge>
+                <class>Summa_Badge_Helper</class>
+            </summa_badge>
+
+            <cms>
+                <rewrite>
+                    <wysiwyg_images>Summa_Badge_Helper_Wysiwyg_Images</wysiwyg_images>
+                </rewrite>
+            </cms>
+        </helpers>
+        <resources>
+            <summa_badge_setup>
+                <setup>
+                    <module>Summa_Badge</module>
+                    <class>Mage_Catalog_Model_Resource_Setup</class>
+                </setup>
+            </summa_badge_setup>
+        </resources>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <summa_badge>
+                    <file>summa_badge.xml</file>
+                </summa_badge>
+            </updates>
+        </layout>
+    </frontend>
+    <adminhtml>
+        <events>
+            <adminhtml_catalog_product_edit_prepare_form>
+                <observers>
+                    <summa_badge_remove_from_general_tab>
+                        <type>model</type>
+                        <class>summa_badge/events_adminhtml</class>
+                        <method>removeFromGeneralTab</method>
+                    </summa_badge_remove_from_general_tab>
+                </observers>
+            </adminhtml_catalog_product_edit_prepare_form>
+            <adminhtml_catalog_product_form_prepare_excluded_field_list>
+                <observers>
+                    <summa_badge_remove_from_update_attributes_general_tab>
+                        <type>model</type>
+                        <class>summa_badge/events_adminhtml</class>
+                        <method>removeFromUpdateAttributesGeneralTab</method>
+                    </summa_badge_remove_from_update_attributes_general_tab>
+                </observers>
+            </adminhtml_catalog_product_form_prepare_excluded_field_list>
+            <clean_catalog_images_cache_after>
+                <observers>
+                    <summa_badge_remove_cache_images>
+                        <class>summa_badge/events_adminhtml</class>
+                        <method>cleanCache</method>
+                    </summa_badge_remove_cache_images>
+                </observers>
+            </clean_catalog_images_cache_after>
+
+        </events>
+        <layout>
+            <updates>
+                <summa_badge module="Summa_Badge">
+                    <file>summa_badge.xml</file>
+                </summa_badge>
+            </updates>
+        </layout>
+
+        <translate>
+            <modules>
+                <Summa_Badge>
+                    <files>
+                        <default>Summa_Badge.csv</default>
+                    </files>
+                </Summa_Badge>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <summa_badge>
+            <nro_badges>1</nro_badges>
+        </summa_badge>
+    </default>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Summa_Badge after="Mage_Adminhtml">Summa_Badge</Summa_Badge>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>
