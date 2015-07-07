@@ -24,7 +24,8 @@ class Summa_Badge_Block_Adminhtml_Badge_Edit
      */
     public function getHeaderText()
     {
-        if (Mage::registry('summa_badge')->getId()) {
+        $summaBadge = Mage::registry('summa_badge');
+        if (is_object($summaBadge) && $summaBadge->getId()) {
             return $this->__('Edit Badge');
         } else {
             return $this->__('New Badge');

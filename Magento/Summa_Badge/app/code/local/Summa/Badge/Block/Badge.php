@@ -15,7 +15,7 @@ class Summa_Badge_Block_Badge
     {
         $_product = Mage::getModel('catalog/product')->load($productId);
         $badges = array();
-        for ($i = 1; $i <= Mage::helper('summa_badge')->getNroBadges(); $i++) {
+        for ($i = 1; $i <= Mage::helper('summa_badge')->getNumberBadges(); $i++) {
             $attributeValue = $_product->getData('badge_' . $i);
             if ($attributeValue) {
                 $badge = Mage::getModel('summa_badge/badge')->load($attributeValue);

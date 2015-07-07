@@ -64,7 +64,7 @@ class Summa_Badge_Block_Adminhtml_Catalog_Product_Tab
             return Mage::getSingleton('admin/session')->isAllowed('catalog/products/summa_badge');
         } else {
             $product = Mage::app()->getRequest()->getParam('product');
-            if (!empty($product)) { //Viene por edicion masiva
+            if (!empty($product)) {
                 return Mage::getSingleton('admin/session')->isAllowed('catalog/products/summa_badge');
             }
         }
@@ -92,9 +92,9 @@ class Summa_Badge_Block_Adminhtml_Catalog_Product_Tab
         return $this->_fieldSuffix;
     }
 
-    public function getBadgeOption($nro)
+    public function getBadgeOption($number)
     {
-        $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'badge_' . $nro);
+        $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'badge_' . $number);
 
         return $attribute->getSource()->getAllOptions();
     }
@@ -109,24 +109,17 @@ class Summa_Badge_Block_Adminhtml_Catalog_Product_Tab
     /**
      * return the label configurated in attribute
      *
-     * @param $nro
+     * @param $number
      *
      * @return string
      */
-    public function getBadgeLabel($nro)
+    public function getBadgeLabel($number)
     {
-        $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'badge_' . $nro);
+        $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'badge_' . $number);
 
         return $attribute->getStoreLabel();
     }
 
-    /**
-     * return the label configurated in attribute
-     *
-     * @param $nro
-     *
-     * @return string
-     */
     public function getBadgePdpLabel()
     {
         $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'badge_pdp');

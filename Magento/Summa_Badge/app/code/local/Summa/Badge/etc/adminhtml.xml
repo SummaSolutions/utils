@@ -12,27 +12,24 @@
         </catalog>
     </menu>
     <acl>
-		<resources>
-			<admin>
-				<children>
-					<catalog>
-						<children>
-							<products>
-								<children>
-									<summa_badge translate="title">
-										<title>Edit Badges</title>
-									</summa_badge>
-								</children>
-							</products>
-						</children>
-
+        <resources>
+            <admin>
+                <children>
+                    <catalog>
+                        <children>
+                            <products>
+                                <children>
+                                    <summa_badge translate="title">
+                                        <title>Edit Badges</title>
+                                    </summa_badge>
+                                </children>
+                            </products>
+                        </children>
                         <title>Add Badges</title>
                         <sort_order>10</sort_order>
-					</catalog>
-
-
-				</children>
-			</admin>
-		</resources>
+                    </catalog>
+                </children>
+            </admin>
+        </resources>
     </acl>
 </config>

@@ -24,7 +24,7 @@ foreach ($allAttributeSetIds as $attributeSetId) {
 
 /******************************************************************************************/
 
-for($i=1; $i<=Mage::helper('summa_badge')->getNroBadges(); $i++) {
+for($i=1; $i<=Mage::helper('summa_badge')->getNumberBadges(); $i++) {
     $configuration = array(
         'label'        => 'Badge '.$i,
         'user_defined' => '1',

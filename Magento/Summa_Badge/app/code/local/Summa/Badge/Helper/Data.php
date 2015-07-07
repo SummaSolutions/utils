@@ -6,9 +6,9 @@ class Summa_Badge_Helper_Data
     /**
      * Retorna el numero de badges.
      * */
-    public function getNroBadges()
+    public function getNumberBadges()
     {
-        return Mage::getStoreConfig('summa_badge/nro_badges');
+        return Mage::getStoreConfig('summa_badge/number_badges');
     }
 
     /**

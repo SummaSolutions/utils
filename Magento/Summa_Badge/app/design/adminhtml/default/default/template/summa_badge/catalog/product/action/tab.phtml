@@ -6,7 +6,7 @@
         <legend><?php echo $this->__('Badges') ?></legend>
 
         <table cellspacing="0" class="form-list">
-        	<?php for($i=1; $i<=Mage::helper('summa_badge')->getNroBadges(); $i++) :?>
+        	<?php for($i=1; $i<=Mage::helper('summa_badge')->getNumberBadges(); $i++) :?>
 				<tr>
 					<td class="label"><label for="badge_<?php echo $i?>">Badge <?php echo $i?></label></td>
 					<td class="value">

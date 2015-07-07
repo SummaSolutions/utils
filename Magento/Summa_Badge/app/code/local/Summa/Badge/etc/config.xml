@@ -112,7 +112,7 @@
     </adminhtml>
     <default>
         <summa_badge>
-            <nro_badges>1</nro_badges>
+            <number_badges>1</number_badges>
         </summa_badge>
     </default>
 

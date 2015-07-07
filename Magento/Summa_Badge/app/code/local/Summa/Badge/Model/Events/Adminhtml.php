@@ -9,7 +9,7 @@ class Summa_Badge_Model_Events_Adminhtml
     public function removeFromGeneralTab($event)
     {
         foreach ($event->getForm()->getElements() as $fieldset) {
-            for ($i = 1; $i <= Mage::helper('summa_badge')->getNroBadges(); $i++) {
+            for ($i = 1; $i <= Mage::helper('summa_badge')->getNumberBadges(); $i++) {
                 $fieldset->removeField('badge_' . $i);
             }
         }
@@ -25,7 +25,7 @@ class Summa_Badge_Model_Events_Adminhtml
         $object = $event->getObject();
         $excluded = $object->getFormExcludedFieldList();
 
-        for ($i = 1; $i <= Mage::helper('summa_badge')->getNroBadges(); $i++) {
+        for ($i = 1; $i <= Mage::helper('summa_badge')->getNumberBadges(); $i++) {
             $excluded[] = 'badge_' . $i;
         }
         $excluded[] = 'badge_pdp';
