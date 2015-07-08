@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <menu>
+        <andreani_branches translate="title" module="summa_andreani">
+            <title>Andreani Branches</title>
+            <sort_order>40</sort_order>
+            <children>
+                <index translate="title" module="summa_andreani">
+                    <title>Admin Branches</title>
+                    <sort_order>40</sort_order>
+                    <action>adminhtml/branch</action>
+                </index>
+            </children>
+        </andreani_branches>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <andreani_branches translate="title" module="summa_andreani">
+                        <title>Andreani Branches</title>
+                        <sort_order>40</sort_order>
+                    </andreani_branches>
+                    <sales>
+                        <children>
+                            <order>
+                                <children>
+                                    <actions>
+                                        <children>
+                                            <generate_shippings translate="title"><title>Create pending shipments</title></generate_shippings>
+                                        </children>
+                                    </actions>
+                                </children>
+                            </order>
+                        </children>
+                    </sales>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

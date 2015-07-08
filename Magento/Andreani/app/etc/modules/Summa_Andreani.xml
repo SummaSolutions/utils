@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_Andreani>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Shipping/>
+                <!--<Summa_ShippingAdditions />-->
+                <!--<Summa_Matrixrate />-->
+                <!--<Webshopapps_Matrixrate />-->
+            </depends>
+        </Summa_Andreani>
+    </modules>
+</config>

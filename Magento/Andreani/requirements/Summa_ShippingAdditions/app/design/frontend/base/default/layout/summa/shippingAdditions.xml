@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <checkout_cart_index>
+        <reference name="checkout.cart">
+            <block type="summa_shippingAdditions/checkout_cart_shipping" name="checkout.cart.shipping" as="shipping" template="summa/shippingAdditions/checkout/cart/shipping.phtml"/>
+        </reference>
+    </checkout_cart_index>
+
+    <checkout_onepage_shippingmethod>
+        <block type="summa_shippingAdditions/checkout_onepage_shipping_method_available" name="root" as="root"
+               output="toHtml" template="summa/shippingAdditions/checkout/onepage/shipping_method/available.phtml"/>
+    </checkout_onepage_shippingmethod>
+
+    <!-- EXAMPLE HOW TO ADD A CUSTOM ADDITIONAL BLOCK FOR FREESHIPPING METHOD -->
+    <!-- ALSO REMEMBER ADD DEPENDS TO Summa_ShippingAdditions ON ETC/MODULES ON YOUR MODULE -->
+    <!--
+    <checkout_cart_index>
+        <reference name="checkout.cart.shipping">
+            <block type="core/template" name="shipment.method.freeshipping" template="summa/shippingAdditions/checkout/onepage/shipping_method/freeshipping.phtml" />
+        </reference>
+    </checkout_cart_index>
+    <checkout_onepage_shippingmethod>
+        <reference name="root">
+            <block type="core/template" name="shipment.method.freeshipping" template="summa/shippingAdditions/checkout/onepage/shipping_method/freeshipping.phtml" />
+        </reference>
+    </checkout_onepage_shippingmethod>
+    -->
+</layout>

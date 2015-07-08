@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_ShippingAdditions>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Checkout />
+                <Mage_Shipping />
+            </depends>
+        </Summa_ShippingAdditions>
+    </modules>
+</config>
