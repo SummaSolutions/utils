@@ -388,7 +388,7 @@ class Mage_Shell_Review6788
     public function dumpPermissions($elements)
     {
         $result = '';
-        $sqlTemplate = 'INSERT INTO permission_%s (%s_name, is_allowed) VALUES ("%s", 1);';
+        $sqlTemplate = 'INSERT IGNORE INTO permission_%s (%s_name, is_allowed) VALUES ("%s", 1);';
 
         foreach ($elements as $elementGroup) {
             foreach ($elementGroup as $element) {
