@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>css/summa_badge/badge.css</stylesheet>
+                <params/>
+            </action>
+        </reference>
+    </default>
+
+    <catalog_category_default>
+        <reference name="product_list">
+            <block type="summa_badge/badge" name="badge.info" as="badge">
+                <action method="setData">
+                    <name>size</name>
+                    <value>80</value>
+                </action>
+            </block>
+        </reference>
+    </catalog_category_default>
+
+    <catalog_category_layered>
+        <reference name="product_list">
+            <block type="summa_badge/badge" name="badge.info" as="badge">
+                <action method="setData">
+                    <name>size</name>
+                    <value>80</value>
+                </action>
+            </block>
+        </reference>
+    </catalog_category_layered>
+
+    <catalogsearch_result_index>
+        <reference name="search_result_list">
+            <block type="summa_badge/badge" name="badge.info" as="badge">
+                <action method="setData">
+                    <name>size</name>
+                    <value>80</value>
+                </action>
+            </block>
+        </reference>
+    </catalogsearch_result_index>
+
+    <catalog_product_view>
+        <reference name="product.info.media">
+            <block type="summa_badge/badge" name="badge.info" as="badge" template="summa_badge/badge_pdp.phtml">
+                <action method="setData">
+                    <name>size</name>
+                    <value>80</value>
+                </action>
+            </block>
+        </reference>
+
+        <reference name="product.info">
+            <block type="summa_badge/badge" name="badge.pdp" as="badge.pdp" template="summa_badge/badge_pdp.phtml">
+                <action method="setData">
+                    <name>size</name>
+                    <value>80</value>
+                </action>
+            </block>
+        </reference>
+    </catalog_product_view>
+
+    <vendorspage_category_view>
+        <reference name="product_list">
+            <block type="summa_badge/badge" name="badge.info" as="badge">
+                <action method="setData">
+                    <name>size</name>
+                    <value>80</value>
+                </action>
+            </block>
+        </reference>
+    </vendorspage_category_view>
+
+    <vendorscms_page_view>
+        <reference name="vendor.feature.product">
+            <block type="summa_badge/badge" name="badge.info" as="badge">
+                <action method="setData">
+                    <name>size</name>
+                    <value>80</value>
+                </action>
+            </block>
+        </reference>
+    </vendorscms_page_view>
+
+
+</layout>

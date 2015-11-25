@@ -1,0 +1,27 @@
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Badges') ?></h4>
+    </div>
+    <fieldset>
+        <legend><?php echo $this->__('Badges') ?></legend>
+
+        <table cellspacing="0" class="form-list">
+        	<?php for($i=1; $i<=Mage::helper('summa_badge')->getNumberBadges(); $i++) :?>
+				<tr>
+					<td class="label"><label for="badge_<?php echo $i?>">Badge <?php echo $i?></label></td>
+					<td class="value">
+						<select id="badge_<?php echo $i?>" name="<?php echo $this->getFieldSuffix() ?>[badge_<?php echo $i?>]" class="select" disabled="disabled">
+							<?php foreach($this->getBadgeOption($i) as $option) :?>
+								<?php $_selected = ($option['value'] == $this->getFieldValue('badge_'.$i)) ? 'selected="selected"' : '' ?>
+								<option value="<?php echo $option['value']?>" <?php echo $_selected;?>><?php echo $option['label']?></option>
+							<?php endforeach;?>
+						</select>
+						<input type="checkbox" id="badge_<?php echo $i?>_checkbox" onclick="toggleValueElementsWithCheckbox(this)" />
+                    	<label for="badge_<?php echo $i?>_checkbox" class="normal"><?php echo Mage::helper('catalog')->__('Change') ?></label>
+					</td>
+					<td class="scope-label"><span class="nobr"></span></td>
+				</tr>
+			<?php endfor;?>
+	    </table>
+    </fieldset>
+</div>
