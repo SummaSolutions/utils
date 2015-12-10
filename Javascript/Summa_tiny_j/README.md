@@ -31,6 +31,9 @@ elem.click(callback);
 elem.blur(callback);
 elem.change(callback);
 elem.focus(callback);
+elem.focusout(callback);
+elem.focus(callback);
+
 ```
 Pero agregado a esto, si el método específico no existe, se puede escuchar un evento solo con el nombre del evento y el callback, por ejemplo:
 ```
@@ -38,12 +41,60 @@ var elem = TinyJ("#id");
 elem.on("mouseleave", callback);
 ```
 
-#### Modificar el value del elemento
-Al igual que jQuery, se puede modificar u obtener el atributo value del elemento de la siguiente manera:
+#### Modificar attributos del elemento
+Al igual que jQuery, se puede modificar u obtener el atributo 'value' del elemento de la siguiente manera:
 ```
 var elem = TinyJ("#id");
 elem.val("hola");
 elem.val() --> "hola"
+```
+También se puede modificar el valor del atributo 'id':
+```
+var elem = TinyJ("#id");
+elem.id("nuevoId");
+```
+O el atributo class. Este permite agregar o quitar clases del mismo:
+```
+var elem = TinyJ("#id");
+elem.addClass("nuevoId");
+elem.attribute('class'); --> 'nuevoId'
+elem.removeClass("nuevoId");
+elem.attribute('class'); --> ''
+```
+O modificar los atributos de edicion (específicos para inputs):
+```
+var elem = TinyJ("#id");
+elem.disable();
+elem.enable();
+```
+En caso de faltar el método directo se puede modificar y recuperar cualquier atributo con el nombre del mismo:
+```
+var elem = TinyJ("#id");
+elem.attribute('hola'); --> undefined
+elem.attribute('hola', 'value');
+elem.attribute('hola'); --> 'value'
+```
+O borrar el attributo por completo:
+```
+var elem = TinyJ("#id");
+elem.removeAttribute('hola');
+```
+
+#### Modificar el html dentro del elemento
+Se puede modificar el html del element (innerHTML) así:
+```
+var elem = TinyJ("#id");
+elem.html('<div id="uno"></div>');
+```
+O sinó vaciar el elemento, equivalente a hacer .html(""):
+```
+var elem = TinyJ("#id");
+elem.empty();
+```
+O agregar un elemento html como hijo:
+```
+var elem = TinyJ("#id");
+elem.appendChild(htmlElement);
 ```
 
 #### Recuperar el elemento DOM original
@@ -51,4 +102,11 @@ En caso de necesitar alguna funcionalidad no existente en la librería, se puede
 ```
 var elem = TinyJ("#id");
 elem.getElem() --> DOM element
+```
+##### Evaluar selector
+Es posible también evaluar si un selector está seleccionado o pedir el seleccionado de un combo:
+```
+var elem = TinyJ("#id");
+elem.isChecked();
+elem.getSelectedOption();
 ```
