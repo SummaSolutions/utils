@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_catalog_product_new>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>badges</name>
+                <block>summa_badge/adminhtml_catalog_product_tab</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_new>
+
+    <adminhtml_catalog_product_edit>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>badges</name>
+                <block>summa_badge/adminhtml_catalog_product_tab</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_edit>
+
+    <adminhtml_catalog_product_action_attribute_edit>
+        <reference name="attributes_tabs">
+            <block type="summa_badge/adminhtml_catalog_product_tab" name="tab_badges">
+                <action method="setTemplate"><template>summa_badge/catalog/product/action/tab.phtml</template></action>
+                <action method="setFieldSuffix"><suffix>attributes</suffix></action>
+            </block>
+            <action method="addTab">
+                <name>badges</name>
+                <block>tab_badges</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_action_attribute_edit>
+
+    <adminhtml_adminhtml_badge_index>
+        <reference name="content">
+            <!-- We also reference our block by namespacename_modulename/adminhtml_controllername, and name it uniquely -->
+            <block type="summa_badge/adminhtml_badge" name="foo_bar_baz" />
+        </reference>
+    </adminhtml_adminhtml_badge_index>
+
+    <adminhtml_adminhtml_badge_edit>
+        <reference name="head">
+            <action method="setCanLoadExtJs"><flag>1</flag></action>
+            <action method="addJs"><script>mage/adminhtml/variables.js</script></action>
+            <action method="addJs"><script>mage/adminhtml/wysiwyg/widget.js</script></action>
+            <action method="addJs"><script>lib/flex.js</script></action>
+            <action method="addJs"><script>lib/FABridge.js</script></action>
+            <action method="addJs"><script>mage/adminhtml/flexuploader.js</script></action>
+            <action method="addJs"><script>mage/adminhtml/browser.js</script></action>
+            <action method="addJs"><script>prototype/window.js</script></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+            <action method="addCss"><name>lib/prototype/windows/themes/magento.css</name></action>
+        </reference>
+
+    </adminhtml_adminhtml_badge_edit>
+</layout>

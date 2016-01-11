@@ -36,17 +36,12 @@ class Summa_EmailPlus_Model_Core_Email_Queue
             ->setPageSize(self::MESSAGES_LIMIT_PER_CRON_RUN)
             ->setCurPage(1)
             ->load();
-
-
         ini_set('SMTP', Mage::getStoreConfig('system/smtp/host'));
         ini_set('smtp_port', Mage::getStoreConfig('system/smtp/port'));
-
         /** @var $message Mage_Core_Model_Email_Queue */
         foreach ($collection as $message) {
             if ($message->getId()) {
                 $parameters = new Varien_Object($message->getMessageParameters());
-
-
                 if (Mage::getStoreConfigFlag(self::CONFIGURATION_PATH . "enable")) {
                     $config = array(
                         'ssl'      => strtolower($this->getConfig("ssl")),
@@ -58,15 +53,14 @@ class Summa_EmailPlus_Model_Core_Email_Queue
                     $transport = new Zend_Mail_Transport_Smtp($this->getConfig("host"), $config);
                     Zend_Mail::setDefaultTransport($transport);
                 }
-
                 if (!Mage::getStoreConfigFlag(self::CONFIGURATION_PATH . "enable") && $parameters->getReturnPathEmail() !== null) {
                     $mailTransport = new Zend_Mail_Transport_Sendmail("-f" . $parameters->getReturnPathEmail());
                     Zend_Mail::setDefaultTransport($mailTransport);
                 }
-
                 $mailer = new Zend_Mail('utf-8');
                 foreach ($message->getRecipients() as $recipient) {
                     list($email, $name, $type) = $recipient;
+                    $email = trim($email);
                     switch ($type) {
                         case self::EMAIL_TYPE_BCC:
                             $mailer->addBcc($email, '=?utf-8?B?' . base64_encode($name) . '?=');
@@ -78,22 +72,19 @@ class Summa_EmailPlus_Model_Core_Email_Queue
                             break;
                     }
                 }
-
                 if ($parameters->getIsPlain()) {
                     $mailer->setBodyText($message->getMessageBody());
                 } else {
                     $mailer->setBodyHTML($message->getMessageBody());
                 }
-
                 $mailer->setSubject('=?utf-8?B?' . base64_encode($parameters->getSubject()) . '?=');
-                $mailer->setFrom($parameters->getFromEmail(), $parameters->getFromName());
+                $mailer->setFrom(trim($parameters->getFromEmail()), trim($parameters->getFromName()));
                 if ($parameters->getReplyTo() !== null) {
-                    $mailer->setReplyTo($parameters->getReplyTo());
+                    $mailer->setReplyTo(trim($parameters->getReplyTo()));
                 }
                 if ($parameters->getReturnTo() !== null) {
-                    $mailer->setReturnPath($parameters->getReturnTo());
+                    $mailer->setReturnPath(trim($parameters->getReturnTo()));
                 }
-
                 try {
                     $mailer->send();
                     unset($mailer);

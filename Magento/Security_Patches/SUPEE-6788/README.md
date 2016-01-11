@@ -27,4 +27,15 @@ In order to check there is no problematic query, you should run the following co
 php shell/review6788.php --check queries
 ```
 
+### Checking content:
+In order to check there is no problematic static block, CMS page or email template, you should run the following command:
+```bash
+php shell/review6788.php --check content
+```
+And in order solve the permission content issues that you may found, you can generate a SQL dump adding the --dump option:
+```bash
+php shell/review6788.php --check content --dump
+```
+
+
 ***IMPORTANT NOTE: THIS SHELL SCRIPT IS NOT BULLET PROOF. PLEASE DO A MANUAL REVIEW AND A THOROUGH TEST TO MAKE SURE NOTHING IS BROKEN***
