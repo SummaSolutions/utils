@@ -8,7 +8,7 @@ class Summa_Badge_Block_Badge
     protected function _construct()
     {
         parent::_construct();
-        $this->setData(array('cache_lifetime' => 86400));
+        $this->setData('cache_lifetime', 86400);
         $this->setTemplate('summa_badge/badge.phtml');
     }
 
