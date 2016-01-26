@@ -8,7 +8,24 @@ class Summa_Badge_Block_Badge
     protected function _construct()
     {
         parent::_construct();
+        $this->setData(array('cache_lifetime' => 86400));
         $this->setTemplate('summa_badge/badge.phtml');
+    }
+
+    /**
+     * Get cache key informative items
+     *
+     * @return array
+     */
+    public function getCacheKeyInfo()
+    {
+        return array(
+            'BLOCK_BADGE',
+            Mage::app()->getStore()->getCode(),
+            $this->getTemplateFile(),
+            'template' => $this->getTemplate(),
+            'product_id' => $this->getProductId()
+        );
     }
 
     public function getBadges($productId)
