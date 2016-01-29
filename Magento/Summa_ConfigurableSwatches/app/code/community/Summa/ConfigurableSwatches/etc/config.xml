@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Summa_ConfigurableSwatches>
+            <version>0.0.1</version>
+        </Summa_ConfigurableSwatches>
+    </modules>
+    <global>
+        <blocks>
+            <summa_configurableswatches>
+                <class>Summa_ConfigurableSwatches_Block</class>
+            </summa_configurableswatches>
+            <configurableswatches>
+                <rewrite>
+                    <catalog_layer_state_swatch>Summa_ConfigurableSwatches_Block_Catalog_Layer_State_Swatch</catalog_layer_state_swatch>
+                </rewrite>
+            </configurableswatches>
+        </blocks>
+    </global>
+</config>
