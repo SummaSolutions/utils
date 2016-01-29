@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Summa_ConfigurableSwatches>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_ConfigurableSwatches />
+            </depends>
+        </Summa_ConfigurableSwatches>
+    </modules>
+</config>
