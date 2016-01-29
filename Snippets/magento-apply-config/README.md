@@ -4,7 +4,6 @@ This scripts allows to apply all configs set in a CSV file into a Magento instal
 
 CSV Format:
 
-Path,Value,Action,Scope,Scope ID
 Path | Value | Action | Scope | Scope ID
 ------------ | ------------- | ------------- | ------------- | -------------
 web/unsecure/base_url | http://example.local/ | set | default
