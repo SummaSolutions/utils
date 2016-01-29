@@ -1,0 +1,4 @@
+Path,Value,Action,Scope,Scope ID
+"web/unsecure/base_url","http://example.local/","set","default",
+"web/secure/base_url","http://example.local/","set","default",
+"design/head/default_robots","NOINDEX, NOFOLLOW","set","default",
